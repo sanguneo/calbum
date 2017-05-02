@@ -10,7 +10,9 @@ import {
     Text,
     View
 } from 'react-native';
+
 import { Navigation } from 'react-native-navigation';
+
 import { registerScreens } from './screen'
 registerScreens();
 
