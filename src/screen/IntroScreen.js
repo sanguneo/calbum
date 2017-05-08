@@ -14,19 +14,20 @@ import {
 
 export default class IntroScreen extends Component {
     static navigatorButtons = {
-        rightButtons: [{
+        leftButtons: [
+            {
+                id: 'sideMenu' // id is locked up 'sideMenu'
+            }
+        ],
+        rightButtons: [
+            {
                 title: 'Edit',
                 id: 'edit'
             }
         ]
     };
-    static navigatorStyle = {
-        drawUnderNavBar: false,
-        navBarTranslucent: true
-    };
     constructor(props) {
         super(props);
-        // if you want to listen on navigator events, set this up
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
