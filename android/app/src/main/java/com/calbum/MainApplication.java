@@ -4,16 +4,22 @@ import android.support.annotation.Nullable;
 
 import com.facebook.react.ReactPackage;
 import com.reactnativenavigation.NavigationApplication;
-import com.reactnativenavigation.controllers.ActivityCallbacks;
 
 import java.util.List;
 
+/*
+// in case soft button hide enable
+import com.reactnativenavigation.controllers.ActivityCallbacks;
 import android.view.View;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
+*/
 
 public class MainApplication extends NavigationApplication {
+
+/*
+// in case soft button hide enable
 
     private int currentApiVersion;
 
@@ -50,6 +56,7 @@ public class MainApplication extends NavigationApplication {
             }
         });
     }
+*/
 
     @Override
     public boolean isDebug() {
