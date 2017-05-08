@@ -44,9 +44,12 @@ Navigation.startTabBasedApp({
     },
     drawer: {
         left: {
-            screen: 'calbum.SideMenu',
-            passProps: {}
+            screen: 'calbum.SideMenu'
         },
+        // left: { // optional, define if you want a drawer from the left
+        //     screen: 'example.FirstSideMenu', // unique ID registered with Navigation.registerScreen
+        //     passProps: {} // simple serializable object that will pass as props to all top screens (optional)
+        // },
         // right: { // optional, define if you want a drawer from the right
         //     screen: 'example.SecondSideMenu', // unique ID registered with Navigation.registerScreen
         //     passProps: {} // simple serializable object that will pass as props to all top screens (optional)
@@ -54,5 +57,5 @@ Navigation.startTabBasedApp({
         disableOpenGesture: false
     },
     passProps: {},
-    animationType: 'fade'
+    animationType: 'none'
 });
