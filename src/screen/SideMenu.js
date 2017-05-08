@@ -15,18 +15,18 @@ export default class SideMenu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>Side Menu</Text>
+                <Text style={styles.title}>메뉴</Text>
                 <TouchableOpacity>
-                    <Text style={styles.button}>Show In-App Notification</Text>
+                    <Text style={styles.button}>아이템</Text>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Text style={styles.button}>Show In-App Notification</Text>
+                    <Text style={styles.button}>아이템</Text>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Text style={styles.button}>Show In-App Notification</Text>
+                    <Text style={styles.button}>아이템</Text>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Text style={styles.button}>Show In-App Notification</Text>
+                    <Text style={styles.button}>아이템</Text>
                 </TouchableOpacity>
             </View>
         );

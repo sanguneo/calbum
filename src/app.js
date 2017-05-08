@@ -20,18 +20,18 @@ registerScreens();
 Navigation.startTabBasedApp({
     tabs: [
         {
-            label: 'One',
+            label: '첫',
             screen: 'calbum.IntroScreen',
             icon: require('../img/one.png'),
             selectedIcon: require('../img/one_selected.png'),
-            title: 'Screen One'
+            title: '첫번째'
         },
         {
-            label: 'Two',
+            label: '둘',
             screen: 'calbum.SecondScreen',
             icon: require('../img/two.png'),
             selectedIcon: require('../img/two_selected.png'),
-            title: 'Screen Two'
+            title: '두번째'
         }
     ],
     appStyle: {

@@ -34,15 +34,7 @@ export default class IntroScreen extends Component {
 
     onNavigatorEvent(event) {
         if (event.id === 'edit') {
-            Alert.alert('NavBar', 'Edit button pressed');
-            this.props.navigator.resetTo({
-                screen: 'calbum.SecondScreen', // unique ID registered with Navigation.registerScreen
-                title: undefined, // navigation bar title of the pushed screen (optional)
-                passProps: {}, // simple serializable object that will pass as props to the pushed screen (optional)
-                animated: true, // does the push have transition animation or does it happen immediately (optional)
-                navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-                navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-            });
+            Alert.alert('제목', '클릭됨!!');
         }
     }
 
@@ -50,14 +42,10 @@ export default class IntroScreen extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>
-                    Welcome to React Native!
+                    첫페이지!!
                 </Text>
                 <Text style={styles.instructions}>
-                    To get started, edit index.android.js
-                </Text>
-                <Text style={styles.instructions}>
-                    Double tap R on your keyboard to reload,{'\n'}
-                    Shake or press menu button for dev menu
+                    페이지를 테스트합니다.
                 </Text>
             </View>
         );
