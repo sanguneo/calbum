@@ -27,7 +27,6 @@ export default class SecondScreen extends Component {
 
     constructor(props) {
         super(props);
-        // if you want to listen on navigator events, set this up
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
@@ -40,14 +39,6 @@ export default class SecondScreen extends Component {
         }
         if (event.id === 'edit') {
             Alert.alert('알림!!!', '두번째 EDIT');
-            /*this.props.navigator.resetTo({
-                screen: 'calbum.SecondScreen', // unique ID registered with Navigation.registerScreen
-                title: undefined, // navigation bar title of the pushed screen (optional)
-                passProps: {}, // simple serializable object that will pass as props to the pushed screen (optional)
-                animated: true, // does the push have transition animation or does it happen immediately (optional)
-                navigatorStyle: {}, // override the navigator style for the pushed screen (optional)
-                navigatorButtons: {} // override the nav buttons for the pushed screen (optional)
-            });*/
         }
     }
 
