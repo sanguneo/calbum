@@ -14,11 +14,15 @@ import {
 
 export default class IntroScreen extends Component {
     static navigatorButtons = {
-        rightButtons: [
-            {
+        rightButtons: [{
                 title: 'Edit',
                 id: 'edit'
-            }]
+            }
+        ]
+    };
+    static navigatorStyle = {
+        drawUnderNavBar: false,
+        navBarTranslucent: true
     };
     constructor(props) {
         super(props);
