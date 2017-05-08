@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         backgroundColor: 'white',
-
         width: 250
     },
     title: {

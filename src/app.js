@@ -34,13 +34,21 @@ Navigation.startTabBasedApp({
             title: 'Screen Two'
         }
     ],
-    tabsStyle: {
-        tabBarButtonColor: '#ffff00',
-        tabBarSelectedButtonColor: '#ff9900',
-        tabBarBackgroundColor: '#551A8B'
-    },
     appStyle: {
-        orientation: 'portrait'
+        screenBackgroundColor: 'white',
+        drawUnderTabBar: true,
+        navBarTextColor: '#EBECED',
+        navBarButtonColor: '#EBECED',
+        statusBarBlur: false,
+        statusBarColor:'#A2AAB0',
+        navBarBackgroundColor: '#A2AAB0',
+        orientation: 'portrait',
+        tabBarBackgroundColor: '#3e3e3b',
+        tabBarButtonColor: '#ebeced',
+        tabBarSelectedButtonColor: '#cbc5c1',
+        tabFontFamily: 'BioRhyme-Bold',
+        tabBarTranslucent: false,
+        forceTitlesDisplay: true
     },
     drawer: {
         left: {
