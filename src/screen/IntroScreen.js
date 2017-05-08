@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     StyleSheet,
     Text,
@@ -26,6 +26,7 @@ export default class IntroScreen extends Component {
             }
         ]
     };
+
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -44,6 +45,7 @@ export default class IntroScreen extends Component {
             });
         }
     }
+
     render() {
         return (
             <View style={styles.container}>

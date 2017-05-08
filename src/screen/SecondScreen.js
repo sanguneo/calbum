@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     StyleSheet,
     Text,
@@ -23,11 +23,13 @@ export default class SecondScreen extends Component {
             id: 'menu'
         }],
     };
+
     constructor(props) {
         super(props);
         // if you want to listen on navigator events, set this up
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
+
     onNavigatorEvent(event) {
         if (event.id === 'menu') {
             this.props.navigator.toggleDrawer({
@@ -47,6 +49,7 @@ export default class SecondScreen extends Component {
             });
         }
     }
+
     render() {
         return (
             <View style={styles.container}>
