@@ -38,7 +38,7 @@ export default class SecondScreen extends Component {
             });
         }
         if (event.id === 'edit') {
-            Alert.alert('NavBar', 'Edit button pressed');
+            Alert.alert('알림!!!', '두번째 EDIT');
             this.props.navigator.resetTo({
                 screen: 'calbum.SecondScreen', // unique ID registered with Navigation.registerScreen
                 title: undefined, // navigation bar title of the pushed screen (optional)
