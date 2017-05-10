@@ -1,7 +1,3 @@
-
-
-
-
 ### 우선 설정
 
 ~/.gradle/gradle.properties
