@@ -2,7 +2,7 @@
 
 
 
-###우선 설정
+### 우선 설정
 
 ~/.gradle/gradle.properties
 
