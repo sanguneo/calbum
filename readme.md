@@ -1,5 +1,9 @@
 
 
+
+
+###우선 설정
+
 ~/.gradle/gradle.properties
 
     MYAPP_RELEASE_STORE_FILE=myapp.keystore
