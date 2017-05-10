@@ -21,7 +21,7 @@ export default class IntroScreen extends Component {
         ],
         rightButtons: [
             {
-                title: 'Edit',
+                icon: require('../../img/setting.png'),
                 id: 'edit'
             }
         ]

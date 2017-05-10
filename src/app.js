@@ -17,37 +17,23 @@ import {registerScreens} from './screen'
 registerScreens();
 
 
-Navigation.startTabBasedApp({
-    tabs: [
-        {
-            label: '첫',
-            screen: 'calbum.IntroScreen',
-            icon: require('../img/one.png'),
-            selectedIcon: require('../img/one_selected.png'),
-            title: '첫번째'
-        },
-        {
-            label: '둘',
-            screen: 'calbum.SecondScreen',
-            icon: require('../img/two.png'),
-            selectedIcon: require('../img/two_selected.png'),
-            title: '두번째'
-        }
-    ],
+Navigation.startSingleScreenApp({
+    screen: {
+        screen: 'calbum.IntroScreen',
+        title: 'cAlbum'
+    },
     appStyle: {
         screenBackgroundColor: 'white',
-        drawUnderTabBar: true,
-        navBarTextColor: '#EBECED',
-        navBarButtonColor: '#EBECED',
+        navBarTransparent: false, // make the nav bar transparent, works best with drawUnderNavBar:true,
+        drawUnderNavBar: false,
+        navBarTextColor: 'white',
+        navBarButtonColor: 'white',
+        statusBarHidden: true,
+        statusBarTextColorScheme: 'dark',
+        statusBarTextColorSchemeSingleScreen: 'dark',
         statusBarBlur: false,
-        statusBarColor:'#A2AAB0',
-        navBarBackgroundColor: '#A2AAB0',
+        navBarBackgroundColor: '#f26968',
         orientation: 'portrait',
-        tabBarBackgroundColor: '#3e3e3b',
-        tabBarButtonColor: '#ebeced',
-        tabBarSelectedButtonColor: '#cbc5c1',
-        tabFontFamily: 'BioRhyme-Bold',
-        tabBarTranslucent: false,
         forceTitlesDisplay: true
     },
     drawer: {
@@ -65,5 +51,5 @@ Navigation.startTabBasedApp({
         disableOpenGesture: false
     },
     passProps: {},
-    animationType: 'none'
+    animationType: 'fade'
 });
