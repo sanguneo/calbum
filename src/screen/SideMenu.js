@@ -7,11 +7,11 @@ import {
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
-
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
         console.log(this.props.navigator);
+
     }
     render() {
         return (
@@ -23,19 +23,19 @@ export default class SideMenu extends Component {
                     />
                     {/*<Text style={styles.name}>상구너</Text>*/}
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={() => {this._openModal('second')}}>
                     <Image
                         source={require('../../img/navicon_add.png')}
                         style={[styles.leftIcon]}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={() => {this._openModal('third')}}>
                     <Image
                         source={require('../../img/navicon_add.png')}
                         style={[styles.leftIcon]}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={() => {this._openImagePicker()}}>
                     <Image
                         source={require('../../img/setting.png')}
                         style={[styles.leftIcon,{transform: [{ scale: 0.6}]}]}
@@ -56,6 +56,29 @@ export default class SideMenu extends Component {
             side: 'left',
             animated: true
         });
+    }
+    _openModal(screen) {
+        if (screen === 'second') {
+            this.props.navigator.showModal({
+                screen: "calbum.SecondScreen", // unique ID registered with Navigation.registerScreen
+                title: "Modal", // title of the screen as appears in the nav bar (optional)
+                passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+                navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+                navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+                animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+            });
+        }else {
+            this.props.navigator.showModal({
+                screen: "calbum.ThirdScreen", // unique ID registered with Navigation.registerScreen
+                title: "Modal", // title of the screen as appears in the nav bar (optional)
+                passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+                navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+                navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+                animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+            });
+        }
+    }
+    _openImagePicker() {
     }
 }
 

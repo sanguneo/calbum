@@ -15,6 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
 */
+import java.util.Arrays;
+import com.rnfs.RNFSPackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -66,6 +68,8 @@ public class MainApplication extends NavigationApplication {
     @Nullable
     @Override
     public List<ReactPackage> createAdditionalReactPackages() {
-        return null;
+        return Arrays.<ReactPackage>asList(
+            new RNFSPackage()
+        );
     }
 }

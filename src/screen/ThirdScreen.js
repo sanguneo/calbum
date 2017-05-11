@@ -14,7 +14,7 @@ import {
 
 var RNFS = require('react-native-fs');
 
-export default class SecondScreen extends Component {
+export default class ThirdScreen extends Component {
     static navigatorButtons = {
         rightButtons: [{
             title: 'Edit',
@@ -29,23 +29,20 @@ export default class SecondScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            files : ''
-        }
-        var files = [];
-        var self = this;
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        RNFS.readDir(RNFS.DocumentDirectoryPath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-            .then((result) => {
-                console.log('GOT RESULT', result);
-                result.forEach((itm) => {
-                    files.push(itm.path);
-                });
-            }).then(() => {
-                console.log(files.join('\n'));
-                self.setState({files: files.join('\n')});
-            }).catch((err) => {
-                console.log(err.message, err.code);
+        this.state = {
+            success: 'no'
+        }
+        var path = RNFS.DocumentDirectoryPath + '/test.txt';
+
+// write the file
+        RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
+            .then((success) => {
+                console.log('FILE WRITTEN!');
+                this.setState({success: 'FILE WRITTEN!'});
+            })
+            .catch((err) => {
+                console.log(err.message);
             });
     }
 
@@ -65,7 +62,7 @@ export default class SecondScreen extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>
-                    {this.state.files}
+                    {this.state.success}
                 </Text>
             </View>
         );
