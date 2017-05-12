@@ -7,6 +7,20 @@ import {
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
+
+const ImagePicker = require('react-native-image-picker');
+
+var options = {
+    title: 'Select Avatar',
+    customButtons: [
+        {name: 'fb', title: 'Choose Photo from Facebook'},
+    ],
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
+
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
@@ -79,6 +93,30 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
+        // console.log(ImagePicker.showImagePicker);
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                let source = { uri: response.uri };
+
+                // You can also display the image using data:
+                // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                this.setState({
+                    avatarSource: source
+                });
+            }
+        });
     }
 }
 

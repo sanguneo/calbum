@@ -1,0 +1,6 @@
+
+include ':react-native-image-picker'
+project(':react-native-image-picker').projectDir = new File('../../react-native-image-picker/android')
+
+include ':app'
+
