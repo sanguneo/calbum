@@ -9,6 +9,8 @@ import {
     Alert
 } from 'react-native';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 var options = {
     title: '이미지 선택',
     cancelButtonTitle: '취소',
@@ -17,6 +19,11 @@ var options = {
     storageOptions: {
         skipBackup: true
     }
+};
+const imgOpt = {
+    width: 200,
+    height: 400,
+    cropping: true
 };
 
 export default class SideMenu extends Component {
@@ -92,6 +99,9 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
+        ImagePicker.openPicker(imgOpt).then(image => {
+            console.log(image);
+        });
         // console.log(ImagePicker.showImagePicker);
         /*ImagePicker.showImagePicker(options, (response) => {
             if (response.error) {
@@ -152,7 +162,7 @@ const styles = StyleSheet.create({
     stretch: {
         width: 78,
         height: 78,
-        borderRadius: 40,
+        // borderRadius: 40,
         margin: 2
     },
     leftIcon: {
