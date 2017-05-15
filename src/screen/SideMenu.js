@@ -11,15 +11,6 @@ import {
 
 import ImagePicker from 'react-native-image-crop-picker';
 
-var options = {
-    title: '이미지 선택',
-    cancelButtonTitle: '취소',
-    takePhotoButtonTitle: '촬영',
-    chooseFromLibraryButtonTitle: '불러오기',
-    storageOptions: {
-        skipBackup: true
-    }
-};
 const imgOpt = {
     width: 200,
     height: 400,
@@ -30,7 +21,7 @@ export default class SideMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatar: require('../../img/2016080300076_0.jpg')
+            avatar: require('../../img/2016080300076_0.jpg'),
         }
     }
     render() {
@@ -80,8 +71,8 @@ export default class SideMenu extends Component {
     _openModal(screen) {
         if (screen === 'second') {
             this.props.navigator.showModal({
-                screen: "calbum.SecondScreen", // unique ID registered with Navigation.registerScreen
-                title: "Modal", // title of the screen as appears in the nav bar (optional)
+                screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
+                title: "subscribe", // title of the screen as appears in the nav bar (optional)
                 passProps: {}, // simple serializable object that will pass as props to the modal (optional)
                 navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
                 navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
@@ -99,21 +90,13 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
-        ImagePicker.openPicker(imgOpt).then(image => {
-            console.log(image);
+        ImagePicker.openPicker(imgOpt).then(leftImg => {
+            this.setState({leftImg});
+            ImagePicker.openPicker(imgOpt).then(rightImg => {
+                this.setState({rightImg});
+                console.log(this.state);
+            });
         });
-        // console.log(ImagePicker.showImagePicker);
-        /*ImagePicker.showImagePicker(options, (response) => {
-            if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else {
-                let source = { uri: response.uri };
-                Alert.alert('aa', response.uri)
-                this.setState({
-                    avatar: source
-                });
-            }
-        });*/
     }
 }
 
