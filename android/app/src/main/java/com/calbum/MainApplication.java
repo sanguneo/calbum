@@ -17,7 +17,6 @@ import android.app.Activity;
 */
 import java.util.Arrays;
 import com.rnfs.RNFSPackage;
-import com.imagepicker.ImagePickerPackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -70,8 +69,7 @@ public class MainApplication extends NavigationApplication {
     @Override
     public List<ReactPackage> createAdditionalReactPackages() {
         return Arrays.<ReactPackage>asList(
-            new RNFSPackage(),
-            new ImagePickerPackage()
+            new RNFSPackage()
         );
     }
 }

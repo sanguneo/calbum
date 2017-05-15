@@ -35,7 +35,7 @@ export default class SecondScreen extends Component {
         var files = [];
         var self = this;
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        RNFS.readDir(RNFS.DocumentDirectoryPath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+        RNFS.readDir(RNFS.DocumentDirectoryPath + '/../../com.calbum.provider/app_images/Pictures/') // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
             .then((result) => {
                 console.log('GOT RESULT', result);
                 result.forEach((itm) => {

@@ -6,33 +6,32 @@ import {
     ScrollView,
     TouchableOpacity,
     StyleSheet,
+    Alert
 } from 'react-native';
 
-const ImagePicker = require('react-native-image-picker');
-
 var options = {
-    title: 'Select Avatar',
-    customButtons: [
-        {name: 'fb', title: 'Choose Photo from Facebook'},
-    ],
+    title: '이미지 선택',
+    cancelButtonTitle: '취소',
+    takePhotoButtonTitle: '촬영',
+    chooseFromLibraryButtonTitle: '불러오기',
     storageOptions: {
-        skipBackup: true,
-        path: 'images'
+        skipBackup: true
     }
 };
 
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.navigator);
-
+        this.state = {
+            avatar: require('../../img/2016080300076_0.jpg')
+        }
     }
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.profile} elevation={5}>
                     <Image
-                        source={require('../../img/2016080300076_0.jpg')}
+                        source={this.state.avatar}
                         style={styles.stretch}
                     />
                     {/*<Text style={styles.name}>상구너</Text>*/}
@@ -94,29 +93,17 @@ export default class SideMenu extends Component {
     }
     _openImagePicker() {
         // console.log(ImagePicker.showImagePicker);
-        ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }
-            else if (response.error) {
+        /*ImagePicker.showImagePicker(options, (response) => {
+            if (response.error) {
                 console.log('ImagePicker Error: ', response.error);
-            }
-            else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            }
-            else {
+            } else {
                 let source = { uri: response.uri };
-
-                // You can also display the image using data:
-                // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
+                Alert.alert('aa', response.uri)
                 this.setState({
-                    avatarSource: source
+                    avatar: source
                 });
             }
-        });
+        });*/
     }
 }
 
