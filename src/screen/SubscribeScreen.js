@@ -10,7 +10,8 @@ import {
     Text,
     ScrollView,
     View,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-crop-picker';
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     img :{
-      width: window.width / 2,
-      height: window.width
+      width: Dimensions.get('window').width / 2,
+      height: Dimensions.get('window').width
     }
 });
