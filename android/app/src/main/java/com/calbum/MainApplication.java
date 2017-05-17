@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.app.Activity;
 */
 import java.util.Arrays;
-import com.rnfs.RNFSPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.sanguneo.image2merge.Image2mergePackage;
 
@@ -71,7 +70,6 @@ public class MainApplication extends NavigationApplication {
     @Override
     public List<ReactPackage> createAdditionalReactPackages() {
         return Arrays.<ReactPackage>asList(
-            new RNFSPackage(),
             new PickerPackage(),
             new Image2mergePackage()
         );

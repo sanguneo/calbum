@@ -12,8 +12,6 @@ import {
     Alert
 } from 'react-native';
 
-var RNFS = require('react-native-fs');
-
 export default class SecondScreen extends Component {
     static navigatorButtons = {
         rightButtons: [{
@@ -35,18 +33,6 @@ export default class SecondScreen extends Component {
         var files = [];
         var self = this;
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        RNFS.readDir(RNFS.DocumentDirectoryPath + '/../../com.calbum.provider/app_images/Pictures/') // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-            .then((result) => {
-                console.log('GOT RESULT', result);
-                result.forEach((itm) => {
-                    files.push(itm.path);
-                });
-            }).then(() => {
-                console.log(files.join('\n'));
-                self.setState({files: files.join('\n')});
-            }).catch((err) => {
-                console.log(err.message, err.code);
-            });
     }
 
     onNavigatorEvent(event) {

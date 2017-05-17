@@ -78,7 +78,7 @@ export default class SideMenu extends Component {
                 navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
                 animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
             });
-        }else {
+        } else {
             this.props.navigator.showModal({
                 screen: "calbum.ThirdScreen", // unique ID registered with Navigation.registerScreen
                 title: "Modal", // title of the screen as appears in the nav bar (optional)
