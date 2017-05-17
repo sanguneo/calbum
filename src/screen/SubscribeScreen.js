@@ -11,17 +11,19 @@ import {
     ScrollView,
     View,
     Image,
-    Dimensions
+    Dimensions,
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-crop-picker';
+import Image2merge from '../../native_modules/image2merge'
+
 const imgOpt = {
     width: 200,
     height: 400,
     cropping: true
 };
-
-const RNFS = require('react-native-fs');
 
 export default class SubscribeScreen extends Component {
     static navigatorButtons = {
@@ -40,18 +42,11 @@ export default class SubscribeScreen extends Component {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
-            success: 'no'
+            success: 'no',
+            uriLeft: require('../../img/2016080300076_0.jpg'),
+            uriRight: require('../../img/2016080300076_0.jpg'),
+            merged: { uri: 'file:///storage/emulated/0/_original_/name.jpg' }
         }
-        var path = RNFS.DocumentDirectoryPath + '/test.txt';
-
-        RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
-            .then((success) => {
-                console.log('FILE WRITTEN!');
-                this.setState({success: 'FILE WRITTEN!'});
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
     }
 
     onNavigatorEvent(event) {
@@ -65,13 +60,46 @@ export default class SubscribeScreen extends Component {
             Alert.alert('알림!!!', '두번째 EDIT');
         }
     }
+    _changeImage(direct) {
+        if (direct === 'left') {
+            ImagePicker.openPicker(imgOpt).then(uriLeft => {
+                this.setState({uriLeft: {uri: uriLeft.path}});
+            });
+        } else {
+            ImagePicker.openPicker(imgOpt).then(uriRight => {
+                this.setState({uriRight: {uri: uriRight.path}});
+            });
+        }
+    }
+    __mergeImage(arg) {
+        let tokenized = arg.split('|');
+        this.setState({merged: {uri: tokenized[1]}});
+    }
+    _mergeImage() {
+        var self = this;
+        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], 'name', (arg) => {
+            self.setState({merged: {uri: arg.replace('_type_','_original_')}});
+            console.log(self.state);
+        });
+    }
 
     render() {
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.imgView}>
-                    <Image source={require('../../img/2016080300076_0.jpg')} style={styles.img} />
-                    <Image source={require('../../img/2016080300076_0.jpg')} style={styles.img} />
+                    <TouchableOpacity onPress={() => {this._changeImage('left')}}>
+                        <Image source={this.state.uriLeft} style={styles.img} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {this._changeImage('right')}}>
+                        <Image source={this.state.uriRight} style={styles.img} />
+                    </TouchableOpacity>
+
+                </View>
+                <TouchableOpacity onPress={() => {this._mergeImage()}}>
+                    <Text>합치기</Text>
+                </TouchableOpacity>
+                <View style={styles.imgView}>
+                    <Image source={this.state.merged} style={styles.merged} />
                 </View>
             </ScrollView>
         );
@@ -89,5 +117,9 @@ const styles = StyleSheet.create({
     img :{
       width: Dimensions.get('window').width / 2,
       height: Dimensions.get('window').width
+    },
+    merged: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').width
     }
 });
