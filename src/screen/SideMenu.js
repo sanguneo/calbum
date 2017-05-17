@@ -27,29 +27,28 @@ export default class SideMenu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.profile} elevation={5}>
+                <View style={styles.profile}>
                     <Image
                         source={this.state.avatar}
                         style={styles.stretch}
                     />
-                    {/*<Text style={styles.name}>상구너</Text>*/}
                 </View>
-                <TouchableOpacity  onPress={() => {this._openModal('second')}}>
+                <TouchableOpacity  onPress={() => {this._openModal('subscribe')}}>
                     <Image
-                        source={require('../../img/navicon_add.png')}
+                        source={require('../../img/quill.png')}
                         style={[styles.leftIcon]}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity  onPress={() => {this._openModal('third')}}>
                     <Image
-                        source={require('../../img/navicon_add.png')}
+                        source={require('../../img/images.png')}
                         style={[styles.leftIcon]}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity  onPress={() => {this._openImagePicker()}}>
                     <Image
-                        source={require('../../img/setting.png')}
-                        style={[styles.leftIcon,{transform: [{ scale: 0.6}]}]}
+                        source={require('../../img/price-tags.png')}
+                        style={[styles.leftIcon]}
                     />
                 </TouchableOpacity>
 
@@ -69,7 +68,7 @@ export default class SideMenu extends Component {
         });
     }
     _openModal(screen) {
-        if (screen === 'second') {
+        if (screen === 'subscribe') {
             this.props.navigator.showModal({
                 screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
                 title: "subscribe", // title of the screen as appears in the nav bar (optional)
@@ -90,13 +89,7 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
-        ImagePicker.openPicker(imgOpt).then(leftImg => {
-            this.setState({leftImg});
-            ImagePicker.openPicker(imgOpt).then(rightImg => {
-                this.setState({rightImg});
-                console.log(this.state);
-            });
-        });
+
     }
 }
 
@@ -153,6 +146,8 @@ const styles = StyleSheet.create({
         height: 64,
         margin: 8,
         tintColor: '#323339',
+        resizeMode: 'contain',
+        transform: [{ scale: 0.6}]
     },
     rotate45: {
         transform: [{ rotate: '45deg'}]

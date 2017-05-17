@@ -45,7 +45,7 @@ export default class SubscribeScreen extends Component {
             success: 'no',
             uriLeft: require('../../img/2016080300076_0.jpg'),
             uriRight: require('../../img/2016080300076_0.jpg'),
-            merged: { uri: 'file:///storage/emulated/0/_original_/name.jpg' }
+            merged: { uri: null }
         }
     }
 
@@ -93,14 +93,10 @@ export default class SubscribeScreen extends Component {
                     <TouchableOpacity onPress={() => {this._changeImage('right')}}>
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
-
                 </View>
                 <TouchableOpacity onPress={() => {this._mergeImage()}}>
                     <Text>합치기</Text>
                 </TouchableOpacity>
-                <View style={styles.imgView}>
-                    <Image source={this.state.merged} style={styles.merged} />
-                </View>
             </ScrollView>
         );
     }
