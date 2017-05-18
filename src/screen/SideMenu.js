@@ -69,13 +69,15 @@ export default class SideMenu extends Component {
     }
     _openModal(screen) {
         if (screen === 'subscribe') {
-            this.props.navigator.showModal({
+            this._toggleDrawer();
+            this.props.navigator.push({
                 screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
-                title: "subscribe", // title of the screen as appears in the nav bar (optional)
+                title: "작성하기", // title of the screen as appears in the nav bar (optional)
                 passProps: {}, // simple serializable object that will pass as props to the modal (optional)
                 navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
                 navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
-                animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+                animated: true,
+                animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
             });
         } else {
             this.props.navigator.showModal({
@@ -84,6 +86,7 @@ export default class SideMenu extends Component {
                 passProps: {}, // simple serializable object that will pass as props to the modal (optional)
                 navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
                 navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+                animated: true,
                 animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
             });
         }

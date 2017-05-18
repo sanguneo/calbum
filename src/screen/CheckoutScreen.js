@@ -22,13 +22,7 @@ import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
 
-const imgOpt = {
-    width: 200,
-    height: 400,
-    cropping: true
-};
-
-export default class SubscribeScreen extends Component {
+export default class CheckoutScreen extends Component {
     static navigatorButtons = {
         leftButtons: [],
         rightButtons: [
@@ -44,8 +38,6 @@ export default class SubscribeScreen extends Component {
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             success: 'no',
-            uriLeft: require('../../img/2016080300076_0.jpg'),
-            uriRight: require('../../img/2016080300076_0.jpg'),
             merged: { uri: null },
             title: '',
             recipe: ''
@@ -53,46 +45,10 @@ export default class SubscribeScreen extends Component {
     }
 
     onNavigatorEvent(event) {
-        if (event.id === 'menu') {
-            this.props.navigator.toggleDrawer({
-                side: 'left',
-                animated: true
-            });
-        }
         if (event.id === 'save') {
-            Alert.alert(
-                '작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
-                [
-                    {text: '확인', onPress: () => {
-                        this._mergeImage();
-                        this.props.navigator.pop({
-                            animated: true // does the pop have transition animation or does it happen immediately (optional)
-                        });
-                    }},
-                    {text: '취소'},
-                ],
-                { cancelable: true }
-            );
-        }
-    }
-    _changeImage(direct) {
-        if (direct === 'left') {
-            ImagePicker.openPicker(imgOpt).then(uriLeft => {
-                this.setState({uriLeft: {uri: uriLeft.path}});
-            });
-        } else {
-            ImagePicker.openPicker(imgOpt).then(uriRight => {
-                this.setState({uriRight: {uri: uriRight.path}});
-            });
-        }
-    }
-    _mergeImage() {
-        var self = this;
-        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], 'name', (arg) => {
-            self.setState({merged: {uri: arg.replace('_type_','_original_')}});
-        });
-    }
 
+        }
+    }
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -107,9 +63,6 @@ export default class SubscribeScreen extends Component {
                 />
                 <View style={styles.imgView}>
                     <TouchableOpacity onPress={() => {this._changeImage('left')}}>
-                        <Image source={this.state.uriLeft} style={styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {this._changeImage('right')}}>
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
                 </View>

@@ -95,6 +95,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
@@ -115,10 +116,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
-            minifyEnabled true
         }
     }
     // applicationVariants are e.g. debug, release

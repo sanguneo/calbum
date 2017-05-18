@@ -2,6 +2,7 @@ import {Navigation} from 'react-native-navigation';
 
 import IntroScreen from './IntroScreen';
 import SubscribeScreen from './SubscribeScreen';
+import CheckoutScreen from './CheckoutScreen';
 import SecondScreen from './SecondScreen';
 import ThirdScreen from './ThirdScreen';
 import SideMenu from './SideMenu';
@@ -10,6 +11,7 @@ import SideMenu from './SideMenu';
 export function registerScreens() {
     Navigation.registerComponent('calbum.IntroScreen', () => IntroScreen);
     Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen);
+    Navigation.registerComponent('calbum.CheckoutScreen', () => CheckoutScreen);
     Navigation.registerComponent('calbum.SecondScreen', () => SecondScreen);
     Navigation.registerComponent('calbum.ThirdScreen', () => ThirdScreen);
     Navigation.registerComponent('calbum.SideMenu', () => SideMenu);

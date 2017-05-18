@@ -20,10 +20,10 @@ export default class IntroScreen extends Component {
             }
         ],
         rightButtons: [
-            {
+            /*{
                 icon: require('../../img/setting.png'),
                 id: 'edit'
-            }
+            }*/
         ]
     };
 
@@ -33,9 +33,9 @@ export default class IntroScreen extends Component {
     }
 
     onNavigatorEvent(event) {
-        if (event.id === 'edit') {
+        /*if (event.id === 'edit') {
             Alert.alert('제목', '클릭됨!!');
-        }
+        }*/
     }
 
     render() {
