@@ -62,9 +62,7 @@ export default class CheckoutScreen extends Component {
                     placeholder={'제목'}
                 />
                 <View style={styles.imgView}>
-                    <TouchableOpacity onPress={() => {this._changeImage('left')}}>
-                        <Image source={this.state.uriRight} style={styles.img} />
-                    </TouchableOpacity>
+                    <Image source={this.state.uriRight} style={styles.img} />
                 </View>
                 <AutoGrowingTextInput
                     style={styles.textbox}
@@ -100,12 +98,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     img :{
-      width: Dimensions.get('window').width / 2,
+      width: Dimensions.get('window').width,
       height: Dimensions.get('window').width
-    },
-    merged: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').width
     },
     textbox: {
         height: 60,

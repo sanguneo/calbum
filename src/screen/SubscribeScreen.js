@@ -88,7 +88,7 @@ export default class SubscribeScreen extends Component {
     }
     _mergeImage() {
         var self = this;
-        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], 'name', (arg) => {
+        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], 'name', 'sanguneo', (arg) => {
             self.setState({merged: {uri: arg.replace('_type_','_original_')}});
         });
     }
@@ -113,6 +113,7 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
                 </View>
+                <Image source={this.state.merged} style={{width: 400, height:400}} />
                 <AutoGrowingTextInput
                     style={styles.textbox}
                     multiline={true}
