@@ -1,5 +1,8 @@
 rootProject.name = 'calbum'
 
+include ':react-native-sqlite-storage'
+project(':react-native-sqlite-storage').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sqlite-storage/src/android')
+
 include ':Image2merge'
 project(':Image2merge').projectDir = new File(rootProject.projectDir, '../native_modules/image2merge/android')
 

@@ -18,6 +18,7 @@ import android.app.Activity;
 import java.util.Arrays;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.sanguneo.image2merge.Image2mergePackage;
+import org.pgsqlite.SQLitePluginPackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -70,6 +71,7 @@ public class MainApplication extends NavigationApplication {
     @Override
     public List<ReactPackage> createAdditionalReactPackages() {
         return Arrays.<ReactPackage>asList(
+            new SQLitePluginPackage(),
             new PickerPackage(),
             new Image2mergePackage()
         );

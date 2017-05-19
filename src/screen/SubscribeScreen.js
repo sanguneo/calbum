@@ -113,7 +113,6 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
                 </View>
-                <Image source={this.state.merged} style={{width: 400, height:400}} />
                 <AutoGrowingTextInput
                     style={styles.textbox}
                     multiline={true}

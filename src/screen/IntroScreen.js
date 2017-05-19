@@ -11,6 +11,7 @@ import {
     View,
     Alert
 } from 'react-native';
+import dbSvc from '../service/calbumdb_svc';
 
 export default class IntroScreen extends Component {
     static navigatorButtons = {
@@ -29,22 +30,22 @@ export default class IntroScreen extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            rows: []
+        }
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        var db = new dbSvc();
+        db.initialDB();
     }
 
     onNavigatorEvent(event) {
-        /*if (event.id === 'edit') {
-            Alert.alert('제목', '클릭됨!!');
-        }*/
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>
-                    첫페이지!!
-                </Text>
-                <Text style={styles.instructions}>
+                    {this.state.rows.map((row) => (row.idx + '\n'))}
                     페이지를 테스트합니다.
                 </Text>
             </View>
