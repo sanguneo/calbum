@@ -16,6 +16,8 @@ import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screen'
 registerScreens();
 
+import dbSVC from './service/calbumdb_svc';
+
 
 Navigation.startSingleScreenApp({
     screen: {
@@ -50,6 +52,6 @@ Navigation.startSingleScreenApp({
         // },
         disableOpenGesture: false
     },
-    passProps: {},
+    passProps: {dbsvc: new dbSVC(true)},
     animationType: 'fade'
 });

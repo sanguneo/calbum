@@ -99,11 +99,12 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
     }
 
     private String saveBitmapToJpg(Bitmap bitmap, String folder, String name) {
-        String dir_path =Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+folder+"/";
+        Context c = getReactApplicationContext();
+        // String dir_path =Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+folder+"/";
         File directory = null;
         File file = null;
         try {
-            directory = new File(dir_path);
+            directory = new File(c.getFilesDir(), folder);
             if (!directory.exists()) {
                 directory.mkdir();
             }
@@ -187,7 +188,7 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void image2merge(ReadableArray twoParts, String imgName, String idString, Callback callback) throws FileNotFoundException, IOException {
+    public void image2merge(ReadableArray twoParts, String imgName, String idString, Callback callback) throws FileNotFoundException, IOException, IllegalStateException {
         Uri[] partsUri = new Uri[] {
                 Uri.parse(twoParts.getString(0)),
                 Uri.parse(twoParts.getString(1))

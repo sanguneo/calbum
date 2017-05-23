@@ -27,6 +27,7 @@ const imgOpt = {
     height: 400,
     cropping: true
 };
+const regdate = new Date().getTime();
 
 export default class SubscribeScreen extends Component {
     static navigatorButtons = {
@@ -64,7 +65,7 @@ export default class SubscribeScreen extends Component {
                 '작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
                 [
                     {text: '확인', onPress: () => {
-                        this._mergeImage();
+                        this._mergeImage('uniqueKey',regdate);
                         this.props.navigator.pop({
                             animated: true // does the pop have transition animation or does it happen immediately (optional)
                         });
@@ -86,10 +87,11 @@ export default class SubscribeScreen extends Component {
             });
         }
     }
-    _mergeImage() {
+    _mergeImage(uniqkey, regdate, name='example', id='test') {
         var self = this;
-        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], 'name', 'sanguneo', (arg) => {
-            self.setState({merged: {uri: arg.replace('_type_','_original_')}});
+        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey+name, id, (arg) => {
+            var uri = arg.replace('_type_','_original_');
+            self.setState({merged: {uri: uri}});
         });
     }
 
@@ -113,6 +115,7 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
                 </View>
+                <Image source={this.state.merged} style={styles.merged} />
                 <AutoGrowingTextInput
                     style={styles.textbox}
                     multiline={true}
