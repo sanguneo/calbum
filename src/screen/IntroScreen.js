@@ -34,6 +34,9 @@ export default class IntroScreen extends Component {
         }
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         var svcc = props.dbsvc;
+        svcc.getUSER((ret) => {
+            this.setState({rows: ret});
+        });
     }
 
     onNavigatorEvent(event) {
@@ -43,7 +46,7 @@ export default class IntroScreen extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>
-                    {this.state.rows.map((row) => (row.idx + '\n'))}
+                    {this.state.rows}
                     페이지를 테스트합니다.
                 </Text>
             </View>

@@ -27,8 +27,6 @@ const imgOpt = {
     height: 400,
     cropping: true
 };
-const regdate = new Date().getTime();
-
 export default class SubscribeScreen extends Component {
     static navigatorButtons = {
         leftButtons: [],
@@ -43,14 +41,18 @@ export default class SubscribeScreen extends Component {
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        this.crypt = this.props.crypt;
         this.state = {
             success: 'no',
             uriLeft: require('../../img/2016080300076_0.jpg'),
             uriRight: require('../../img/2016080300076_0.jpg'),
             merged: { uri: null },
             title: '',
-            recipe: ''
+            recipe: '',
+            userid: 'test',
+            regdate: new Date().getTime()
         }
+
     }
 
     onNavigatorEvent(event) {
@@ -65,7 +67,7 @@ export default class SubscribeScreen extends Component {
                 '작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
                 [
                     {text: '확인', onPress: () => {
-                        this._mergeImage('uniqueKey',regdate);
+                        this._mergeImage('sss', this.state.userid);
                         this.props.navigator.pop({
                             animated: true // does the pop have transition animation or does it happen immediately (optional)
                         });
@@ -87,12 +89,38 @@ export default class SubscribeScreen extends Component {
             });
         }
     }
-    _mergeImage(uniqkey, regdate, name='example', id='test') {
+    _mergeImage() {
         var self = this;
-        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey+name, id, (arg) => {
-            var uri = arg.replace('_type_','_original_');
+        let uniqkey = this.crypt.getCryptedCode(this.state.regdate);
+        Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey, this.state.userid, (arg) => {
+            let uri = arg.replace('_type_','_original_');
             self.setState({merged: {uri: uri}});
         });
+    }
+    _formCheck(inputid) {
+        switch (inputid) {
+            case 'title':
+                Alert.alert('확인', '제목을 입력해주세요.');
+                break;
+            case 'limg':
+                Alert.alert('확인', '왼쪽 이미지를 선택해주세요.');
+                break;
+            case 'rimg':
+                Alert.alert('확인', '오른쪽 이미지를 선택해주세요.');
+                break;
+            case 'recipe':
+                Alert.alert('확인', '레시피를 입력해주세요.');
+                break;
+            case 'tag':
+                Alert.alert('확인', '테그를 입력해주세요.');
+                break;
+            case 'album':
+                Alert.alert('확인', '사진첩을 입력해주세요.');
+                break;
+            case 'comment':
+                Alert.alert('확인', '코멘트를 입력해주세요.');
+                break;
+        }
     }
 
     render() {
@@ -115,7 +143,6 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
                 </View>
-                <Image source={this.state.merged} style={styles.merged} />
                 <AutoGrowingTextInput
                     style={styles.textbox}
                     multiline={true}

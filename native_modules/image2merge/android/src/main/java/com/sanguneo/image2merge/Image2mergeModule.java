@@ -81,21 +81,7 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         if(src == null)
             return null;
 
-        int width = src.getWidth();
-        int height = src.getHeight();
-        float rate = 0.0f;
-
-        if (width > height) {
-            rate = max / (float) width;
-            height = (int) (height * rate);
-            width = max;
-        } else {
-            rate = max / (float) height;
-            width = (int) (width * rate);
-            height = max;
-        }
-
-        return Bitmap.createScaledBitmap(src, width, height, true);
+        return Bitmap.createScaledBitmap(src, max, max, true);
     }
 
     private String saveBitmapToJpg(Bitmap bitmap, String folder, String name) {
@@ -174,26 +160,26 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         return result;
     }
 
-    public String _image2merge(Uri[] twoParts, String imgName, String idString) throws FileNotFoundException, IOException {
+    public String _image2merge(Uri[] twoParts, String uniqkey, String idString) throws FileNotFoundException, IOException {
         Bitmap[] bitmaps = new Bitmap[] {
                 getImageBitmap(twoParts[0]),
                 getImageBitmap(twoParts[1])
         };
         Bitmap original = _mergeMultiple(bitmaps, idString);
-        Bitmap thumbnail = resizeBitmap(original, 80);
-        String originalUri = saveBitmapToJpg(original, "_original_", imgName);
-        saveBitmapToJpg(thumbnail, "_thumb_", imgName);
+        Bitmap thumbnail = resizeBitmap(original, 100);
+        String originalUri = saveBitmapToJpg(original, "_original_", uniqkey+"_"+idString);
+        saveBitmapToJpg(thumbnail, "_thumb_", uniqkey+"_"+idString);
         String merged = originalUri.replaceAll("_original_", "_type_");
         return merged;
     }
 
     @ReactMethod
-    public void image2merge(ReadableArray twoParts, String imgName, String idString, Callback callback) throws FileNotFoundException, IOException, IllegalStateException {
+    public void image2merge(ReadableArray twoParts, String uniqkey, String idString, Callback callback) throws FileNotFoundException, IOException, IllegalStateException {
         Uri[] partsUri = new Uri[] {
                 Uri.parse(twoParts.getString(0)),
                 Uri.parse(twoParts.getString(1))
         };
-        String ret = _image2merge(partsUri, imgName, idString);
+        String ret = _image2merge(partsUri, uniqkey, idString);
         callback.invoke(ret);
     }
 }

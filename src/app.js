@@ -3,26 +3,21 @@
  * https://github.com/facebook/react-native
  * @flow
  */
-
-import React, {Component} from 'react';
-import {
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
-
 import {Navigation} from 'react-native-navigation';
 
 import {registerScreens} from './screen'
 registerScreens();
 
 import dbSVC from './service/calbumdb_svc';
+import cryptSVC from './service/crypt_svc';
 
+const dbsvc = new dbSVC(true);
+const crypt = new cryptSVC();
 
 Navigation.startSingleScreenApp({
     screen: {
         screen: 'calbum.IntroScreen',
-        title: 'cAlbum'
+        title: 'cAlbum',
     },
     appStyle: {
         screenBackgroundColor: 'white',
@@ -40,18 +35,11 @@ Navigation.startSingleScreenApp({
     },
     drawer: {
         left: {
-            screen: 'calbum.SideMenu'
+            screen: 'calbum.SideMenu',
+            passProps: {dbsvc, crypt}
         },
-        // left: { // optional, define if you want a drawer from the left
-        //     screen: 'example.FirstSideMenu', // unique ID registered with Navigation.registerScreen
-        //     passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-        // },
-        // right: { // optional, define if you want a drawer from the right
-        //     screen: 'example.SecondSideMenu', // unique ID registered with Navigation.registerScreen
-        //     passProps: {} // simple serializable object that will pass as props to all top screens (optional)
-        // },
         disableOpenGesture: false
     },
-    passProps: {dbsvc: new dbSVC(true)},
+    passProps: {dbsvc, crypt},
     animationType: 'fade'
 });

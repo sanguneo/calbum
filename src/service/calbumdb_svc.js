@@ -35,4 +35,18 @@ export default class dbSVC {
             tx.executeSql("INSERT INTO ca_user VALUES (null,'${uniqkey}','${regdate}','${userid}');", []);
         });
     }
+    getUSER(callback) {
+        this.db.transaction((tx) => {
+            tx.executeSql("SELECT * FROM ca_user", [], (tx, results) => {
+                var len = results.rows.length;
+                var ret = [];
+                for (let i = 0; i < len; i++) {
+                    let row = results.rows.item(i);
+                    ret.push(row);
+                }
+                callback(ret);
+                return ret;
+            });
+        });
+    }
 }

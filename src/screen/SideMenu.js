@@ -73,7 +73,7 @@ export default class SideMenu extends Component {
             this.props.navigator.push({
                 screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
                 title: "작성하기", // title of the screen as appears in the nav bar (optional)
-                passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+                passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt}, // simple serializable object that will pass as props to the modal (optional)
                 navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
                 navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
                 animated: true,
