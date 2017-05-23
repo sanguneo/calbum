@@ -10,6 +10,7 @@
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
     "react-native-autogrow-textinput": "^3.0.2",
+    "react-native-image-crop-picker": "^0.13.1",
     "react-native-navigation": "^1.1.45",
     "react-native-sqlite-storage": "^3.3.1"
   },
