@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-crop-picker';
+const RNFS = require('react-native-fs');
 
 const imgOpt = {
     width: 200,
-    height: 400,
+    height: 200,
     cropping: true
 };
 
@@ -27,7 +28,7 @@ export default class SideMenu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.profile}>
+                <TouchableOpacity style={styles.profile} onPress={() => this._openImagePicker()}>
                     <Image
                         source={this.state.avatar}
                         style={styles.stretch}
@@ -97,7 +98,10 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
-
+        ImagePicker.openPicker(imgOpt).then((profile) => {
+            this.setState({avatar: {uri: profile.path}});
+            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+uniquename+'.jpg');
+        });
     }
 }
 

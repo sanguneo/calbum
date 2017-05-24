@@ -142,6 +142,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':Image2merge')
+    compile project(':react-native-fs')
     compile project(':react-native-sqlite-storage')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-navigation')

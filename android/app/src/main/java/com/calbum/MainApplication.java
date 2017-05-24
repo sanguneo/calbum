@@ -19,6 +19,7 @@ import java.util.Arrays;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.sanguneo.image2merge.Image2mergePackage;
 import org.pgsqlite.SQLitePluginPackage;
+import com.rnfs.RNFSPackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -73,7 +74,8 @@ public class MainApplication extends NavigationApplication {
         return Arrays.<ReactPackage>asList(
             new SQLitePluginPackage(),
             new PickerPackage(),
-            new Image2mergePackage()
+            new Image2mergePackage(),
+            new RNFSPackage()
         );
     }
 }

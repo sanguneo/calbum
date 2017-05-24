@@ -44,8 +44,8 @@ export default class SubscribeScreen extends Component {
         this.crypt = this.props.crypt;
         this.state = {
             success: 'no',
-            uriLeft: require('../../img/2016080300076_0.jpg'),
-            uriRight: require('../../img/2016080300076_0.jpg'),
+            uriLeft: require('../../img/plusbtn.jpg'),
+            uriRight: require('../../img/plusbtn.jpg'),
             merged: { uri: null },
             title: '',
             recipe: '',
