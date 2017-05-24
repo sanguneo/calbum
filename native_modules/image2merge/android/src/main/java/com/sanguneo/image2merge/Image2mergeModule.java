@@ -142,7 +142,7 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         id.setTextSize(30);
         id.setAntiAlias(true);
         id.getTextBounds(idString, 0, idString.length(), bounds);
-        id.setAlpha(90);
+        id.setAlpha(95);
 
 
         canvas.drawText("Before", w/4 - 35, h - 30, stroke);
