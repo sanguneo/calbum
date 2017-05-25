@@ -32,6 +32,8 @@ export default class IntroScreen extends Component {
 		svcc.getUSER((ret) => {
 			this.setState({rows: ret});
 		});
+
+
 	}
 	onNavigatorEvent(event) {
 

@@ -25,7 +25,8 @@ export default class SideMenu extends Component {
         this.state = {
             profile: require('../../img/2016080300076_0.jpg'),
             name: '상구너',
-            userid: 'sanguneo'
+            userid: 'sanguneo',
+			uniquekey: this.props.crypt.getCryptedCode(this.props.crypt.getCharCodeSerial('sanguneo'))
         }
         this.props.global.setVar('side', this);
     }
@@ -105,7 +106,7 @@ export default class SideMenu extends Component {
     _openImagePicker() {
         ImagePicker.openPicker(imgOpt).then((profile) => {
             this.setState({profile: {uri: profile.path}});
-            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.userid+'.jpg');
+            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.uniquekey+'_'+this.state.userid+'.jpg');
         });
     }
 }
