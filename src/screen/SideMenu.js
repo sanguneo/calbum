@@ -66,6 +66,11 @@ export default class SideMenu extends Component {
         );
     }
 
+	componentDidMount() {
+		setTimeout(() => {
+		}, 3000);
+	}
+
     _toggleDrawer() {
         this.props.navigator.toggleDrawer({
             to: 'closed',
@@ -100,7 +105,7 @@ export default class SideMenu extends Component {
     _openImagePicker() {
         ImagePicker.openPicker(imgOpt).then((profile) => {
             this.setState({avatar: {uri: profile.path}});
-            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+uniquename+'.jpg');
+            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+'asdfasf'+'.jpg');
         });
     }
 }

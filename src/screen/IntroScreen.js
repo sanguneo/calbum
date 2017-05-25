@@ -9,7 +9,8 @@ import {
 	StyleSheet,
 	Text,
 	View,
-	Alert
+	Alert,
+	Image
 } from 'react-native';
 
 const RNFS = require('react-native-fs');
@@ -51,14 +52,21 @@ export default class IntroScreen extends Component {
 
 	onNavigatorEvent(event) {
 	}
+	componentDidMount() {
+	}
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<View style={styles.container} ref="introscreen">
 				<Text style={styles.welcome}>
 					{this.state.rows}
 					페이지를 테스트합니다.
+
 				</Text>
+				<Image
+					source={this.state.avatar}
+					style={styles.stretch}
+				/>
 			</View>
 		);
 	}
