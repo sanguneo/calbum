@@ -9,8 +9,6 @@ import {
     Alert
 } from 'react-native';
 
-import * as global from '../service/global';
-
 import ImagePicker from 'react-native-image-crop-picker';
 const RNFS = require('react-native-fs');
 
@@ -23,19 +21,20 @@ const imgOpt = {
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
-		//this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
-            avatar: require('../../img/2016080300076_0.jpg'),
-            name: '상구너'
+            profile: require('../../img/2016080300076_0.jpg'),
+            name: '상구너',
+            userid: 'sanguneo'
         }
-        global.setVar('side', this);
+        this.props.global.setVar('side', this);
     }
     render() {
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.profile} onPress={() => this._openImagePicker()}>
                     <Image
-                        source={this.state.avatar}
+                        source={this.state.profile}
                         style={styles.stretch}
                     />
                     <Text style={styles.name}>{this.state.name}</Text>
@@ -69,9 +68,8 @@ export default class SideMenu extends Component {
             </View>
         );
     }
-    _setProfile(avatar, name) {
-        this.setState({avatar, name})
-    }
+	onNavigatorEvent(event) {
+	}
     _toggleDrawer() {
         this.props.navigator.toggleDrawer({
             to: 'closed',
@@ -106,8 +104,8 @@ export default class SideMenu extends Component {
     }
     _openImagePicker() {
         ImagePicker.openPicker(imgOpt).then((profile) => {
-            this.setState({avatar: {uri: profile.path}});
-            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+'asdfasf'+'.jpg');
+            this.setState({profile: {uri: profile.path}});
+            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.userid+'.jpg');
         });
     }
 }

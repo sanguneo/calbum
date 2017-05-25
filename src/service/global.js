@@ -3,8 +3,8 @@
  */
 let gvar = {};
 export function setVar(key, tvar) {
-	gvar.key = tvar;
+	gvar[key] = tvar;
 }
 export function getVar(key) {
-	return gvar.key;
+	return gvar[key];
 }
