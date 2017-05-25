@@ -9,6 +9,8 @@ import {
     Alert
 } from 'react-native';
 
+import * as global from '../service/global';
+
 import ImagePicker from 'react-native-image-crop-picker';
 const RNFS = require('react-native-fs');
 
@@ -21,9 +23,12 @@ const imgOpt = {
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
+		//this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             avatar: require('../../img/2016080300076_0.jpg'),
+            name: '상구너'
         }
+        global.setVar('side', this);
     }
     render() {
         return (
@@ -33,7 +38,7 @@ export default class SideMenu extends Component {
                         source={this.state.avatar}
                         style={styles.stretch}
                     />
-                    <Text style={styles.name}>상구너</Text>
+                    <Text style={styles.name}>{this.state.name}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('subscribe')}}>
                     <Image
@@ -61,22 +66,19 @@ export default class SideMenu extends Component {
                     <Image source={require('../../img/navicon_add.png')} style={[styles.leftIcon, styles.rotate45]} />
                     <Text style={styles.sidetext}>닫기</Text>
                 </TouchableOpacity>
-
             </View>
         );
     }
-
-	componentDidMount() {
-		setTimeout(() => {
-		}, 3000);
-	}
-
+    _setProfile(avatar, name) {
+        this.setState({avatar, name})
+    }
     _toggleDrawer() {
         this.props.navigator.toggleDrawer({
             to: 'closed',
             side: 'left',
             animated: true
         });
+
     }
     _openModal(screen) {
         if (screen === 'subscribe') {

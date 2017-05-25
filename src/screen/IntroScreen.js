@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 const RNFS = require('react-native-fs');
+import * as global from '../service/global';
 
 export default class IntroScreen extends Component {
 	static navigatorButtons = {
@@ -28,10 +29,11 @@ export default class IntroScreen extends Component {
 
 	constructor(props) {
 		super(props);
+		//this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
 			rows: []
 		}
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+
 		var svcc = props.dbsvc;
 		svcc.getUSER((ret) => {
 			this.setState({rows: ret});
@@ -50,9 +52,10 @@ export default class IntroScreen extends Component {
 		});
 	}
 
-	onNavigatorEvent(event) {
-	}
 	componentDidMount() {
+		setTimeout(() => {
+			global.getVar('side').setState({profile:require('../../img/2016080300076_0.jpg'), name:'asdfasfdsdf'});
+		}, 3000)
 	}
 
 	render() {
@@ -61,7 +64,6 @@ export default class IntroScreen extends Component {
 				<Text style={styles.welcome}>
 					{this.state.rows}
 					페이지를 테스트합니다.
-
 				</Text>
 				<Image
 					source={this.state.avatar}
