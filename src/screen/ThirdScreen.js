@@ -14,17 +14,13 @@ import {
 
 
 export default class ThirdScreen extends Component {
-    static navigatorButtons = {
-        rightButtons: [{
-            title: 'Edit',
-            id: 'edit'
-        }
-        ],
-        leftButtons: [{
-            title: 'Menu',
-            id: 'menu'
-        }],
-    };
+	static navigatorButtons = {
+		leftButtons: [
+			{
+				id: 'sideMenu' // id is locked up 'sideMenu'
+			}
+		]
+	};
 
     constructor(props) {
         super(props);
@@ -37,7 +33,7 @@ export default class ThirdScreen extends Component {
     onNavigatorEvent(event) {
         if (event.id === 'menu') {
             this.props.navigator.toggleDrawer({
-                side: 'left',
+                side: 'sideMenu',
                 animated: true
             });
         }

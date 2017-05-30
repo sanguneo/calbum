@@ -50,7 +50,11 @@ export default class SubscribeScreen extends Component {
             title: '',
             recipe: '',
             userid: 'test',
-            regdate: new Date().getTime()
+            tags: '',
+            regdate: new Date().getTime(),
+            uniqkey:'',
+            album: '',
+			comment: ''
         }
 
     }
@@ -63,14 +67,18 @@ export default class SubscribeScreen extends Component {
             });
         }
         if (event.id === 'save') {
+            let regdate = new Date().getTime();
+			let uniqkey = this.crypt.getCryptedCode(regdate+this.crypt.getCharCodeSerial(this.state.userid,1));
+			this.setState({regdate, uniqkey});
             Alert.alert(
                 '작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
                 [
                     {text: '확인', onPress: () => {
-                        this._mergeImage('sss', this.state.userid);
-                        this.props.navigator.pop({
-                            animated: true // does the pop have transition animation or does it happen immediately (optional)
-                        });
+                        //this._mergeImage();
+                        this._insertDB();
+                        // this.props.navigator.pop({
+                        //     animated: true // does the pop have transition animation or does it happen immediately (optional)
+                        // });
                     }},
                     {text: '취소'},
                 ],
@@ -91,11 +99,26 @@ export default class SubscribeScreen extends Component {
     }
     _mergeImage() {
         var self = this;
-        let uniqkey = this.crypt.getCryptedCode(this.state.regdate);
         Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey, this.state.userid, (arg) => {
             let uri = arg.replace('_type_','_original_');
             self.setState({merged: {uri: uri}});
         });
+    }
+    _insertDB() {
+        let i_uniqkey = this.state.uniqkey;
+		let i_regdate = this.state.regdate;
+		let i_title = this.state.title;
+		let i_recipe = this.state.recipe;
+		let i_album = this.state.album;
+		let i_comment = this.state.comment;
+		let i_user = this.state.userid;
+		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
+            "VALUES ('"+i_uniqkey+"','"+i_regdate+"','"+i_title+"','"+i_recipe+"','"+i_album+"','"+i_comment+"','"+i_user+"');";
+		let i_tags = this.state.tags.split(',');
+		console.log(query);
+		console.log(i_tags);
+
+
     }
     _formCheck(inputid) {
         switch (inputid) {
@@ -143,6 +166,16 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.uriRight} style={styles.img} />
                     </TouchableOpacity>
                 </View>
+                <AutoGrowingTextInput
+                    style={styles.textbox}
+                    multiline={true}
+                    editable={true}
+                    autoCorrect={false}
+                    underlineColorAndroid={'transparent'}
+                    onChangeText={(tags) => this.setState({tags})}
+                    value={this.state.tags}
+                    placeholder={'테그'}
+                />
                 <AutoGrowingTextInput
                     style={styles.textbox}
                     multiline={true}

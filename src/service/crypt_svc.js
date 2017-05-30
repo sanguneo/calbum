@@ -19,18 +19,22 @@ export default class crypt {
         else
             return pad(date.getFullYear(),4)+pad(date.getMonth())+pad(date.getDate())+pad(date.getHours())+pad(date.getMinutes())+pad(date.getSeconds());
     }
-    getCharCodeSerial(input) {
+    getCharCodeSerial(input,term=2) {
+		input+='';
 		let ret = '';
-		for(var i=0;i<input.length;i=i+2){
+		for(var i=0;i<input.length;i=i+term){
 			ret += input.charCodeAt(i);
 		}
 		return ret;
     }
     getCharCode(pos, pass=this.passphase) {
+		pass+='';
         let retpos = pos % pass.length;
         return pass.charCodeAt(retpos).toString(16);
     }
     getCryptedCode(input=this.getTime(), pass=this.passphase) {
+        input+='';
+		pass+='';
         let inputtmp = (input.length % 2 === 1)? '0'+ input: input;
         let ret = '';
         for(var i=0;i<inputtmp.length;i=i+2){

@@ -14,7 +14,8 @@ import {
     Dimensions,
     TouchableOpacity,
     Alert,
-    TextInput
+    TextInput,
+    Button
 } from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
@@ -44,8 +45,9 @@ export default class SubscribeScreen extends Component {
         this.crypt = this.props.crypt;
         this.state = {
             success: 'no',
-            profile: { uri: null },
-            name: 'test',
+            profile: this.props.profile[1],
+			userid: this.props.profile[2],
+            name: this.props.profile[3],
         }
 
     }
@@ -100,15 +102,33 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.profile} style={styles.img} />
                     </TouchableOpacity>
                 </View>
-                <TextInput
-                    style={styles.textbox}
-                    editable = {true}
-                    autoCorrect={false}
-                    underlineColorAndroid={'transparent'}
-                    onChangeText={(title) => this.setState({name})}
-                    value={this.state.title}
-                    placeholder={'이름'}
-                />
+                <View style={styles.textView}>
+                    <Text style={styles.text}>아이디: </Text>
+                    <TextInput
+                        style={styles.textbox}
+                        editable = {false}
+                        autoCorrect={false}
+                        underlineColorAndroid={'#aaa'}
+                        onChangeText={(userid) => this.setState({userid})}
+                        value={this.state.userid}
+                        placeholder={'아이디'}
+                    />
+                </View>
+                <View style={styles.textView}>
+                    <Text style={styles.text}>이&nbsp;&nbsp;&nbsp;&nbsp;름: </Text>
+                    <TextInput
+                        style={styles.textbox}
+                        editable = {true}
+                        autoCorrect={false}
+                        underlineColorAndroid={'#aaa'}
+                        onChangeText={(name) => this.setState({name})}
+                        value={this.state.name}
+                        placeholder={'이름'}
+                    />
+                </View>
+                <TouchableOpacity style={styles.button}>
+                    <Image source={require('../../img/checkmark.png')} style={styles.btnimg} /><Text style={styles.btntext} >저장</Text>
+                </TouchableOpacity>
             </ScrollView>
         );
     }
@@ -120,18 +140,64 @@ const styles = StyleSheet.create({
     },
     imgView : {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        height: 300
     },
     img :{
-		margin: (Dimensions.get('window').width - 200) / 2,
         width: 200,
         height: 200,
+        borderWidth: 1,
+        borderColor: '#bbb',
+        marginHorizontal: (Dimensions.get('window').width - 200) / 2,
+		marginVertical: 50,
     },
+    textView: {
+        flex: 1,
+        flexDirection: 'row',
+		flexWrap:'wrap',
+		justifyContent: 'flex-start',
+    },
+    text: {
+        width: (Dimensions.get('window').width - 200) / 2 - 20,
+		height: 60,
+        marginRight: 20,
+		fontSize: 17,
+		color: '#777',
+		textAlign: 'right',
+		alignSelf: 'flex-start',
+        textAlignVertical: 'center'
+	},
     textbox: {
+        width: 200,
         height: 60,
-        paddingLeft: 10,
-        paddingRight: 10,
         fontSize: 17,
-        color: '#000'
-    }
+        color: '#000',
+        textAlign: 'center',
+    },
+    button: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+	    width: 200,
+        height: 50,
+		marginHorizontal: (Dimensions.get('window').width - 200) / 2,
+        marginTop: Dimensions.get('window').height - 600,
+        backgroundColor: '#6cbf84',
+        paddingTop: 11,
+		paddingBottom: 19,
+        borderColor: '#dfe2d2',
+        borderWidth:1
+    },
+    btnimg: {
+		width: 30,
+		height: 30,
+		tintColor: '#fff',
+    },
+	btntext: {
+        marginLeft: 20,
+		height: 30,
+		fontSize: 17,
+		textAlignVertical: 'center',
+        color: '#fff'
+	}
 });

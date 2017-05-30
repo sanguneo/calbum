@@ -33,7 +33,7 @@ export default class SideMenu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.profile} onPress={() => this._openImagePicker()}>
+                <TouchableOpacity style={styles.profile} onPress={() => {this._openModal('profile')}}>
                     <Image
                         source={this.state.profile}
                         style={styles.stretch}
@@ -47,9 +47,16 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>작성하기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('third')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('intro')}}>
                     <Image
                         source={require('../../img/images.png')}
+                        style={[styles.leftIcon]}
+                    />
+                    <Text style={styles.sidetext}>전체보기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('third')}}>
+                    <Image
+                        source={require('../../img/book.png')}
                         style={[styles.leftIcon]}
                     />
                     <Text style={styles.sidetext}>앨범보기</Text>
@@ -80,19 +87,45 @@ export default class SideMenu extends Component {
 
     }
     _openModal(screen) {
-        if (screen === 'subscribe') {
-            this._toggleDrawer();
+		if (screen === 'subscribe') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
+				title: "작성하기", // title of the screen as appears in the nav bar (optional)
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt}, // simple serializable object that will pass as props to the modal (optional)
+				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+				animated: true,
+				animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+			});
+		} else if (screen === 'profile') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.ProfileScreen",
+				title: "프로필",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name]},
+				navigatorStyle: {},
+				navigatorButtons: {},
+				animated: true,
+				animationType: 'fade'
+			});
+		} else if (screen === 'intro') {
+			this._toggleDrawer();
+			this.props.navigator.resetTo({
+				screen: "calbum.IntroScreen",
+				title: "인트로",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name]},
+				navigatorStyle: {},
+				navigatorButtons: {leftButtons: [
+					{
+						id: 'sideMenu' // id is locked up 'sideMenu'
+					}
+				]},
+				animated: false,
+				animationType: 'none'
+			});
+		} else {
             this.props.navigator.push({
-                screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
-                title: "작성하기", // title of the screen as appears in the nav bar (optional)
-                passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt}, // simple serializable object that will pass as props to the modal (optional)
-                navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-                navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
-                animated: true,
-                animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-            });
-        } else {
-            this.props.navigator.showModal({
                 screen: "calbum.ThirdScreen", // unique ID registered with Navigation.registerScreen
                 title: "Modal", // title of the screen as appears in the nav bar (optional)
                 passProps: {}, // simple serializable object that will pass as props to the modal (optional)
@@ -151,9 +184,9 @@ const styles = StyleSheet.create({
     profile: {
         width: 200,
         height: 200,
-        elevation: 2,
+        // elevation: 2,
         marginBottom: 10,
-        borderColor: '#000',
+        // borderColor: '#000',
     },
     stretch: {
         width: 200,

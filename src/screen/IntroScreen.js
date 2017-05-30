@@ -38,6 +38,7 @@ export default class IntroScreen extends Component {
 	onNavigatorEvent(event) {
 
 	}
+
 	render() {
 		return (
 			<View style={styles.container}>
