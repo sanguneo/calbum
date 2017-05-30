@@ -114,11 +114,9 @@ export default class SubscribeScreen extends Component {
 		let i_user = this.state.userid;
 		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
             "VALUES ('"+i_uniqkey+"','"+i_regdate+"','"+i_title+"','"+i_recipe+"','"+i_album+"','"+i_comment+"','"+i_user+"');";
-		let i_tags = this.state.tags.split(',');
+		let i_tags = this.state.tags.split(',').map(string => string.trim());
 		console.log(query);
 		console.log(i_tags);
-
-
     }
     _formCheck(inputid) {
         switch (inputid) {
