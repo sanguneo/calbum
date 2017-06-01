@@ -228,7 +228,7 @@ export default class SubscribeScreen extends Component {
 					tagTextStyle={styles.tagTextStyle}
 					value={this.state.tags}
 					onChange={this.onChangeTags}
-					tagColor="darkgray"
+					tagColor={commonStyle.placeholderTextColor}
 					tagTextColor="white"
 					inputProps={inputProps}
 					parseOnBlur={true}
