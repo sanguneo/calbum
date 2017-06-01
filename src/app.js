@@ -23,18 +23,18 @@ Navigation.startSingleScreenApp({
     appStyle: {
         screenBackgroundColor: 'white',
         navBarTransparent: false, // make the nav bar transparent, works best with drawUnderNavBar:true,
-        drawUnderNavBar: true,
+        drawUnderNavBar: false,
+		navBarHideOnScroll: false,
+		navBarBackgroundColor: 'white',
         navBarTextColor: '#f26968',
         navBarButtonColor: '#f26968',
+		navBarTitleTextCentered: true, // default: false. centers the title.
+		topBarElevationShadowEnabled: false,
         statusBarHidden: true,
         statusBarTextColorScheme: 'dark',
         statusBarTextColorSchemeSingleScreen: 'dark',
         statusBarBlur: false,
-        navBarBackgroundColor: 'white',
         orientation: 'portrait',
-        forceTitlesDisplay: true,
-		navBarTitleTextCentered: true, // default: false. centers the title.
-		topBarElevationShadowEnabled: false,
     },
     drawer: {
         left: {

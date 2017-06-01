@@ -21,6 +21,7 @@ export default class dbSVC {
             });
         }
     }
+
     test() {
         return this.db;
     }
@@ -49,4 +50,19 @@ export default class dbSVC {
             });
         });
     }
+	_getAlbum(callback, user_key) {
+		let userFind = user_key ? " WHERE user_key='"+user_key +"';" : "";
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_album" + userFind, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+
 }
