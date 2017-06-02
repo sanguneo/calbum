@@ -153,6 +153,9 @@ export default class SubscribeScreen extends Component {
 	}
 
 	_insertDB() {
+		if (!this._formCheck()) {
+			return;
+		}
 		let i_uniqkey = this.state.uniqkey;
 		let i_regdate = this.state.regdate;
 		let i_title = this.state.title;
@@ -167,30 +170,32 @@ export default class SubscribeScreen extends Component {
 		console.log(i_tags);
 	}
 
-	_formCheck(inputid) {
-		switch (inputid) {
-			case 'title':
-				Alert.alert('확인', '제목을 입력해주세요.');
-				break;
-			case 'limg':
-				Alert.alert('확인', '왼쪽 이미지를 선택해주세요.');
-				break;
-			case 'rimg':
-				Alert.alert('확인', '오른쪽 이미지를 선택해주세요.');
-				break;
-			case 'recipe':
-				Alert.alert('확인', '레시피를 입력해주세요.');
-				break;
-			case 'tag':
-				Alert.alert('확인', '테그를 입력해주세요.');
-				break;
-			case 'album':
-				Alert.alert('확인', '사진첩을 입력해주세요.');
-				break;
-			case 'comment':
-				Alert.alert('확인', '코멘트를 입력해주세요.');
-				break;
+	_formCheck() {
+		if (this.state.title === '') {
+			Alert.alert('확인', '제목을 입력해주세요.');
+			return false;
 		}
+		if (this.state.uriLeft.uri === '') {
+			Alert.alert('확인', '왼쪽 이미지를 선택해주세요.');
+			return false;
+		}
+		if (this.state.uriRight.uri === '') {
+			Alert.alert('확인', '오른쪽 이미지를 선택해주세요.');
+			return false;
+		}
+		// if (this.state.recipe === '') {
+		// 	Alert.alert('확인', '레시피를 입력해주세요.');
+		// 	return;
+		// }
+		// if (this.state.tags.length == 0) {
+		// 	Alert.alert('확인', '테그를 입력해주세요.');
+		// 	return;
+		// }
+		// if (this.state.title === '') {
+		// 	Alert.alert('확인', '사진첩을 입력해주세요.');
+		// 	return;
+		// }
+		return true;
 	}
 
 	render() {
