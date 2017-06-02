@@ -23,7 +23,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var styles = _reactNative.StyleSheet.create({
   line: {
     flex: 1,
-    height: .5,
+    height: 1,
     backgroundColor: '#b3b3b3',
   },
   text: {

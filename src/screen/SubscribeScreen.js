@@ -248,7 +248,7 @@ export default class SubscribeScreen extends Component {
 					<Hr lineColor={commonStyle.hrColor}/>
 					<LabeledInput label={"레시피"} direction={"vertical"}>
 						<AutoGrowingTextInput
-							style={[styles.textboxag, {marginLeft: 32,}]}
+							style={[styles.textboxag]}
 							multiline={true}
 							editable={true}
 							autoCorrect={false}
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
 	},
 	textboxag: {
 		height: 60,
-		marginLeft: 25,
-		marginRight: 30,
+		marginLeft: 20,
+		marginRight: 20,
 		fontSize: 16,
 		color: '#000',
 		marginBottom: 10,
