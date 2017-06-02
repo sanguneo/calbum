@@ -91,7 +91,7 @@ export default class SideMenu extends Component {
 			this._toggleDrawer();
 			this.props.navigator.push({
 				screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
-				title: "작성하기", // title of the screen as appears in the nav bar (optional)
+				title: "디자인 작성하기", // title of the screen as appears in the nav bar (optional)
 				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt}, // simple serializable object that will pass as props to the modal (optional)
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
@@ -184,9 +184,9 @@ const styles = StyleSheet.create({
     profile: {
         width: 200,
         height: 200,
-        // elevation: 2,
+        elevation: 1,
         marginBottom: 10,
-        // borderColor: '#000',
+        borderColor: '#000',
     },
     stretch: {
         width: 200,

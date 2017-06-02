@@ -19,7 +19,9 @@ import {
 } from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
+import Hr from '../component/LabeledInput';
 import TagInput from '../component/TagInput';
+import LabeledInput from '../component/LabeledInput';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
@@ -32,12 +34,14 @@ const imgOpt = {
 
 const inputProps = {
 	keyboardType: 'default',
-	placeholder: '태그',
+	placeholder: '테그',
 	autoFocus: false,
 };
 
 const commonStyle = {
-	placeholderTextColor: '#bbb'
+	placeholderTextColor: '#bbb',
+	hrColor: '#f0f0f0',
+	backgroundColor: '#f0f0f0'
 }
 export default class SubscribeScreen extends Component {
 	static navigatorButtons = {
@@ -54,7 +58,8 @@ export default class SubscribeScreen extends Component {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.navigator.setStyle({
-			navBarHideOnScroll: true
+			navBarHideOnScroll: true,
+			screenBackgroundColor: commonStyle.backgroundColor
 		})
 		this.crypt = this.props.crypt;
 		this.db = this.props.dbsvc;
@@ -127,10 +132,14 @@ export default class SubscribeScreen extends Component {
 		if (direct === 'left') {
 			ImagePicker.openPicker(imgOpt).then(uriLeft => {
 				this.setState({uriLeft: {uri: uriLeft.path}});
+			}).catch(e => {
+				// console.log(e);
 			});
 		} else {
 			ImagePicker.openPicker(imgOpt).then(uriRight => {
 				this.setState({uriRight: {uri: uriRight.path}});
+			}).catch(e => {
+				// console.log(e);
 			});
 		}
 	}
@@ -188,16 +197,6 @@ export default class SubscribeScreen extends Component {
 		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
 		return (
 			<ScrollView style={styles.container}>
-				<TextInput
-					style={styles.textbox}
-					editable={true}
-					autoCorrect={false}
-					underlineColorAndroid={'transparent'}
-					onChangeText={(title) => this.setState({title})}
-					value={this.state.title}
-					placeholder={'제목'}
-					placeholderTextColor={commonStyle.placeholderTextColor}
-				/>
 				<View style={styles.imgView}>
 					<TouchableOpacity onPress={() => {this._changeImage('left')}}>
 						<Image source={this.state.uriLeft} style={styles.img}/>
@@ -206,56 +205,70 @@ export default class SubscribeScreen extends Component {
 						<Image source={this.state.uriRight} style={styles.img}/>
 					</TouchableOpacity>
 				</View>
-				<Picker style={[styles.album, pickerColor]} selectedValue={this.state.album}
-						onValueChange={(itemValue, itemIndex) => {this.setState({album: itemValue});}}>
-					<Picker.Item label={'사진첩 선택안함'} value={''}/>
-					{this.state.albums.map((obj, i) => <Picker.Item key={i} label={obj.label} value={obj.value}/>)}
-				</Picker>
-				{/*<AutoGrowingTextInput
-					style={styles.textbox}
-					multiline={true}
-					editable={true}
-					autoCorrect={false}
-					underlineColorAndroid={'transparent'}
-					onChangeText={(tags) => this.setState({tags})}
-					value={this.state.tags}
-					placeholder={'테그'}
-					placeholderTextColor={commonStyle.placeholderTextColor}
-				/>*/}
-				<TagInput
-					style={styles.tagInputComp}
-					tagContainerStyle={styles.tagContainer}
-					tagTextStyle={styles.tagTextStyle}
-					value={this.state.tags}
-					onChange={this.onChangeTags}
-					tagColor={commonStyle.placeholderTextColor}
-					tagTextColor="white"
-					inputProps={inputProps}
-					parseOnBlur={true}
-					numberOfLines={99}
-				/>
-				<AutoGrowingTextInput
-					style={styles.textbox}
-					multiline={true}
-					editable={true}
-					autoCorrect={false}
-					underlineColorAndroid={'transparent'}
-					onChangeText={(recipe) => this.setState({recipe})}
-					value={this.state.recipe}
-					placeholder={'레시피'}
-					placeholderTextColor={commonStyle.placeholderTextColor}
-				/>
-				<AutoGrowingTextInput
-					style={styles.textbox}
-					multiline={true}
-					editable={true}
-					autoCorrect={false}
-					underlineColorAndroid={'transparent'}
-					onChangeText={(comment) => this.setState({comment})}
-					value={this.state.comment}
-					placeholder={'추가내용'}
-					placeholderTextColor={commonStyle.placeholderTextColor}
-				/>
+				<View style={styles.formWrapper}>
+					<LabeledInput label={"제목"}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							onChangeText={(title) => this.setState({title})}
+							value={this.state.title}
+							placeholder={'제목'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"사진첩"}>
+						<Picker style={[styles.album, pickerColor]} selectedValue={this.state.album} itemStyle={styles.itemStyle}
+								onValueChange={(itemValue, itemIndex) => {this.setState({album: itemValue});}}>
+							<Picker.Item label={'선택안함'} value={''}/>
+							{this.state.albums.map((obj, i) => <Picker.Item key={i} label={obj.label} value={obj.value}/>)}
+						</Picker>
+					</LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"테그"}>
+						<TagInput
+							tagContainerStyle={styles.tagContainer}
+							tagTextStyle={styles.tagTextStyle}
+							value={this.state.tags}
+							onChange={this.onChangeTags}
+							tagColor={commonStyle.placeholderTextColor}
+							tagTextColor="white"
+							inputProps={inputProps}
+							parseOnBlur={true}
+							numberOfLines={99}
+						/>
+					</LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"레시피"} direction={"vertical"}>
+						<AutoGrowingTextInput
+							style={[styles.textboxag, {marginLeft: 32,}]}
+							multiline={true}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							onChangeText={(recipe) => this.setState({recipe})}
+							value={this.state.recipe}
+							placeholder={'레시피'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"추가내용"} direction={"vertical"}>
+						<AutoGrowingTextInput
+							style={styles.textboxag}
+							multiline={true}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							onChangeText={(comment) => this.setState({comment})}
+							value={this.state.comment}
+							placeholder={'추가내용'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
+				</View>
 			</ScrollView>
 		);
 	}
@@ -268,23 +281,41 @@ const styles = StyleSheet.create({
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',
-		width: Dimensions.get('window').width - 20,
-		height: Dimensions.get('window').width -20,
-		marginLeft: 10,
-		marginRight: 10,
+		width: Dimensions.get('window').width ,
+		height: Dimensions.get('window').width,
 	},
 	img: {
-		width: Dimensions.get('window').width / 2 - 10,
-		height: Dimensions.get('window').width - 20,
+		width: Dimensions.get('window').width / 2,
+		height: Dimensions.get('window').width,
+	},
+	formWrapper: {
+		flex: 1,
+		margin: 10,
+		borderRadius:5,
+		backgroundColor: 'white'
+	},
+	labeledtextbox: {
+		height: 60,
+		marginLeft: 10,
+		marginRight: 10,
+		fontSize: 16,
+		color: '#000',
+		textAlign: 'left'
 	},
 	textbox: {
 		height: 60,
 		marginLeft: 10,
 		marginRight: 10,
-		fontSize: 17,
+		fontSize: 16,
 		color: '#000',
-		borderBottomWidth: 1,
-		borderColor: commonStyle.placeholderTextColor,
+		marginBottom: 10,
+	},
+	textboxag: {
+		height: 60,
+		marginLeft: 25,
+		marginRight: 30,
+		fontSize: 16,
+		color: '#000',
 		marginBottom: 10,
 	},
 	album: {
@@ -292,16 +323,13 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		marginRight: 5,
 		color: '#000',
-		borderBottomWidth: 2,
 		borderColor: commonStyle.placeholderTextColor,
-	},
-	tagInputComp:{
-		height: 1000,
+		alignItems: 'center',
 	},
 	tagContainer: {
 		height: 30
 	},
 	tagTextStyle :{
-		fontSize: 17
-	}
+		fontSize: 16
+	},
 });

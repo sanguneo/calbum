@@ -14,7 +14,6 @@
     "react-native-image-crop-picker": "^0.13.1",
     "react-native-navigation": "^1.1.45",
     "react-native-sqlite-storage": "^3.3.1",
-    "react-native-tag-input": "0.0.14"
   },
   "devDependencies": {
     "babel-jest": "19.0.0",

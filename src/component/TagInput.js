@@ -319,8 +319,8 @@ const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
 		flexDirection: 'row',
-		marginTop: 3,
-		marginBottom: 2,
+		marginTop: 0,
+		marginBottom: 20,
 		marginLeft: 14,
 		marginRight: 14,
 		alignItems: 'flex-start',
@@ -328,24 +328,23 @@ const styles = StyleSheet.create({
 	tagInputContainerScroll: {
 		flex: 1,
 	},
-	tagInputContainer: {
-	},
 	textInput: {
-		height: 36,
-		fontSize: 17,
-		marginBottom: 6,
+		height: 55,
+		fontSize: 16,
+		marginBottom: 5,
 		padding: 0,
 
 	},
 	textInputContainer: {
-		height: 36,
+		height: 62,
+		marginBottom: 8,
 	},
 	tag: {
 		justifyContent: 'center',
 		marginTop: 6,
 		marginRight: 3,
 		padding: 8,
-		height: 24,
+		height: 26,
 		borderRadius: 2,
 	},
 	tagText: {

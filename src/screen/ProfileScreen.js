@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         width: (Dimensions.get('window').width - 200) / 2 - 20,
 		height: 60,
         marginRight: 20,
-		fontSize: 17,
+		fontSize: 16,
 		color: '#777',
 		textAlign: 'right',
 		alignSelf: 'flex-start',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     textbox: {
         width: 200,
         height: 60,
-        fontSize: 17,
+        fontSize: 16,
         color: '#000',
         textAlign: 'center',
     },
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
 	btntext: {
         marginLeft: 20,
 		height: 30,
-		fontSize: 17,
+		fontSize: 16,
 		textAlignVertical: 'center',
         color: '#fff'
 	}
