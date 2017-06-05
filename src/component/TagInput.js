@@ -264,6 +264,7 @@ class TagInput extends Component {
 			autoCapitalize: 'none',
 			autoCorrect: false,
 			placeholder: 'Start typing',
+			placeholderTextColor: '#bbb',
 			returnKeyType: 'done',
 			keyboardType: 'default',
 			underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -271,7 +272,7 @@ class TagInput extends Component {
 
 		const inputProps = { ...defaultInputProps, ...this.props.inputProps };
 
-		const wrapperHeight = (lines - 1) * 40 + 36;
+		const wrapperHeight = (lines - 1) * 50 + 36;
 
 		const width = inputWidth ? inputWidth : 400;
 
@@ -319,8 +320,8 @@ const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
 		flexDirection: 'row',
-		marginTop: 0,
-		marginBottom: 20,
+		marginTop: 3,
+		marginBottom: 3,
 		marginLeft: 14,
 		marginRight: 14,
 		alignItems: 'flex-start',
@@ -329,14 +330,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	textInput: {
-		height: 55,
+		height: 35,
 		fontSize: 16,
-		marginBottom: 5,
 		padding: 0,
 
 	},
 	textInputContainer: {
-		height: 62,
+		height: 42,
 		marginBottom: 8,
 	},
 	tag: {
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
 		marginTop: 6,
 		marginRight: 3,
 		padding: 8,
-		height: 26,
+		height: 21,
 		borderRadius: 2,
 	},
 	tagText: {

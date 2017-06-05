@@ -14,20 +14,30 @@ import {
     Dimensions,
     TouchableOpacity,
     Alert,
-    TextInput,
-    Button
+    TextInput
 } from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
+
+import LabeledInput from '../component/LabeledInput';
+import Hr from '../component/Hr';
+import Button from '../component/Button';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
 
 const imgOpt = {
-    width: 200,
+    width: 400,
     height: 400,
     cropping: true
 };
+
+const commonStyle = {
+	placeholderTextColor: '#bbb',
+	hrColor: '#000',
+	backgroundColor: '#f5f5f5'
+}
+
 export default class SubscribeScreen extends Component {
     static navigatorButtons = {
         leftButtons: [],
@@ -102,33 +112,36 @@ export default class SubscribeScreen extends Component {
                         <Image source={this.state.profile} style={styles.img} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.textView}>
-                    <Text style={styles.text}>아이디: </Text>
-                    <TextInput
-                        style={styles.textbox}
-                        editable = {false}
-                        autoCorrect={false}
-                        underlineColorAndroid={'#aaa'}
-                        onChangeText={(userid) => this.setState({userid})}
-                        value={this.state.userid}
-                        placeholder={'아이디'}
-                    />
+                <View style={styles.formWrapper}>
+                    <LabeledInput label={"아이디"}>
+                        <TextInput
+                            style={styles.labeledtextbox}
+                            editable={true}
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            onChangeText={(userid) => this.setState({userid})}
+                            value={this.state.userid}
+                            placeholder={'아이디'}
+                            placeholderTextColor={commonStyle.placeholderTextColor}
+                        />
+                    </LabeledInput>
+                    <Hr lineColor={commonStyle.hrColor}/>
+                    <LabeledInput label={"이름"}>
+                        <TextInput
+                            style={styles.labeledtextbox}
+                            editable={true}
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            onChangeText={(name) => this.setState({name})}
+                            value={this.state.name}
+                            placeholder={'이름'}
+                            placeholderTextColor={commonStyle.placeholderTextColor}
+                        />
+                    </LabeledInput>
                 </View>
-                <View style={styles.textView}>
-                    <Text style={styles.text}>이&nbsp;&nbsp;&nbsp;&nbsp;름: </Text>
-                    <TextInput
-                        style={styles.textbox}
-                        editable = {true}
-                        autoCorrect={false}
-                        underlineColorAndroid={'#aaa'}
-                        onChangeText={(name) => this.setState({name})}
-                        value={this.state.name}
-                        placeholder={'이름'}
-                    />
+                <View style={[styles.formWrapper]}>
+                    <Button imgsource={require('../../img/checkmark.png')}/>
                 </View>
-                <TouchableOpacity style={styles.button}>
-                    <Image source={require('../../img/checkmark.png')} style={styles.btnimg} /><Text style={styles.btntext} >저장</Text>
-                </TouchableOpacity>
             </ScrollView>
         );
     }
@@ -151,53 +164,32 @@ const styles = StyleSheet.create({
         marginHorizontal: (Dimensions.get('window').width - 200) / 2,
 		marginVertical: 50,
     },
-    textView: {
-        flex: 1,
-        flexDirection: 'row',
-		flexWrap:'wrap',
-		justifyContent: 'flex-start',
-    },
-    text: {
-        width: (Dimensions.get('window').width - 200) / 2 - 20,
-		height: 60,
-        marginRight: 20,
-		fontSize: 16,
-		color: '#777',
-		textAlign: 'right',
-		alignSelf: 'flex-start',
-        textAlignVertical: 'center'
-	},
-    textbox: {
-        width: 200,
-        height: 60,
-        fontSize: 16,
-        color: '#000',
-        textAlign: 'center',
-    },
-    button: {
+	formWrapper: {
 		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-	    width: 200,
-        height: 50,
-		marginHorizontal: (Dimensions.get('window').width - 200) / 2,
-        marginTop: Dimensions.get('window').height - 600,
-        backgroundColor: '#6cbf84',
-        paddingTop: 11,
-		paddingBottom: 19,
-        borderColor: '#dfe2d2',
-        borderWidth:1
-    },
-    btnimg: {
-		width: 30,
-		height: 30,
-		tintColor: '#fff',
-    },
-	btntext: {
-        marginLeft: 20,
-		height: 30,
+		margin: 10,
+        marginLeft:50,
+        marginRight: 50,
+		borderRadius:5,
+		backgroundColor: '#f5f5f5'
+	},
+	labeledtextbox: {
+		height: 42,
+
+		margin: 0,
+		marginLeft: 10,
+		marginRight: 10,
+
+
 		fontSize: 16,
-		textAlignVertical: 'center',
-        color: '#fff'
-	}
+		color: '#000',
+		textAlign: 'left'
+	},
+	textbox: {
+		height: 58,
+		marginLeft: 10,
+		marginRight: 10,
+		fontSize: 16,
+		color: '#000',
+		marginBottom: 10,
+	},
 });

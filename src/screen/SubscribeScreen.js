@@ -19,7 +19,8 @@ import {
 } from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
-import Hr from '../component/LabeledInput';
+import Hr from '../component/Hr';
+import Button from '../component/Button';
 import TagInput from '../component/TagInput';
 import LabeledInput from '../component/LabeledInput';
 
@@ -27,8 +28,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
 
 const imgOpt = {
-	width: 200,
-	height: 400,
+	width: 400,
+	height: 500,
 	cropping: true
 };
 
@@ -40,8 +41,8 @@ const inputProps = {
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
-	hrColor: '#f0f0f0',
-	backgroundColor: '#f0f0f0'
+	hrColor: '#000',
+	backgroundColor: '#f5f5f5'
 }
 export default class SubscribeScreen extends Component {
 	static navigatorButtons = {
@@ -59,7 +60,7 @@ export default class SubscribeScreen extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.navigator.setStyle({
 			navBarHideOnScroll: true,
-			screenBackgroundColor: commonStyle.backgroundColor
+			// screenBackgroundColor: commonStyle.backgroundColor
 		})
 		this.crypt = this.props.crypt;
 		this.db = this.props.dbsvc;
@@ -91,20 +92,19 @@ export default class SubscribeScreen extends Component {
 			});
 		}
 		if (event.id === 'save') {
-			let regdate = new Date().getTime();
-			let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userid, 1));
-			this.setState({regdate, uniqkey});
+			//this._mergeImage();
+			this._insertDB();
+			this._insertTag();
+			return;
 			Alert.alert(
 				'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
 				[
 					{
-						text: '확인', onPress: () => {
-						//this._mergeImage();
-						this._insertDB();
-						// this.props.navigator.pop({
-						//     animated: true // does the pop have transition animation or does it happen immediately (optional)
-						// });
-					}
+						text: '확인',
+						onPress: () => {
+							//this._mergeImage();
+							this._insertDB();
+						}
 					},
 					{text: '취소'},
 				],
@@ -146,6 +146,9 @@ export default class SubscribeScreen extends Component {
 
 	_mergeImage() {
 		var self = this;
+		let regdate = new Date().getTime();
+		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userid, 1));
+		this.setState({regdate, uniqkey});
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey, this.state.userid, (arg) => {
 			let uri = arg.replace('_type_', '_original_');
 			self.setState({merged: {uri: uri}});
@@ -165,9 +168,11 @@ export default class SubscribeScreen extends Component {
 		let i_user = this.state.userid;
 		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
 			"VALUES ('" + i_uniqkey + "','" + i_regdate + "','" + i_title + "','" + i_recipe + "','" + i_album + "','" + i_comment + "','" + i_user + "');";
-		let i_tags = this.state.tags.split(',').map(string => string.trim());
 		console.log(query);
 		console.log(i_tags);
+	}
+	_insertTag() {
+		console.log(this.state.tags);
 	}
 
 	_formCheck() {
@@ -197,7 +202,14 @@ export default class SubscribeScreen extends Component {
 		// }
 		return true;
 	}
+	_placeHolder(ref) {
+		this.refs[ref].setState({plabel: {color: 'transparent'}})
 
+	}
+	componentDidMount() {
+		// console.log((this.props.direction == "vertical") ? this.props.children : '');
+
+	}
 	render() {
 		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
 		return (
@@ -209,6 +221,10 @@ export default class SubscribeScreen extends Component {
 					<TouchableOpacity onPress={() => {this._changeImage('right')}}>
 						<Image source={this.state.uriRight} style={styles.img}/>
 					</TouchableOpacity>
+				</View>
+				<Image source={this.state.merged} style={styles.imgView}/>
+				<View style={[styles.bgView,{marginTop: 15}]}>
+					<Text style={{fontSize: 17}}>기본정보</Text>
 				</View>
 				<View style={styles.formWrapper}>
 					<LabeledInput label={"제목"}>
@@ -239,40 +255,48 @@ export default class SubscribeScreen extends Component {
 							value={this.state.tags}
 							onChange={this.onChangeTags}
 							tagColor={commonStyle.placeholderTextColor}
+							placeholderTextColor={commonStyle.placeholderTextColor}
 							tagTextColor="white"
 							inputProps={inputProps}
 							parseOnBlur={true}
 							numberOfLines={99}
 						/>
 					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"레시피"} direction={"vertical"}>
-						<AutoGrowingTextInput
-							style={[styles.textboxag]}
-							multiline={true}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							onChangeText={(recipe) => this.setState({recipe})}
-							value={this.state.recipe}
-							placeholder={'레시피'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"추가내용"} direction={"vertical"}>
-						<AutoGrowingTextInput
-							style={styles.textboxag}
-							multiline={true}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							onChangeText={(comment) => this.setState({comment})}
-							value={this.state.comment}
-							placeholder={'추가내용'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-						/>
-					</LabeledInput>
+				</View>
+				<View style={styles.bgView}>
+					<Text style={{fontSize: 17}}>레시피</Text>
+				</View>
+				<View style={styles.formWrapper}>
+					<AutoGrowingTextInput
+						style={[styles.textboxag]}
+						multiline={true}
+						editable={true}
+						autoCorrect={false}
+						underlineColorAndroid={'transparent'}
+						onChangeText={(recipe) => this.setState({recipe})}
+						value={this.state.recipe}
+						placeholder={'레시피'}
+						placeholderTextColor={commonStyle.placeholderTextColor}
+					/>
+				</View>
+				<View style={styles.bgView}>
+					<Text style={{fontSize: 17}}>코멘트</Text>
+				</View>
+				<View style={styles.formWrapper}>
+					<AutoGrowingTextInput
+						style={styles.textboxag}
+						multiline={true}
+						editable={true}
+						autoCorrect={false}
+						underlineColorAndroid={'transparent'}
+						onChangeText={(comment) => this.setState({comment})}
+						value={this.state.comment}
+						placeholder={'코멘트'}
+						placeholderTextColor={commonStyle.placeholderTextColor}
+					/>
+				</View>
+				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
+					<Button imgsource={require('../../img/checkmark.png')}/>
 				</View>
 			</ScrollView>
 		);
@@ -287,28 +311,39 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		width: Dimensions.get('window').width ,
-		height: Dimensions.get('window').width,
+		height: Dimensions.get('window').width / 1.6,
 	},
 	img: {
 		width: Dimensions.get('window').width / 2,
-		height: Dimensions.get('window').width,
+		height: Dimensions.get('window').width / 1.6,
 	},
 	formWrapper: {
 		flex: 1,
 		margin: 10,
 		borderRadius:5,
-		backgroundColor: 'white'
+		backgroundColor: commonStyle.backgroundColor
+	},
+	bgView: {
+		backgroundColor: 'white',
+		marginLeft: 20,
+		marginRight: 20,
+		marginTop: 3,
+		marginBottom: 2,
 	},
 	labeledtextbox: {
-		height: 60,
+		height: 42,
+
+		margin: 0,
 		marginLeft: 10,
 		marginRight: 10,
+
+
 		fontSize: 16,
 		color: '#000',
 		textAlign: 'left'
 	},
 	textbox: {
-		height: 60,
+		height: 58,
 		marginLeft: 10,
 		marginRight: 10,
 		fontSize: 16,
@@ -316,15 +351,14 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	textboxag: {
-		height: 60,
+		height: 40,
 		marginLeft: 20,
 		marginRight: 20,
 		fontSize: 16,
 		color: '#000',
-		marginBottom: 10,
 	},
 	album: {
-		height: 60,
+		height: 41,
 		marginLeft: 5,
 		marginRight: 5,
 		color: '#000',
@@ -332,9 +366,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	tagContainer: {
-		height: 30
+		height: 42
 	},
 	tagTextStyle :{
 		fontSize: 16
-	},
+	}
 });
