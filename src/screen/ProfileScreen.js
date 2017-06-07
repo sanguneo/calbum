@@ -58,6 +58,7 @@ export default class SubscribeScreen extends Component {
             profile: this.props.profile[1],
 			userid: this.props.profile[2],
             name: this.props.profile[3],
+			email: this.props.profile[4],
         }
 
     }
@@ -125,8 +126,21 @@ export default class SubscribeScreen extends Component {
                             placeholderTextColor={commonStyle.placeholderTextColor}
                         />
                     </LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"이메일"}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							onChangeText={(email) => this.setState({email})}
+							value={this.state.email}
+							placeholder={'이메일'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
                     <Hr lineColor={commonStyle.hrColor}/>
-                    <LabeledInput label={"이름"}>
+                    <LabeledInput label={"닉네임"}>
                         <TextInput
                             style={styles.labeledtextbox}
                             editable={true}
@@ -134,7 +148,7 @@ export default class SubscribeScreen extends Component {
                             underlineColorAndroid={'transparent'}
                             onChangeText={(name) => this.setState({name})}
                             value={this.state.name}
-                            placeholder={'이름'}
+                            placeholder={'닉네임'}
                             placeholderTextColor={commonStyle.placeholderTextColor}
                         />
                     </LabeledInput>
@@ -170,7 +184,8 @@ const styles = StyleSheet.create({
         marginLeft:50,
         marginRight: 50,
 		borderRadius:5,
-		backgroundColor: '#f5f5f5'
+		backgroundColor: '#f5f5f5',
+		marginBottom: 40,
 	},
 	labeledtextbox: {
 		height: 42,

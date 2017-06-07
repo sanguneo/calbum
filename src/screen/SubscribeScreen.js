@@ -29,7 +29,7 @@ import Image2merge from '../../native_modules/image2merge'
 
 const imgOpt = {
 	width: 400,
-	height: 500,
+	height: 800,
 	cropping: true
 };
 
@@ -216,10 +216,10 @@ export default class SubscribeScreen extends Component {
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
 					<TouchableOpacity onPress={() => {this._changeImage('left')}}>
-						<Image source={this.state.uriLeft} style={styles.img}/>
+						<Image source={this.state.uriLeft} style={[styles.img, {borderRightWidth: 0}]}/>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => {this._changeImage('right')}}>
-						<Image source={this.state.uriRight} style={styles.img}/>
+						<Image source={this.state.uriRight} style={[styles.img, {borderLeftWidth: 0}]}/>
 					</TouchableOpacity>
 				</View>
 				<Image source={this.state.merged} style={styles.imgView}/>
@@ -311,11 +311,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		width: Dimensions.get('window').width ,
-		height: Dimensions.get('window').width / 1.6,
+		height: Dimensions.get('window').width,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	img: {
-		width: Dimensions.get('window').width / 2,
-		height: Dimensions.get('window').width / 1.6,
+		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
+		borderWidth: 1,
+		borderColor:'#f5f5f5'
 	},
 	formWrapper: {
 		flex: 1,

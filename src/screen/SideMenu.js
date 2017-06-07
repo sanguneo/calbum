@@ -26,6 +26,7 @@ export default class SideMenu extends Component {
             profile: require('../../img/2016080300076_0.jpg'),
             name: '상구너',
             userid: 'sanguneo',
+			email: 'sanguneo',
 			uniquekey: this.props.crypt.getCryptedCode(this.props.crypt.getCharCodeSerial('sanguneo'))
         }
         this.props.global.setVar('side', this);
@@ -103,7 +104,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.ProfileScreen",
 				title: "프로필",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -114,7 +115,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.resetTo({
 				screen: "calbum.IntroScreen",
 				title: "인트로",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {leftButtons: [
 					{
