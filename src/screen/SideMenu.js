@@ -24,13 +24,38 @@ export default class SideMenu extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             profile: require('../../img/2016080300076_0.jpg'),
-            name: '상구너',
-            userid: 'sanguneo',
-			email: 'sanguneo',
-			uniquekey: this.props.crypt.getCryptedCode(this.props.crypt.getCharCodeSerial('sanguneo'))
+            name: '',
+            userid: '',
+			email: '',
+			uniquekey: ''
         }
         this.props.global.setVar('side', this);
+		this.props.global.setVar('f', console.log);
     }
+    componentDidMount(){
+    	this.props.dbsvc.getUSER((ret) =>{
+    		if(ret.length > 0) {
+    			console.log(ret);
+    			this.setState({
+					profile: {uri: ret[0].path},
+					name: ret[0].name,
+					userid: ret[0].user_id,
+					email: ret[0].email,
+					uniquekey: ret[0].unique_key
+				})
+			} else {
+				this.props.navigator.push({
+					screen: "calbum.ProfileScreen",
+					title: "프로필 생성하기",
+					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+					navigatorStyle: {},
+					navigatorButtons: {},
+					animated: true,
+					animationType: 'fade'
+				});
+			}
+		})
+	}
     render() {
         return (
             <View style={styles.container}>
@@ -88,12 +113,17 @@ export default class SideMenu extends Component {
 
     }
     _openModal(screen) {
+    	let userinfo = {
+    		name: this.state.name,
+			userid: this.state.userid,
+			uniquekey: this.state.uniquekey,
+		};
 		if (screen === 'subscribe') {
 			this._toggleDrawer();
 			this.props.navigator.push({
 				screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
 				title: "디자인 작성하기", // title of the screen as appears in the nav bar (optional)
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt}, // simple serializable object that will pass as props to the modal (optional)
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 				animated: true,
@@ -104,7 +134,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.ProfileScreen",
 				title: "프로필",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profileCreate: false, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -138,10 +168,11 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
-        ImagePicker.openPicker(imgOpt).then((profile) => {
-            this.setState({profile: {uri: profile.path}});
-            RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.uniquekey+'_'+this.state.userid+'.jpg');
-        });
+    	console.log(this.props.userinfo);
+        // ImagePicker.openPicker(imgOpt).then((profile) => {
+        //     this.setState({profile: {uri: profile.path}});
+        //     RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.uniquekey+'_'+this.state.userid+'.jpg');
+        // });
     }
 }
 

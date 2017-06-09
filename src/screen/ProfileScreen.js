@@ -24,7 +24,8 @@ import Hr from '../component/Hr';
 import Button from '../component/Button';
 
 import ImagePicker from 'react-native-image-crop-picker';
-import Image2merge from '../../native_modules/image2merge'
+const RNFS = require('react-native-fs');
+import md5 from '../service/md5';
 
 const imgOpt = {
     width: 400,
@@ -38,7 +39,7 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 }
 
-export default class SubscribeScreen extends Component {
+export default class ProfileScreen extends Component {
     static navigatorButtons = {
         leftButtons: [],
         rightButtons: [
@@ -59,6 +60,9 @@ export default class SubscribeScreen extends Component {
 			userid: this.props.profile[2],
             name: this.props.profile[3],
 			email: this.props.profile[4],
+			pass: '',
+			passchk: '',
+			uniqkey: ''
         }
 
     }
@@ -85,12 +89,16 @@ export default class SubscribeScreen extends Component {
             );
         }
     }
-    _changeImage(direct) {
+    _changeImage() {
         ImagePicker.openPicker(imgOpt).then(profile => {
-            this.setState({profile: {uri: profile.path}});
-			this.props.global.getVar('side').setState({profile: {uri: profile.path}});
+			this.setState({profile: {uri: profile.path}});
         });
     }
+    _saveProfileImage() {
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpg';
+		RNFS.moveFile(this.state.profile.uri, pPath);
+		this.props.global.getVar('side').setState({profile: {uri: 'file://'+pPath}});
+	}
     _formCheck(inputid) {
         switch (inputid) {
             case 'title':
@@ -101,10 +109,37 @@ export default class SubscribeScreen extends Component {
                 break;
         }
     }
-
-	componentDidMount() {
+    _setUnique() {
+		let regdate = new Date().getTime();
+		let uniqkey = this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(this.state.userid, 1));
+		this.setState({regdate, uniqkey})
 	}
-
+    _submit() {
+    	this._setUnique();
+		if(this.props.profileCreate) {
+			this.props.dbsvc.editUSER(this.state.uniqkey,this.state.regdate, this.state.userid, this.state.name, md5(this.state.pass),(ret) => {
+				console.log(ret);
+				this._saveProfileImage();
+			});
+		}else {
+			this.props.dbsvc.regUSER(this.state.uniqkey,this.state.regdate, this.state.userid, this.state.name, md5(this.state.pass),(ret) => {
+				console.log(ret);
+				this._saveProfileImage();
+			});
+		}
+	}
+	componentWillMount() {
+		this.props.dbsvc.getUSER((ret) => {
+			let row = ret[0]
+			this.setState({
+				profile: {uri: RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg'},
+				userid: row.user_id,
+				name: row.name,
+				email: row.email,
+				uniqkey: row.unique_key
+			});
+		});
+	}
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -122,7 +157,7 @@ export default class SubscribeScreen extends Component {
                             underlineColorAndroid={'transparent'}
                             onChangeText={(userid) => this.setState({userid})}
                             value={this.state.userid}
-                            placeholder={'아이디'}
+                            placeholder={'아이디를 입력해주세요'}
                             placeholderTextColor={commonStyle.placeholderTextColor}
                         />
                     </LabeledInput>
@@ -135,7 +170,7 @@ export default class SubscribeScreen extends Component {
 							underlineColorAndroid={'transparent'}
 							onChangeText={(email) => this.setState({email})}
 							value={this.state.email}
-							placeholder={'이메일'}
+							placeholder={'이메일을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>
@@ -148,10 +183,36 @@ export default class SubscribeScreen extends Component {
                             underlineColorAndroid={'transparent'}
                             onChangeText={(name) => this.setState({name})}
                             value={this.state.name}
-                            placeholder={'닉네임'}
+                            placeholder={'닉네임을 입력해주세요'}
                             placeholderTextColor={commonStyle.placeholderTextColor}
                         />
                     </LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"비밀번호"}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							onChangeText={(pass) => this.setState({pass})}
+							value={this.state.pass}
+							placeholder={'비밀번호를 입력해주세요'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"확인"}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							onChangeText={(passchk) => this.setState({passchk})}
+							value={this.state.passchk}
+							placeholder={'비밀번호를 다시 입력해주세요'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
                 </View>
                 <View style={[styles.formWrapper]}>
                     <Button imgsource={require('../../img/checkmark.png')}/>
@@ -168,7 +229,7 @@ const styles = StyleSheet.create({
     imgView : {
         flex: 1,
         flexDirection: 'row',
-        height: 300
+        height: 250
     },
     img :{
         width: 200,
@@ -176,16 +237,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#bbb',
         marginHorizontal: (Dimensions.get('window').width - 200) / 2,
-		marginVertical: 50,
+		marginVertical: 20,
     },
 	formWrapper: {
 		flex: 1,
 		margin: 10,
-        marginLeft:50,
-        marginRight: 50,
+        marginLeft:45,
+        marginRight: 45,
 		borderRadius:5,
 		backgroundColor: '#f5f5f5',
-		marginBottom: 40,
+		marginBottom: 30,
 	},
 	labeledtextbox: {
 		height: 42,

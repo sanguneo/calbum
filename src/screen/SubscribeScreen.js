@@ -72,6 +72,7 @@ export default class SubscribeScreen extends Component {
 			title: '',
 			recipe: '',
 			userid: 'test',
+			userkey: '',
 			tags: [],
 			regdate: new Date().getTime(),
 			uniqkey: '',
@@ -79,6 +80,7 @@ export default class SubscribeScreen extends Component {
 			comment: '',
 			albums: []
 		}
+		console.log(this.props.crypt.getCryptedCode(this.props.crypt.getCharCodeSerial('test')));
 
 		// console.log(this.db.getTransaction());
 		this._getAlbums();
@@ -92,6 +94,7 @@ export default class SubscribeScreen extends Component {
 			});
 		}
 		if (event.id === 'save') {
+			this._getUniqkey();
 			//this._mergeImage();
 			this._insertDB();
 			this._insertTag();
@@ -143,12 +146,14 @@ export default class SubscribeScreen extends Component {
 			});
 		}
 	}
-
-	_mergeImage() {
-		var self = this;
+	_getUniqkey() {
 		let regdate = new Date().getTime();
 		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userid, 1));
 		this.setState({regdate, uniqkey});
+		return uniqkey;
+	}
+	_mergeImage() {
+		var self = this;
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey, this.state.userid, (arg) => {
 			let uri = arg.replace('_type_', '_original_');
 			self.setState({merged: {uri: uri}});
@@ -156,23 +161,20 @@ export default class SubscribeScreen extends Component {
 	}
 
 	_insertDB() {
-		if (!this._formCheck()) {
-			return;
-		}
-		let i_uniqkey = this.state.uniqkey;
-		let i_regdate = this.state.regdate;
-		let i_title = this.state.title;
-		let i_recipe = this.state.recipe;
-		let i_album = this.state.album;
-		let i_comment = this.state.comment;
-		let i_user = this.state.userid;
+		// if (!this._formCheck()) {
+		// 	return;
+		// }
 		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
-			"VALUES ('" + i_uniqkey + "','" + i_regdate + "','" + i_title + "','" + i_recipe + "','" + i_album + "','" + i_comment + "','" + i_user + "');";
-		console.log(query);
-		console.log(i_tags);
+			"VALUES ('" + this.state.uniqkey + "','" + this.state.regdate + "','" + this.state.title + "','" + this.state.recipe + "','" + this.state.album + "','" + this.state.comment + "','" + this.state.userid + "');";
 	}
 	_insertTag() {
-		console.log(this.state.tags);
+		let i_tags = this.state.tags;
+		let tagquery = '';
+		let tagreturn = (name) => "INSERT INTO `ca_tag`(`name`,`photo_key`,`user_key`) VALUES ('"+name+"','"+this.state.uniqkey+"','"+this.state.userid+"');";
+		i_tags.forEach((name) => {
+			tagquery += tagreturn(name);
+		});
+		this.db._executeQuery(tagquery);
 	}
 
 	_formCheck() {
