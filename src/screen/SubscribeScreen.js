@@ -66,12 +66,12 @@ export default class SubscribeScreen extends Component {
 		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
-			uriLeft: require('../../img/plusbtn.jpg'),
-			uriRight: require('../../img/plusbtn.jpg'),
+			uriLeft: require('../../img/pickphoto.png'),
+			uriRight: require('../../img/pickphoto.png'),
 			merged: {uri: null},
 			title: '',
 			recipe: '',
-			userid: 'test',
+			userid: '',
 			userkey: '',
 			tags: [],
 			regdate: new Date().getTime(),
@@ -80,9 +80,6 @@ export default class SubscribeScreen extends Component {
 			comment: '',
 			albums: []
 		}
-		console.log(this.props.crypt.getCryptedCode(this.props.crypt.getCharCodeSerial('test')));
-
-		// console.log(this.db.getTransaction());
 		this._getAlbums();
 	}
 
@@ -94,30 +91,12 @@ export default class SubscribeScreen extends Component {
 			});
 		}
 		if (event.id === 'save') {
-			this._getUniqkey();
-			//this._mergeImage();
-			this._insertDB();
-			this._insertTag();
-			return;
-			Alert.alert(
-				'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
-				[
-					{
-						text: '확인',
-						onPress: () => {
-							//this._mergeImage();
-							this._insertDB();
-						}
-					},
-					{text: '취소'},
-				],
-				{cancelable: true}
-			);
+			this._submit();
 		}
 	}
 
 	_getAlbums() {
-		this.db._getAlbum((ret) => {
+		this.db.getAlbum((ret) => {
 			let albums = [];
 			ret.forEach((item) => {
 				albums.push({label: item.name, value: item.unique_key})
@@ -125,7 +104,7 @@ export default class SubscribeScreen extends Component {
 			this.setState({albums});
 		});
 	}
-	onChangeTags = (tags) => {
+	_onChangeTags = (tags) => {
 		this.setState({
 			tags,
 		});
@@ -136,21 +115,15 @@ export default class SubscribeScreen extends Component {
 			ImagePicker.openPicker(imgOpt).then(uriLeft => {
 				this.setState({uriLeft: {uri: uriLeft.path}});
 			}).catch(e => {
-				// console.log(e);
+				console.dbg(e);
 			});
 		} else {
 			ImagePicker.openPicker(imgOpt).then(uriRight => {
 				this.setState({uriRight: {uri: uriRight.path}});
 			}).catch(e => {
-				// console.log(e);
+				console.dbg(e);
 			});
 		}
-	}
-	_getUniqkey() {
-		let regdate = new Date().getTime();
-		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userid, 1));
-		this.setState({regdate, uniqkey});
-		return uniqkey;
 	}
 	_mergeImage() {
 		var self = this;
@@ -174,7 +147,7 @@ export default class SubscribeScreen extends Component {
 		i_tags.forEach((name) => {
 			tagquery += tagreturn(name);
 		});
-		this.db._executeQuery(tagquery);
+		this.db.executeQuery(tagquery);
 	}
 
 	_formCheck() {
@@ -190,27 +163,32 @@ export default class SubscribeScreen extends Component {
 			Alert.alert('확인', '오른쪽 이미지를 선택해주세요.');
 			return false;
 		}
-		// if (this.state.recipe === '') {
-		// 	Alert.alert('확인', '레시피를 입력해주세요.');
-		// 	return;
-		// }
-		// if (this.state.tags.length == 0) {
-		// 	Alert.alert('확인', '테그를 입력해주세요.');
-		// 	return;
-		// }
-		// if (this.state.title === '') {
-		// 	Alert.alert('확인', '사진첩을 입력해주세요.');
-		// 	return;
-		// }
 		return true;
 	}
-	_placeHolder(ref) {
-		this.refs[ref].setState({plabel: {color: 'transparent'}})
-
+	_getUniqkey() {
+		let regdate = new Date().getTime();
+		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userid, 1));
+		this.setState({regdate, uniqkey});
+		return uniqkey;
 	}
-	componentDidMount() {
-		// console.log((this.props.direction == "vertical") ? this.props.children : '');
-
+	_submit() {
+		if (!this._formCheck()) return;
+		this._getUniqkey();
+		Alert.alert(
+			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
+			[
+				{
+					text: '확인',
+					onPress: () => {
+						this._mergeImage();
+						this._insertDB();
+						this._insertTag();
+					}
+				},
+				{text: '취소'},
+			],
+			{cancelable: true}
+		);
 	}
 	render() {
 		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
@@ -219,9 +197,11 @@ export default class SubscribeScreen extends Component {
 				<View style={styles.imgView}>
 					<TouchableOpacity onPress={() => {this._changeImage('left')}}>
 						<Image source={this.state.uriLeft} style={[styles.img, {borderRightWidth: 0}]}/>
+						<Text style={[styles.imglabel]}>Before</Text>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => {this._changeImage('right')}}>
 						<Image source={this.state.uriRight} style={[styles.img, {borderLeftWidth: 0}]}/>
+						<Text style={[styles.imglabel]}>After</Text>
 					</TouchableOpacity>
 				</View>
 				<Image source={this.state.merged} style={styles.imgView}/>
@@ -255,7 +235,7 @@ export default class SubscribeScreen extends Component {
 							tagContainerStyle={styles.tagContainer}
 							tagTextStyle={styles.tagTextStyle}
 							value={this.state.tags}
-							onChange={this.onChangeTags}
+							onChange={this._onChangeTags}
 							tagColor={commonStyle.placeholderTextColor}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							tagTextColor="white"
@@ -279,6 +259,7 @@ export default class SubscribeScreen extends Component {
 						value={this.state.recipe}
 						placeholder={'레시피'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
+						blurOnSubmit={true}
 					/>
 				</View>
 				<View style={styles.bgView}>
@@ -295,6 +276,7 @@ export default class SubscribeScreen extends Component {
 						value={this.state.comment}
 						placeholder={'코멘트'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
+						blurOnSubmit={true}
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
@@ -320,8 +302,6 @@ const styles = StyleSheet.create({
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
 		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
-		borderWidth: 1,
-		borderColor:'#f5f5f5'
 	},
 	formWrapper: {
 		flex: 1,
@@ -335,6 +315,13 @@ const styles = StyleSheet.create({
 		marginRight: 20,
 		marginTop: 3,
 		marginBottom: 2,
+	},
+	imglabel: {
+		position: 'absolute',
+		bottom: 10,
+		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		fontSize: 15,
+		textAlign: 'center'
 	},
 	labeledtextbox: {
 		height: 42,

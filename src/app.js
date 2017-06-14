@@ -3,6 +3,10 @@
  * https://github.com/facebook/react-native
  * @flow
  */
+
+console.sdebug = true;
+console.dbg = console.sdebug ? console.log : () => {};
+
 import {Navigation} from 'react-native-navigation';
 const RNFS = require('react-native-fs');
 import {registerScreens} from './screen'

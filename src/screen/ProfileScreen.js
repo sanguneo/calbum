@@ -53,7 +53,8 @@ export default class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        this.crypt = this.props.crypt;
+        this.crypt = props.crypt;
+        this.global = props.global;
         this.state = {
             success: 'no',
             profile: this.props.profile[1],
@@ -75,18 +76,7 @@ export default class ProfileScreen extends Component {
             });
         }
         if (event.id === 'save') {
-            Alert.alert(
-                '작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
-                [
-                    {text: '확인', onPress: () => {
-                        this.props.navigator.pop({
-                            animated: true // does the pop have transition animation or does it happen immediately (optional)
-                        });
-                    }},
-                    {text: '취소'},
-                ],
-                { cancelable: true }
-            );
+			this._submit();
         }
     }
     _changeImage() {
@@ -96,55 +86,81 @@ export default class ProfileScreen extends Component {
     }
     _saveProfileImage() {
 		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpg';
-		RNFS.moveFile(this.state.profile.uri, pPath);
-		this.props.global.getVar('side').setState({profile: {uri: 'file://'+pPath}});
+		RNFS.moveFile(this.state.profile.uri.replace('file://', ''), pPath);
+		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath}});
 	}
-    _formCheck(inputid) {
-        switch (inputid) {
-            case 'title':
-                Alert.alert('확인', '제목을 입력해주세요.');
-                break;
-            case 'comment':
-                Alert.alert('확인', '코멘트를 입력해주세요.');
-                break;
-        }
-    }
-    _setUnique() {
-		let regdate = new Date().getTime();
-		let uniqkey = this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(this.state.userid, 1));
-		this.setState({regdate, uniqkey})
-	}
-    _submit() {
-    	this._setUnique();
-		if(this.props.profileCreate) {
-			this.props.dbsvc.editUSER(this.state.uniqkey,this.state.regdate, this.state.userid, this.state.name, md5(this.state.pass),(ret) => {
-				console.log(ret);
-				this._saveProfileImage();
-			});
-		}else {
-			this.props.dbsvc.regUSER(this.state.uniqkey,this.state.regdate, this.state.userid, this.state.name, md5(this.state.pass),(ret) => {
-				console.log(ret);
-				this._saveProfileImage();
-			});
+    _formCheck() {
+        if (!this.state.profile.uri) {
+			Alert.alert('확인', '이미지를 선택해주세요.');
+			return false;
+		} else if (!this.state.userid && this.state.userid.length >= 4) {
+			Alert.alert('확인', '아이디를 입력해주세요.');
+			this.refs['r_uid'].focus();
+			return false;
+		} else if (!this.state.name && this.state.name.length >= 4) {
+			Alert.alert('확인', '닉네임을 입력해주세요.');
+			this.refs['r_name'].focus();
+			return false;
+		} else if (!this.state.email) {
+			Alert.alert('확인', '이메일을 입력해주세요.');
+			this.refs['r_eml'].focus();
+			return false;
+		} else if (!(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/.test(this.state.email))) {
+			Alert.alert('확인', '이메일을 형식에 맞게 입력해주세요.');
+			this.refs['r_eml'].focus();
+			return false;
+		} else if (this.state.pass.length < 8) {
+			Alert.alert('확인', '패스워드는 8자 이상이어야합니다.');
+			this.refs['r_pass'].focus();
+			return false;
+		} else if (this.state.pass !== this.state.passchk) {
+			Alert.alert('확인', '패스워드 확인문자가 일치하지않습니다.');
+			this.refs['r_chk'].focus();
+			return false;
 		}
+        return true;
+    }
+    _submit() {
+    	if (!this._formCheck()) return;
+
+		Alert.alert(
+			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
+			[
+				{text: '확인', onPress: () => {
+					if (this.props.profileCreate) {
+						this.props.dbsvc.regUSER(this.state.uniqkey, new Date().getTime(), this.state.userid, this.state.name, this.state.email, md5(this.state.pass));
+					} else {
+						this.props.dbsvc.editUSER(this.state.uniqkey, this.state.name, this.state.email, md5(this.state.pass));
+					}
+					this._saveProfileImage();
+					this.props.navigator.pop();
+				}},
+				{text: '취소'},
+			],
+			{ cancelable: true }
+		);
 	}
-	componentWillMount() {
+
+	componentDidMount() {
 		this.props.dbsvc.getUSER((ret) => {
-			let row = ret[0]
-			this.setState({
-				profile: {uri: RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg'},
-				userid: row.user_id,
-				name: row.name,
-				email: row.email,
-				uniqkey: row.unique_key
-			});
+			if (ret.length > 0) {
+				let row = ret[0];
+				this.setState({
+					profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg'},
+					userid: row.user_id,
+					name: row.name,
+					email: row.email.replace('_emailat_', '@'),
+					uniqkey: row.unique_key
+				});
+			}
 		});
 	}
+
     render() {
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.imgView}>
-                    <TouchableOpacity onPress={() => {this._changeImage('left')}}>
+                    <TouchableOpacity onPress={() => {this._changeImage()}}>
                         <Image source={this.state.profile} style={styles.img} />
                     </TouchableOpacity>
                 </View>
@@ -155,7 +171,14 @@ export default class ProfileScreen extends Component {
                             editable={true}
                             autoCorrect={false}
                             underlineColorAndroid={'transparent'}
-                            onChangeText={(userid) => this.setState({userid})}
+							ref={'r_uid'}
+                            onChangeText={(userid) => {
+                            	this.setState({
+                            		userid,
+                            		uniqkey : this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(userid, 1))
+                            	});
+
+                            }}
                             value={this.state.userid}
                             placeholder={'아이디를 입력해주세요'}
                             placeholderTextColor={commonStyle.placeholderTextColor}
@@ -168,10 +191,12 @@ export default class ProfileScreen extends Component {
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
+							ref={'r_eml'}
 							onChangeText={(email) => this.setState({email})}
 							value={this.state.email}
 							placeholder={'이메일을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
+							keyboardType={'email-address'}
 						/>
 					</LabeledInput>
                     <Hr lineColor={commonStyle.hrColor}/>
@@ -181,6 +206,7 @@ export default class ProfileScreen extends Component {
                             editable={true}
                             autoCorrect={false}
                             underlineColorAndroid={'transparent'}
+							ref={'r_name'}
                             onChangeText={(name) => this.setState({name})}
                             value={this.state.name}
                             placeholder={'닉네임을 입력해주세요'}
@@ -194,10 +220,12 @@ export default class ProfileScreen extends Component {
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
+							ref={'r_pass'}
 							onChangeText={(pass) => this.setState({pass})}
 							value={this.state.pass}
 							placeholder={'비밀번호를 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
+							secureTextEntry={true}
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
@@ -207,15 +235,17 @@ export default class ProfileScreen extends Component {
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
+							ref={'r_chk'}
 							onChangeText={(passchk) => this.setState({passchk})}
 							value={this.state.passchk}
 							placeholder={'비밀번호를 다시 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
+							secureTextEntry={true}
 						/>
 					</LabeledInput>
                 </View>
                 <View style={[styles.formWrapper]}>
-                    <Button imgsource={require('../../img/checkmark.png')}/>
+                    <Button imgsource={require('../../img/checkmark.png')} onPress={()=>{this._submit();}}/>
                 </View>
             </ScrollView>
         );
@@ -229,15 +259,16 @@ const styles = StyleSheet.create({
     imgView : {
         flex: 1,
         flexDirection: 'row',
-        height: 250
+        height: 202,
+		width: 202,
+		marginHorizontal: (Dimensions.get('window').width - 202) / 2,
+		marginVertical: 20,
+		borderColor: '#eee',
+		borderWidth: 1
     },
     img :{
         width: 200,
         height: 200,
-        borderWidth: 1,
-        borderColor: '#bbb',
-        marginHorizontal: (Dimensions.get('window').width - 200) / 2,
-		marginVertical: 20,
     },
 	formWrapper: {
 		flex: 1,

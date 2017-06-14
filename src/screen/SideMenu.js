@@ -9,40 +9,32 @@ import {
     Alert
 } from 'react-native';
 
-import ImagePicker from 'react-native-image-crop-picker';
 const RNFS = require('react-native-fs');
-
-const imgOpt = {
-    width: 200,
-    height: 200,
-    cropping: true
-};
 
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
-            profile: require('../../img/2016080300076_0.jpg'),
+            profile: require('../../img/profile.png'),
             name: '',
             userid: '',
 			email: '',
 			uniquekey: ''
         }
-        this.props.global.setVar('side', this);
-		this.props.global.setVar('f', console.log);
+        props.global.setVar('side', this);
     }
-    componentDidMount(){
-    	this.props.dbsvc.getUSER((ret) =>{
-    		if(ret.length > 0) {
-    			console.log(ret);
-    			this.setState({
-					profile: {uri: ret[0].path},
-					name: ret[0].name,
-					userid: ret[0].user_id,
-					email: ret[0].email,
-					uniquekey: ret[0].unique_key
-				})
+    componentDidMount() {
+		this.props.dbsvc.getUSER((ret) =>{
+			if (ret.length > 0) {
+				let row = ret[0];
+				this.setState({
+					profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg'},
+					userid: row.user_id,
+					name: row.name,
+					email: row.email,
+					uniquekey: row.unique_key
+				});
 			} else {
 				this.props.navigator.push({
 					screen: "calbum.ProfileScreen",
@@ -54,7 +46,7 @@ export default class SideMenu extends Component {
 					animationType: 'fade'
 				});
 			}
-		})
+		});
 	}
     render() {
         return (
@@ -87,7 +79,7 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>앨범보기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openImagePicker()}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('tag')}}>
                     <Image
                         source={require('../../img/price-tags.png')}
                         style={[styles.leftIcon]}
@@ -134,7 +126,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.ProfileScreen",
 				title: "프로필",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profileCreate: false, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -168,7 +160,7 @@ export default class SideMenu extends Component {
         }
     }
     _openImagePicker() {
-    	console.log(this.props.userinfo);
+    	console.dbg(this.props.userinfo);
         // ImagePicker.openPicker(imgOpt).then((profile) => {
         //     this.setState({profile: {uri: profile.path}});
         //     RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.uniquekey+'_'+this.state.userid+'.jpg');

@@ -30,10 +30,11 @@ export default class IntroScreen extends Component {
 		}
 		var svcc = props.dbsvc;
 		svcc.getUSER((ret) => {
+			console.dbg('User Info', ret);
 			this.setState({rows: ret});
 		});
 		/*svcc._getTags((ret) => {
-			console.log(ret);
+			console.dbg(ret);
 		});*/
 
 	}

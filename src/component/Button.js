@@ -36,7 +36,7 @@ import {
 export default class Button extends Component{
 	render() {
 		return (
-			<TouchableOpacity style={[styles.button, this.props.style]}>
+			<TouchableOpacity style={[styles.button, this.props.style]} onPress={this.props.onPress}>
 				<Image source={this.props.imgsource} style={styles.btnimg} /><Text style={styles.btntext} >저장</Text>
 			</TouchableOpacity>
 		);

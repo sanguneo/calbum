@@ -33,7 +33,7 @@ export default class dbSVC {
     }
     getUSER(callback) {
         this.db.transaction((tx) => {
-            tx.executeSql("SELECT unique_key, reg_date, user_id, name FROM ca_user", [], (tx, results) => {
+            tx.executeSql("SELECT unique_key, reg_date, user_id, name, email FROM ca_user", [], (tx, results) => {
                 var len = results.rows.length;
                 var ret = [];
                 for (let i = 0; i < len; i++) {
@@ -44,21 +44,18 @@ export default class dbSVC {
             });
         });
     }
-	regUSER(arg_uniquekey, arg_reg_date, arg_user_id, arg_name, arg_passphase, callback) {
+	regUSER(arg_uniquekey, arg_reg_date, arg_user_id, arg_name, arg_email, arg_passphase) {
 		this.db.transaction((tx) => {
-			tx.executeSql( "INSERT INTO `ca_user`(`unique_key`,`reg_date`,`user_id`,`name`,`passphase`) " +
-				"VALUES ('"+arg_uniquekey+"','"+arg_reg_date+"','"+arg_user_id+"','"+arg_name+"','"+arg_passphase+"');", [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
+			tx.executeSql( "INSERT INTO `ca_user`(`unique_key`,`reg_date`,`user_id`,`name`,`email`,`passphase`) " +
+				"VALUES ('"+arg_uniquekey+"','"+arg_reg_date+"','"+arg_user_id+"','"+arg_name+"','"+arg_email+"','"+arg_passphase+"');", [], (tx, results) => {});
 		});
 	}
-	_getAlbum(callback, user_key) {
+	editUSER(arg_uniquekey, arg_name, arg_email, arg_passphase) {
+		this.db.transaction((tx) => {
+			tx.executeSql("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniquekey+"' AND `passphase`='"+arg_passphase+"';", [], (tx, results) => {});
+		});
+	}
+	getAlbum(callback, user_key) {
 		let userFind = user_key ? " WHERE user_key='"+user_key +"';" : "";
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_album" + userFind, [], (tx, results) => {
@@ -72,13 +69,13 @@ export default class dbSVC {
 			});
 		});
 	}
-	_executeQuery(query) {
+	executeQuery(query) {
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {
 			});
 		});
 	}
-	_getTags(callback) {
+	getTags(callback) {
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_tag", [], (tx, results) => {
 				var len = results.rows.length;
@@ -91,7 +88,7 @@ export default class dbSVC {
 			});
 		});
 	}
-	_getTagsByUser(userkey, callback) {
+	getTagsByUser(userkey, callback) {
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_tag WHERE user_key='"+userkey+"'", [], (tx, results) => {
 				var len = results.rows.length;
@@ -104,7 +101,7 @@ export default class dbSVC {
 			});
 		});
 	}
-	_getTagsByPhoto(photokey, callback) {
+	getTagsByPhoto(photokey, callback) {
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_tag WHERE photo_key='"+photokey+"'", [], (tx, results) => {
 				var len = results.rows.length;
@@ -117,7 +114,7 @@ export default class dbSVC {
 			});
 		});
 	}
-	_getTagsByName(name, callback) {
+	getTagsByName(name, callback) {
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_tag WHERE name='"+name+"'", [], (tx, results) => {
 				var len = results.rows.length;
