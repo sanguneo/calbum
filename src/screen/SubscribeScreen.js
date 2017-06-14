@@ -60,21 +60,20 @@ export default class SubscribeScreen extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.navigator.setStyle({
 			navBarHideOnScroll: true,
-			// screenBackgroundColor: commonStyle.backgroundColor
 		})
 		this.crypt = this.props.crypt;
 		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
+			userid: props.profile[2],
+			userkey: props.profile[0],
+			regdate: new Date().getTime(),
 			uriLeft: require('../../img/pickphoto.png'),
 			uriRight: require('../../img/pickphoto.png'),
 			merged: {uri: null},
 			title: '',
 			recipe: '',
-			userid: '',
-			userkey: '',
 			tags: [],
-			regdate: new Date().getTime(),
 			uniqkey: '',
 			album: '',
 			comment: '',
@@ -126,26 +125,22 @@ export default class SubscribeScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		var self = this;
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], uniqkey, this.state.userid, (arg) => {
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, (arg) => {
 			let uri = arg.replace('_type_', '_original_');
-			self.setState({merged: {uri: uri}});
 		});
 	}
 
 	_insertDB() {
-		// if (!this._formCheck()) {
-		// 	return;
-		// }
 		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
-			"VALUES ('" + this.state.uniqkey + "','" + this.state.regdate + "','" + this.state.title + "','" + this.state.recipe + "','" + this.state.album + "','" + this.state.comment + "','" + this.state.userid + "');";
+			"VALUES ('" + this.state.uniqkey + "','" + this.state.regdate + "','" + this.state.title + "','" + this.state.recipe.replace('\n', '\\n') + "','" + this.state.album + "','" + this.state.comment.replace('\n', '\\n') + "','" + this.state.userid + "');";
+		this.db.executeQuery(query);
 	}
 	_insertTag() {
 		let i_tags = this.state.tags;
 		let tagquery = '';
-		let tagreturn = (name) => "INSERT INTO `ca_tag`(`name`,`photo_key`,`user_key`) VALUES ('"+name+"','"+this.state.uniqkey+"','"+this.state.userid+"');";
-		i_tags.forEach((name) => {
-			tagquery += tagreturn(name);
+		let tagreturn = (tag) => "INSERT INTO `ca_tag`(`name`,`photo_key`,`user_key`) VALUES ('"+tag+"','"+this.state.uniqkey+"','"+this.state.userid+"');";
+		i_tags.forEach((tag) => {
+			tagquery += tagreturn(tag);
 		});
 		this.db.executeQuery(tagquery);
 	}
@@ -183,6 +178,7 @@ export default class SubscribeScreen extends Component {
 						this._mergeImage();
 						this._insertDB();
 						this._insertTag();
+						this.props.navigator.pop();
 					}
 				},
 				{text: '취소'},
@@ -280,7 +276,7 @@ export default class SubscribeScreen extends Component {
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
-					<Button imgsource={require('../../img/checkmark.png')}/>
+					<Button imgsource={require('../../img/checkmark.png')} onPress={()=>{this._submit();}}/>
 				</View>
 			</ScrollView>
 		);

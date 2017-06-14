@@ -6,6 +6,8 @@
 
 console.sdebug = true;
 console.dbg = console.sdebug ? console.log : () => {};
+JSON.clone = (arg) => {JSON.parse(JSON.stringify(arg))};
+JSON.formatedString= (arg) => JSON.stringify(arg, null, 4);
 
 import {Navigation} from 'react-native-navigation';
 const RNFS = require('react-native-fs');

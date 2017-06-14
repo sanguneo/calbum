@@ -11,6 +11,12 @@ import {
 
 const RNFS = require('react-native-fs');
 
+const imgOpt = {
+    width: 200,
+    height: 200,
+    cropping: true
+};
+
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
@@ -23,8 +29,9 @@ export default class SideMenu extends Component {
 			uniquekey: ''
         }
         props.global.setVar('side', this);
+        this._initializeUser();
     }
-    componentDidMount() {
+	_initializeUser() {
 		this.props.dbsvc.getUSER((ret) =>{
 			if (ret.length > 0) {
 				let row = ret[0];
@@ -49,11 +56,16 @@ export default class SideMenu extends Component {
 		});
 	}
     render() {
+		let profile = this.state.profile;
+		if (this.state.profile.uri) {
+			let key = Math.random() * 100000;
+			profile.uri = profile.uri.split('?key=')[0] + '?key=' + key;
+		}
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.profile} onPress={() => {this._openModal('profile')}}>
                     <Image
-                        source={this.state.profile}
+                        source={profile}
                         style={styles.stretch}
                     />
                     <Text style={styles.name}>{this.state.name}</Text>
@@ -72,7 +84,7 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>전체보기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('third')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('view')}}>
                     <Image
                         source={require('../../img/book.png')}
                         style={[styles.leftIcon]}
@@ -147,17 +159,29 @@ export default class SideMenu extends Component {
 				animated: false,
 				animationType: 'none'
 			});
+		} else if (screen === 'view') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
+				title: "디자인 보기", // title of the screen as appears in the nav bar (optional)
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
+				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+				animated: true,
+				animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+			});
 		} else {
-            this.props.navigator.push({
-                screen: "calbum.ThirdScreen", // unique ID registered with Navigation.registerScreen
-                title: "Modal", // title of the screen as appears in the nav bar (optional)
-                passProps: {}, // simple serializable object that will pass as props to the modal (optional)
-                navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-                navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
-                animated: true,
-                animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-            });
-        }
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.ThirdScreen", // unique ID registered with Navigation.registerScreen
+				title: "Modal", // title of the screen as appears in the nav bar (optional)
+				passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+				animated: true,
+				animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+			});
+		}
     }
     _openImagePicker() {
     	console.dbg(this.props.userinfo);

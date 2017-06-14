@@ -69,10 +69,43 @@ export default class dbSVC {
 			});
 		});
 	}
+	getPhoto(callback, user_key) {
+		let userFind = user_key ? " WHERE user_key='"+user_key +"';" : "";
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+	getPhotoSpecific(callback, user_key, unique_key) {
+    	let postfix = user_key||unique_key ? ' WHERE' : '';
+		postfix += user_key ? " user_key='"+user_key +"'" : "";
+		postfix += unique_key ? " `unique_key`='" + unique_key+"'" : "";
+		postfix += ';';
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret[0]);
+			});
+		});
+	}
 	executeQuery(query) {
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {
+				console.dbg(query);
 			});
+
 		});
 	}
 	getTags(callback) {

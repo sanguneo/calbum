@@ -85,9 +85,13 @@ export default class ProfileScreen extends Component {
         });
     }
     _saveProfileImage() {
+		let key = Math.random()*100000;
 		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpg';
-		RNFS.moveFile(this.state.profile.uri.replace('file://', ''), pPath);
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath}});
+		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
+			RNFS.unlink(this.state.profile.uri).catch((e) => {console.log('error_del', e)});
+		}).catch((e) => {console.log('error', e)});
+
+		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
 	}
     _formCheck() {
         if (!this.state.profile.uri) {
@@ -142,26 +146,32 @@ export default class ProfileScreen extends Component {
 	}
 
 	componentDidMount() {
-		this.props.dbsvc.getUSER((ret) => {
-			if (ret.length > 0) {
-				let row = ret[0];
-				this.setState({
-					profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg'},
-					userid: row.user_id,
-					name: row.name,
-					email: row.email.replace('_emailat_', '@'),
-					uniqkey: row.unique_key
-				});
-			}
-		});
+		// this.props.dbsvc.getUSER((ret) => {
+		// 	if (ret.length > 0) {
+		// 		let row = ret[0];
+		//		let key = Math.random()*100000;
+		// 		this.setState({
+		// 			profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg' + '?key=' + key},
+		// 			userid: row.user_id,
+		// 			name: row.name,
+		// 			email: row.email.replace('_emailat_', '@'),
+		// 			uniqkey: row.unique_key
+		// 		});
+		// 	}
+		// });
 	}
 
     render() {
+		let profile = this.state.profile;
+		if (this.state.profile.uri) {
+			let key = Math.random() * 100000;
+			profile.uri = profile.uri.split('?key=')[0] + '?key=' + key;
+		}
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.imgView}>
                     <TouchableOpacity onPress={() => {this._changeImage()}}>
-                        <Image source={this.state.profile} style={styles.img} />
+                        <Image source={profile} style={styles.img} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.formWrapper}>

@@ -12,7 +12,7 @@ import {
 	Alert,
 	Image
 } from 'react-native';
-
+const RNFS = require('react-native-fs');
 export default class IntroScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
@@ -28,15 +28,14 @@ export default class IntroScreen extends Component {
 		this.state = {
 			rows: []
 		}
-		var svcc = props.dbsvc;
-		svcc.getUSER((ret) => {
-			console.dbg('User Info', ret);
-			this.setState({rows: ret});
+		props.dbsvc.getPhoto((ret) => {
+			this.setState({
+				rows: JSON.formatedString(ret.map((i) => {
+						return i.title + '_' +i.unique_key;
+					}))
+			});
 		});
-		/*svcc._getTags((ret) => {
-			console.dbg(ret);
-		});*/
-
+		console.log(RNFS.readDir(RNFS.DocumentDirectoryPath + '/_original_').then(e=>console.log(e)));
 	}
 	onNavigatorEvent(event) {
 
@@ -47,7 +46,6 @@ export default class IntroScreen extends Component {
 			<View style={styles.container}>
 				<Text style={styles.welcome}>
 					{this.state.rows}
-					페이지를 테스트합니다.
 				</Text>
 			</View>
 		);
@@ -62,7 +60,7 @@ const styles = StyleSheet.create({
 	},
 	welcome: {
 		fontSize: 20,
-		textAlign: 'center',
+		textAlign: 'left',
 		margin: 10,
 	},
 	instructions: {
