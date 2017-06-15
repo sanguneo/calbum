@@ -179,8 +179,9 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         };
         Bitmap original = _mergeMultiple(bitmaps);
         Bitmap thumbnail = resizeBitmap(original, 100);
-        Bitmap watermarked = _watermarker(original, idString);
-        String originalUri = saveBitmapToJpg(watermarked, "_original_", uniqkey+"_"+idString);
+        // Bitmap watermarked = _watermarker(original, idString);
+        // String originalUri = saveBitmapToJpg(watermarked, "_original_", uniqkey+"_"+idString);
+        String originalUri = saveBitmapToJpg(original, "_original_", uniqkey+"_"+idString);
         saveBitmapToJpg(thumbnail, "_thumb_", uniqkey+"_"+idString);
         String merged = originalUri.replaceAll("_original_", "_type_");
         return merged;

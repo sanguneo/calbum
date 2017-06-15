@@ -112,7 +112,8 @@ export default class SubscribeScreen extends Component {
 	_changeImage(direct) {
 		if (direct === 'left') {
 			ImagePicker.openPicker(imgOpt).then(uriLeft => {
-				this.setState({uriLeft: {uri: uriLeft.path}});
+				this.setState({uriLeft: {uri: uriLeft.path}, merged: {uri: uriLeft.src}});
+				console.log('path : ' + uriLeft.path, '\nsrc : ' + uriLeft.src);
 			}).catch(e => {
 				console.dbg(e);
 			});
@@ -200,7 +201,7 @@ export default class SubscribeScreen extends Component {
 						<Text style={[styles.imglabel]}>After</Text>
 					</TouchableOpacity>
 				</View>
-				<Image source={this.state.merged} style={styles.imgView}/>
+				{/*<Image source={this.state.merged} style={styles.imgView}/>*/}
 				<View style={[styles.bgView,{marginTop: 15}]}>
 					<Text style={{fontSize: 17}}>기본정보</Text>
 				</View>

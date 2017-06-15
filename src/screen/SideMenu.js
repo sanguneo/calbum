@@ -29,10 +29,10 @@ export default class SideMenu extends Component {
 			uniquekey: ''
         }
         props.global.setVar('side', this);
-        this._initializeUser();
     }
 	_initializeUser() {
 		this.props.dbsvc.getUSER((ret) =>{
+
 			if (ret.length > 0) {
 				let row = ret[0];
 				this.setState({
@@ -54,6 +54,9 @@ export default class SideMenu extends Component {
 				});
 			}
 		});
+	}
+	componentDidMount() {
+    	this._initializeUser();
 	}
     render() {
 		let profile = this.state.profile;

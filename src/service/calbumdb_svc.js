@@ -41,7 +41,7 @@ export default class dbSVC {
                     ret.push(row);
                 }
                 callback(ret);
-            });
+            })
         });
     }
 	regUSER(arg_uniquekey, arg_reg_date, arg_user_id, arg_name, arg_email, arg_passphase) {

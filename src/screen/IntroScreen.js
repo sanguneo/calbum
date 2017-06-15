@@ -35,7 +35,6 @@ export default class IntroScreen extends Component {
 					}))
 			});
 		});
-		console.log(RNFS.readDir(RNFS.DocumentDirectoryPath + '/_original_').then(e=>console.log(e)));
 	}
 	onNavigatorEvent(event) {
 
