@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	textboxag: {
-		minHeight: 40,
+		minHeight: 36,
 		lineHeight: 30,
 		marginLeft: 20,
 		marginRight: 20,

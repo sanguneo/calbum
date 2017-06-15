@@ -70,7 +70,8 @@ export default class SubscribeScreen extends Component {
 			regdate: new Date().getTime(),
 			uriLeft: require('../../img/pickphoto.png'),
 			uriRight: require('../../img/pickphoto.png'),
-			merged: {uri: null},
+			srcLeft: '',
+			srcRight: '',
 			title: '',
 			recipe: '',
 			tags: [],
@@ -108,20 +109,28 @@ export default class SubscribeScreen extends Component {
 			tags,
 		});
 	};
-
+	_saveSourceImage() {
+		RNFS.copyFile(
+			this.state.srcLeft.replace('file://', ''),
+			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+ '_left.jpg'
+		).then(() => {}).catch((e) => {console.error('error', e)});
+		RNFS.copyFile(
+			this.state.srcRight.replace('file://', ''),
+			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+ '_right.jpg'
+		).then(() => {}).catch((e) => {console.error('error', e)});
+	}
 	_changeImage(direct) {
 		if (direct === 'left') {
-			ImagePicker.openPicker(imgOpt).then(uriLeft => {
-				this.setState({uriLeft: {uri: uriLeft.path}, merged: {uri: uriLeft.src}});
-				console.log('path : ' + uriLeft.path, '\nsrc : ' + uriLeft.src);
+			ImagePicker.openPicker(imgOpt).then(result => {
+				this.setState({uriLeft: {uri: result.path}, srcLeft: result.src});
 			}).catch(e => {
-				console.dbg(e);
+				console.log(e);
 			});
 		} else {
-			ImagePicker.openPicker(imgOpt).then(uriRight => {
-				this.setState({uriRight: {uri: uriRight.path}});
+			ImagePicker.openPicker(imgOpt).then(result => {
+				this.setState({uriRight: {uri: result.path, srcRight: result.src}});
 			}).catch(e => {
-				console.dbg(e);
+				console.log(e);
 			});
 		}
 	}
@@ -177,6 +186,7 @@ export default class SubscribeScreen extends Component {
 					text: '확인',
 					onPress: () => {
 						this._mergeImage();
+						this._saveSourceImage();
 						this._insertDB();
 						this._insertTag();
 						this.props.navigator.pop();
@@ -341,7 +351,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	textboxag: {
-		height: 40,
+		height: 36,
 		marginLeft: 20,
 		marginRight: 20,
 		fontSize: 16,

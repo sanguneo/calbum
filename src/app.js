@@ -5,7 +5,15 @@
  */
 
 console.sdebug = true;
-console.dbg = console.sdebug ? console.log : () => {};
+var orig_log = console.log;
+var orig_error = console.error;
+console.log = function(){
+	return console.sdebug ? orig_log.apply(this, arguments) : null;
+}
+console.error = function(){
+	return console.sdebug ? orig_error.apply(this, arguments) : null;
+}
+
 JSON.clone = (arg) => {JSON.parse(JSON.stringify(arg))};
 JSON.formatedString= (arg) => JSON.stringify(arg, null, 4);
 

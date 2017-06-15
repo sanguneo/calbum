@@ -103,7 +103,7 @@ export default class dbSVC {
 	executeQuery(query) {
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {
-				console.dbg(query);
+				console.log(query);
 			});
 
 		});
