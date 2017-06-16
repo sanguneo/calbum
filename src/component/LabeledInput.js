@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     label: {
 		flexDirection: 'row',
         flex: 30,
-        fontSize: 16,
+        fontSize: 15,
         textAlign: 'center',
         marginTop: 9,
     },

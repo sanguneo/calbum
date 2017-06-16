@@ -40,16 +40,6 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 }
 export default class ViewScreen extends Component {
-	static navigatorButtons = {
-		leftButtons: [],
-		rightButtons: [
-			{
-				icon: require('../../img/checkmark.png'),
-				id: 'save'
-			}
-		]
-	};
-
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -117,7 +107,7 @@ export default class ViewScreen extends Component {
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
 					<LabeledInput label={"테그"}>
-						<Text style={styles.textboxag}>{this.state.tags.join(',')}</Text>
+						<Text style={styles.textboxag}>{this.state.tags.join(', ')}</Text>
 					</LabeledInput>
 				</View>
 				<View style={styles.bgView}>

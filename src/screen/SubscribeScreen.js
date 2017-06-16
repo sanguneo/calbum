@@ -26,6 +26,7 @@ import LabeledInput from '../component/LabeledInput';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
+const RNFS = require('react-native-fs');
 
 const imgOpt = {
 	width: 400,
@@ -113,11 +114,12 @@ export default class SubscribeScreen extends Component {
 		RNFS.copyFile(
 			this.state.srcLeft.replace('file://', ''),
 			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+ '_left.jpg'
-		).then(() => {}).catch((e) => {console.error('error', e)});
+		).then(() => {}).catch((e) => {console.error('error left', e)});
+
 		RNFS.copyFile(
 			this.state.srcRight.replace('file://', ''),
 			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+ '_right.jpg'
-		).then(() => {}).catch((e) => {console.error('error', e)});
+		).then(() => {}).catch((e) => {console.error('error right', e)});
 	}
 	_changeImage(direct) {
 		if (direct === 'left') {
@@ -128,7 +130,7 @@ export default class SubscribeScreen extends Component {
 			});
 		} else {
 			ImagePicker.openPicker(imgOpt).then(result => {
-				this.setState({uriRight: {uri: result.path, srcRight: result.src}});
+				this.setState({uriRight: {uri: result.path }, srcRight: result.src});
 			}).catch(e => {
 				console.log(e);
 			});
@@ -136,7 +138,6 @@ export default class SubscribeScreen extends Component {
 	}
 	_mergeImage() {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, (arg) => {
-			let uri = arg.replace('_type_', '_original_');
 		});
 	}
 
@@ -158,14 +159,23 @@ export default class SubscribeScreen extends Component {
 	_formCheck() {
 		if (this.state.title === '') {
 			Alert.alert('확인', '제목을 입력해주세요.');
+			this.refs.title.focus();
 			return false;
 		}
-		if (this.state.uriLeft.uri === '') {
+		if (this.state.srcLeft.uri === '') {
 			Alert.alert('확인', '왼쪽 이미지를 선택해주세요.');
 			return false;
 		}
-		if (this.state.uriRight.uri === '') {
+		if (this.state.uriLeft.uri === '') {
+			Alert.alert('확인', '선택한 왼쪽 이미지에 오류가 있습니다.\n다시 선택해주세요.');
+			return false;
+		}
+		if (this.state.srcRight.uri === '') {
 			Alert.alert('확인', '오른쪽 이미지를 선택해주세요.');
+			return false;
+		}
+		if (this.state.uriRight.uri === '') {
+			Alert.alert('확인', '선택한 오른쪽 이미지에 오류가 있습니다.\n다시 선택해주세요.');
 			return false;
 		}
 		return true;
@@ -185,6 +195,7 @@ export default class SubscribeScreen extends Component {
 				{
 					text: '확인',
 					onPress: () => {
+						console.log('key : ' + this.state.uniqkey);
 						this._mergeImage();
 						this._saveSourceImage();
 						this._insertDB();
@@ -218,6 +229,7 @@ export default class SubscribeScreen extends Component {
 				<View style={styles.formWrapper}>
 					<LabeledInput label={"제목"}>
 						<TextInput
+							ref={"title"}
 							style={styles.labeledtextbox}
 							editable={true}
 							autoCorrect={false}
@@ -338,7 +350,7 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 
 
-		fontSize: 16,
+		fontSize: 15,
 		color: '#000',
 		textAlign: 'left'
 	},
@@ -346,7 +358,7 @@ const styles = StyleSheet.create({
 		height: 58,
 		marginLeft: 10,
 		marginRight: 10,
-		fontSize: 16,
+		fontSize: 15,
 		color: '#000',
 		marginBottom: 10,
 	},
@@ -354,7 +366,7 @@ const styles = StyleSheet.create({
 		height: 36,
 		marginLeft: 20,
 		marginRight: 20,
-		fontSize: 16,
+		fontSize: 15,
 		color: '#000',
 	},
 	album: {

@@ -6,18 +6,16 @@
 
 import React, {Component} from 'react';
 import {
-    StyleSheet,
-    Text,
-    ScrollView,
-    View,
-    Image,
-    Dimensions,
-    TouchableOpacity,
-    Alert,
-    TextInput
+	StyleSheet,
+	Text,
+	ScrollView,
+	View,
+	Image,
+	Dimensions,
+	TouchableOpacity,
+	Alert,
+	TextInput
 } from 'react-native';
-
-import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
@@ -28,9 +26,9 @@ const RNFS = require('react-native-fs');
 import md5 from '../service/md5';
 
 const imgOpt = {
-    width: 400,
-    height: 400,
-    cropping: true
+	width: 400,
+	height: 400,
+	cropping: true
 };
 
 const commonStyle = {
@@ -40,61 +38,59 @@ const commonStyle = {
 }
 
 export default class ProfileScreen extends Component {
-    static navigatorButtons = {
-        leftButtons: [],
-        rightButtons: [
-            {
-                icon: require('../../img/checkmark.png'),
-                id: 'save'
-            }
-        ]
-    };
-
-    constructor(props) {
-        super(props);
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        this.crypt = props.crypt;
-        this.global = props.global;
-        this.state = {
-            success: 'no',
-            profile: this.props.profile[1],
+	static navigatorButtons = {
+		rightButtons: [
+			{
+				icon: require('../../img/checkmark.png'),
+				id: 'save'
+			}
+		]
+	};
+	constructor(props) {
+		super(props);
+		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		this.crypt = props.crypt;
+		this.global = props.global;
+		this.state = {
+			success: 'no',
+			profile: this.props.profile[1],
 			userid: this.props.profile[2],
-            name: this.props.profile[3],
+			name: this.props.profile[3],
 			email: this.props.profile[4],
 			pass: '',
 			passchk: '',
-			uniqkey: ''
-        }
+			uniquekey: this.props.profile[0]
+		}
 
-    }
-
-    onNavigatorEvent(event) {
-        if (event.id === 'menu') {
-            this.props.navigator.toggleDrawer({
-                side: 'left',
-                animated: true
-            });
-        }
-        if (event.id === 'save') {
-			this._submit();
-        }
-    }
-    _changeImage() {
-        ImagePicker.openPicker(imgOpt).then(profile => {
-			this.setState({profile: {uri: profile.path}});
-        });
-    }
-    _saveProfileImage() {
-		let key = Math.random()*100000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpg';
-		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri).catch((e) => {console.log('error_del', e)});
-		}).catch((e) => {console.log('error', e)});
-
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
 	}
-    _formCheck() {
-        if (!this.state.profile.uri) {
+
+	onNavigatorEvent(event) {
+		if (event.id === 'menu') {
+			this.props.navigator.toggleDrawer({
+				side: 'left',
+				animated: true
+			});
+		}
+		if (event.id === 'save') {
+			this._submit();
+		}
+	}
+	_changeImage() {
+		ImagePicker.openPicker(imgOpt).then(profile => {
+			this.setState({profile: {uri: profile.path}});
+		}).catch(()=>{});
+	}
+	_saveProfileImage() {
+		let key = Math.random()*100000;
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpg';
+		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
+			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.log('error_del', e)});
+		}).catch((e) => {console.log('error', e)});
+		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
+
+	}
+	_formCheck() {
+		if (!this.state.profile.uri) {
 			Alert.alert('확인', '이미지를 선택해주세요.');
 			return false;
 		} else if (!this.state.userid && this.state.userid.length >= 4) {
@@ -122,21 +118,26 @@ export default class ProfileScreen extends Component {
 			this.refs['r_chk'].focus();
 			return false;
 		}
-        return true;
-    }
-    _submit() {
-    	if (!this._formCheck()) return;
+		return true;
+	}
+	_submit() {
+		if (!this._formCheck()) return;
 
 		Alert.alert(
 			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
 			[
 				{text: '확인', onPress: () => {
+
 					if (this.props.profileCreate) {
-						this.props.dbsvc.regUSER(this.state.uniqkey, new Date().getTime(), this.state.userid, this.state.name, this.state.email, md5(this.state.pass));
+						this.props.dbsvc.regUSER(this.state.uniquekey, new Date().getTime(), this.state.userid, this.state.name, this.state.email, md5(this.state.pass));
 					} else {
-						this.props.dbsvc.editUSER(this.state.uniqkey, this.state.name, this.state.email, md5(this.state.pass));
+						this.props.dbsvc.editUSER(this.state.uniquekey, this.state.name, this.state.email, md5(this.state.pass));
 					}
 					this._saveProfileImage();
+					this.global.getVar('side').setState({name: this.state.name});
+					if (this.props.isFirst) {
+
+					}
 					this.props.navigator.pop();
 				}},
 				{text: '취소'},
@@ -155,45 +156,40 @@ export default class ProfileScreen extends Component {
 		// 			userid: row.user_id,
 		// 			name: row.name,
 		// 			email: row.email.replace('_emailat_', '@'),
-		// 			uniqkey: row.unique_key
+		// 			uniquekey: row.unique_key
 		// 		});
 		// 	}
 		// });
 	}
 
-    render() {
-		let profile = this.state.profile;
-		if (this.state.profile.uri) {
-			let key = Math.random() * 100000;
-			profile.uri = profile.uri.split('?key=')[0] + '?key=' + key;
-		}
-        return (
-            <ScrollView style={styles.container}>
-                <View style={styles.imgView}>
-                    <TouchableOpacity onPress={() => {this._changeImage()}}>
-                        <Image source={profile} style={styles.img} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.formWrapper}>
-                    <LabeledInput label={"아이디"}>
-                        <TextInput
-                            style={styles.labeledtextbox}
-                            editable={true}
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
+	render() {
+		return (
+			<ScrollView style={styles.container}>
+				<View style={styles.imgView}>
+					<TouchableOpacity onPress={() => {this._changeImage()}}>
+						<Image source={this.state.profile} style={styles.img} />
+					</TouchableOpacity>
+				</View>
+				<View style={styles.formWrapper}>
+					<LabeledInput label={"아이디"}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
 							ref={'r_uid'}
-                            onChangeText={(userid) => {
+							onChangeText={(userid) => {
                             	this.setState({
                             		userid,
-                            		uniqkey : this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(userid, 1))
+                            		uniquekey : this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(userid, 1))
                             	});
 
                             }}
-                            value={this.state.userid}
-                            placeholder={'아이디를 입력해주세요'}
-                            placeholderTextColor={commonStyle.placeholderTextColor}
-                        />
-                    </LabeledInput>
+							value={this.state.userid}
+							placeholder={'아이디를 입력해주세요'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
 					<LabeledInput label={"이메일"}>
 						<TextInput
@@ -209,20 +205,20 @@ export default class ProfileScreen extends Component {
 							keyboardType={'email-address'}
 						/>
 					</LabeledInput>
-                    <Hr lineColor={commonStyle.hrColor}/>
-                    <LabeledInput label={"닉네임"}>
-                        <TextInput
-                            style={styles.labeledtextbox}
-                            editable={true}
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
+					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"닉네임"}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
 							ref={'r_name'}
-                            onChangeText={(name) => this.setState({name})}
-                            value={this.state.name}
-                            placeholder={'닉네임을 입력해주세요'}
-                            placeholderTextColor={commonStyle.placeholderTextColor}
-                        />
-                    </LabeledInput>
+							onChangeText={(name) => this.setState({name})}
+							value={this.state.name}
+							placeholder={'닉네임을 입력해주세요'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
 					<LabeledInput label={"비밀번호"}>
 						<TextInput
@@ -253,41 +249,47 @@ export default class ProfileScreen extends Component {
 							secureTextEntry={true}
 						/>
 					</LabeledInput>
-                </View>
-                <View style={[styles.formWrapper]}>
-                    <Button imgsource={require('../../img/checkmark.png')} onPress={()=>{this._submit();}}/>
-                </View>
-            </ScrollView>
-        );
-    }
+				</View>
+				<View style={[styles.formWrapper]}>
+					<Button imgsource={require('../../img/checkmark.png')} onPress={()=>{this._submit();}}/>
+				</View>
+			</ScrollView>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    imgView : {
-        flex: 1,
-        flexDirection: 'row',
-        height: 202,
+	container: {
+		flex: 1,
+	},
+	imgView : {
+		flex: 1,
+		flexDirection: 'row',
+
+		height: 202,
 		width: 202,
+
 		marginHorizontal: (Dimensions.get('window').width - 202) / 2,
 		marginVertical: 20,
+
 		borderColor: '#eee',
 		borderWidth: 1
-    },
-    img :{
-        width: 200,
-        height: 200,
-    },
+	},
+	img :{
+		width: 200,
+		height: 200,
+	},
 	formWrapper: {
 		flex: 1,
-		margin: 10,
-        marginLeft:45,
-        marginRight: 45,
+
+		marginTop: 10,
+		marginLeft:45,
+		marginRight: 45,
+		marginBottom: 30,
+
 		borderRadius:5,
 		backgroundColor: '#f5f5f5',
-		marginBottom: 30,
+
 	},
 	labeledtextbox: {
 		height: 42,
@@ -296,17 +298,19 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		marginRight: 10,
 
-
 		fontSize: 16,
 		color: '#000',
 		textAlign: 'left'
 	},
 	textbox: {
 		height: 58,
+
 		marginLeft: 10,
 		marginRight: 10,
-		fontSize: 16,
-		color: '#000',
 		marginBottom: 10,
+
+		fontSize: 15,
+		color: '#000',
+
 	},
 });

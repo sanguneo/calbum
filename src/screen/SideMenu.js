@@ -32,7 +32,6 @@ export default class SideMenu extends Component {
     }
 	_initializeUser() {
 		this.props.dbsvc.getUSER((ret) =>{
-
 			if (ret.length > 0) {
 				let row = ret[0];
 				this.setState({
@@ -47,8 +46,9 @@ export default class SideMenu extends Component {
 					screen: "calbum.ProfileScreen",
 					title: "프로필 생성하기",
 					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-					navigatorStyle: {},
+					navigatorStyle: {navBarHidden: false},
 					navigatorButtons: {},
+					backButtonHidden: true,
 					animated: true,
 					animationType: 'fade'
 				});
