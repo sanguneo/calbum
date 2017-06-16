@@ -137,8 +137,7 @@ export default class SubscribeScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, (arg) => {
-		});
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
 	}
 
 	_insertDB() {

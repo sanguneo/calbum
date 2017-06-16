@@ -38,14 +38,6 @@ const commonStyle = {
 }
 
 export default class ProfileScreen extends Component {
-	static navigatorButtons = {
-		rightButtons: [
-			{
-				icon: require('../../img/checkmark.png'),
-				id: 'save'
-			}
-		]
-	};
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -144,22 +136,6 @@ export default class ProfileScreen extends Component {
 			],
 			{ cancelable: true }
 		);
-	}
-
-	componentDidMount() {
-		// this.props.dbsvc.getUSER((ret) => {
-		// 	if (ret.length > 0) {
-		// 		let row = ret[0];
-		//		let key = Math.random()*100000;
-		// 		this.setState({
-		// 			profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg' + '?key=' + key},
-		// 			userid: row.user_id,
-		// 			name: row.name,
-		// 			email: row.email.replace('_emailat_', '@'),
-		// 			uniquekey: row.unique_key
-		// 		});
-		// 	}
-		// });
 	}
 
 	render() {

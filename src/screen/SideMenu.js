@@ -11,12 +11,6 @@ import {
 
 const RNFS = require('react-native-fs');
 
-const imgOpt = {
-    width: 200,
-    height: 200,
-    cropping: true
-};
-
 export default class SideMenu extends Component {
     constructor(props) {
         super(props);
@@ -128,13 +122,18 @@ export default class SideMenu extends Component {
 		if (screen === 'subscribe') {
 			this._toggleDrawer();
 			this.props.navigator.push({
-				screen: "calbum.SubscribeScreen", // unique ID registered with Navigation.registerScreen
-				title: "디자인 작성하기", // title of the screen as appears in the nav bar (optional)
+				screen: "calbum.SubscribeScreen",
+				title: "디자인 작성하기",
 				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
-				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+				navigatorStyle: {},
+				navigatorButtons: {rightButtons: [
+					{
+						icon: require('../../img/checkmark.png'),
+						id: 'save'
+					}
+				]},
 				animated: true,
-				animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+				animationType: 'fade'
 			});
 		} else if (screen === 'profile') {
 			this._toggleDrawer();
