@@ -31,6 +31,7 @@ const RNFS = require('react-native-fs');
 const imgOpt = {
 	width: 400,
 	height: 800,
+	compressImageQuality: 1,
 	cropping: true
 };
 
@@ -221,7 +222,6 @@ export default class SubscribeScreen extends Component {
 						<Text style={[styles.imglabel]}>After</Text>
 					</TouchableOpacity>
 				</View>
-				{/*<Image source={this.state.merged} style={styles.imgView}/>*/}
 				<View style={[styles.bgView,{marginTop: 15}]}>
 					<Text style={{fontSize: 17}}>기본정보</Text>
 				</View>
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
 		height: 58,
 		marginLeft: 10,
 		marginRight: 10,
-		fontSize: 15,
+		fontSize: 14,
 		color: '#000',
 		marginBottom: 10,
 	},

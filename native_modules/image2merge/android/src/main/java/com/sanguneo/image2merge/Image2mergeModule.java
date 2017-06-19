@@ -157,15 +157,15 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         id.setAlpha(95);
 
 
-        //canvas.drawText("Before", w/4 - 35, h - 30, stroke);
-        //canvas.drawText("After", 3*w/4 - 35, h - 30, stroke);
+        canvas.drawText("Before", w/4 - 35, h - 30, stroke);
+        canvas.drawText("After", 3*w/4 - 35, h - 30, stroke);
 
-        //paint.setColor(Color.parseColor("#ff0000"));
-        //paint.setAlpha(90);
-        //canvas.drawText("Before", w/4 - 35, h - 30, paint);
-        //paint.setColor(Color.parseColor("#0000ff"));
-        //paint.setAlpha(90);
-        //canvas.drawText("After", 3*w/4 - 35, h - 30, paint);
+        paint.setColor(Color.parseColor("#ff0000"));
+        paint.setAlpha(90);
+        canvas.drawText("Before", w/4 - 35, h - 30, paint);
+        paint.setColor(Color.parseColor("#0000ff"));
+        paint.setAlpha(90);
+        canvas.drawText("After", 3*w/4 - 35, h - 30, paint);
 
         canvas.drawText(idString, (canvas.getWidth() / 2) - (bounds.width() / 2), 40, id);
 
@@ -178,10 +178,10 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
                 getImageBitmap(twoParts[1])
         };
         Bitmap original = _mergeMultiple(bitmaps);
-        Bitmap thumbnail = resizeBitmap(original, 100);
+        Bitmap thumbnail = resizeBitmap(original, 300);
         Bitmap watermarked = _watermarker(original, idString);
-        String originalUri = saveBitmapToJpg(watermarked, "_original_", uniqkey+"_"+idString);
-        saveBitmapToJpg(thumbnail, "_thumb_", uniqkey+"_"+idString);
+        String originalUri = saveBitmapToJpg(watermarked, "_original_", uniqkey);
+        saveBitmapToJpg(thumbnail, "_thumb_", uniqkey);
         String merged = originalUri.replaceAll("_original_", "_type_");
         return merged;
     }

@@ -16,7 +16,6 @@ import {
 	Alert,
 	TextInput
 } from 'react-native';
-
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
@@ -67,20 +66,6 @@ export default class ProfileScreen extends Component {
 			this._submit();
 		}
 	}
-	_changeImage() {
-		ImagePicker.openPicker(imgOpt).then(profile => {
-			this.setState({profile: {uri: profile.path}});
-		}).catch(()=>{});
-	}
-	_saveProfileImage() {
-		let key = Math.random()*100000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpg';
-		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.log('error_del', e)});
-		}).catch((e) => {console.log('error', e)});
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
-
-	}
 	_formCheck() {
 		if (!this.state.profile.uri) {
 			Alert.alert('확인', '이미지를 선택해주세요.');
@@ -112,9 +97,22 @@ export default class ProfileScreen extends Component {
 		}
 		return true;
 	}
+	_changeImage() {
+		ImagePicker.openPicker(imgOpt).then(profile => {
+			this.setState({profile: {uri: profile.path}});
+		}).catch(()=>{});
+	}
+	_saveProfileImage() {
+		let key = Math.random()*100000;
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpg';
+		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
+			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.log('error_del', e)});
+		}).catch((e) => {console.log('error', e)});
+		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
+
+	}
 	_submit() {
 		if (!this._formCheck()) return;
-
 		Alert.alert(
 			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
 			[
@@ -127,9 +125,6 @@ export default class ProfileScreen extends Component {
 					}
 					this._saveProfileImage();
 					this.global.getVar('side').setState({name: this.state.name});
-					if (this.props.isFirst) {
-
-					}
 					this.props.navigator.pop();
 				}},
 				{text: '취소'},
@@ -274,7 +269,7 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		marginRight: 10,
 
-		fontSize: 16,
+		fontSize: 14,
 		color: '#000',
 		textAlign: 'left'
 	},
@@ -285,7 +280,7 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 		marginBottom: 10,
 
-		fontSize: 15,
+		fontSize: 14,
 		color: '#000',
 
 	},

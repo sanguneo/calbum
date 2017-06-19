@@ -31,6 +31,10 @@ export default class dbSVC {
     getDB() {
         return this.db;
     }
+    closeDB() {
+    	this.db.close();
+		console.log('DB Closed');
+	}
     getUSER(callback) {
         this.db.transaction((tx) => {
             tx.executeSql("SELECT unique_key, reg_date, user_id, name, email FROM ca_user", [], (tx, results) => {

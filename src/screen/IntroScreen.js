@@ -9,9 +9,14 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	ScrollView,
 	Alert,
-	Image
+	Image,
+	Dimensions
 } from 'react-native';
+
+import Thumbnail from '../component/Thumbnail';
+
 const RNFS = require('react-native-fs');
 export default class IntroScreen extends Component {
 	static navigatorButtons = {
@@ -30,9 +35,9 @@ export default class IntroScreen extends Component {
 		}
 		props.dbsvc.getPhoto((ret) => {
 			this.setState({
-				rows: JSON.formatedString(ret.map((i) => {
-						return i.title + '_' +i.unique_key;
-					}))
+				rows: ret.map((i, idx) => {
+						return <Thumbnail key={idx} style={styles.thumbnail} title={i.title} uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '.jpg'} />
+					})
 			});
 		});
 	}
@@ -42,29 +47,33 @@ export default class IntroScreen extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<Text style={styles.welcome}>
+			<ScrollView>
+				<View style={styles.container}>
 					{this.state.rows}
-				</Text>
-			</View>
+				</View>
+			</ScrollView>
 		);
 	}
 }
-
+const owidth = (function() {
+	let w = Dimensions.get('window').width;
+	let p = Math.round(w / 150);
+	return parseInt(w/p) - 8;
+})();
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		flexWrap: 'wrap',
+		flexDirection: 'row',
+		alignItems: 'flex-start',
+		justifyContent: 'space-around',
 	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'left',
-		margin: 10,
-	},
-	instructions: {
-		textAlign: 'center',
-		color: '#333333',
-		marginBottom: 5,
-	},
+	thumbnail: {
+		width: owidth,
+		height: owidth,
+
+		marginVertical: 5,
+
+		borderColor: 'rgba(0,0,0,0.2)',
+		borderWidth: 1
+	}
 });

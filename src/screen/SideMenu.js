@@ -52,6 +52,9 @@ export default class SideMenu extends Component {
 	componentDidMount() {
     	this._initializeUser();
 	}
+	componentWillUnmount() {
+		this.props.dbsvc.close();
+	}
     render() {
 		let profile = this.state.profile;
 		if (this.state.profile.uri) {
