@@ -107,10 +107,23 @@ export default class dbSVC {
 	executeQuery(query) {
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {
-				console.log(query);
 			});
-
 		});
+	}
+	insertPhoto(uniqkey, regdate, title, recipe, album, comment, userkey) {
+		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
+			"VALUES ('" + uniqkey + "','" + regdate + "','" + title + "','" + recipe.replace('\n', '\\n') + "','" + album + "','" + comment.replace('\n', '\\n') + "','" + userkey + "');";
+		this.executeQuery(query);
+	}
+	insertTag(i_tags, uniqkey, userkey) {
+		let tagquery = '';
+		let tagreturn = (tag) => "INSERT INTO `ca_tag`(`name`,`photo_key`,`user_key`) VALUES ('"+tag+"','"+uniqkey+"','"+userkey+"');";
+		let tagnamereturn = (tag) => "INSERT INTO `ca_tagname`(`tagname`) SELECT '"+tag+"' WHERE NOT EXISTS(SELECT 1 FROM `ca_tagname` WHERE `tagname` = '"+tag+"');";
+		i_tags.forEach((tag) => {
+			tagquery += tagreturn(tag);
+			tagquery += tagnamereturn(tag);
+		});
+		this.executeQuery(tagquery);
 	}
 	getTags(callback) {
 		this.db.transaction((tx) => {

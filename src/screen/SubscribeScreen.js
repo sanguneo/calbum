@@ -31,7 +31,6 @@ const RNFS = require('react-native-fs');
 const imgOpt = {
 	width: 400,
 	height: 800,
-	compressImageQuality: 1,
 	cropping: true
 };
 
@@ -138,22 +137,14 @@ export default class SubscribeScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userkey, () => {});
 	}
 
 	_insertDB() {
-		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
-			"VALUES ('" + this.state.uniqkey + "','" + this.state.regdate + "','" + this.state.title + "','" + this.state.recipe.replace('\n', '\\n') + "','" + this.state.album + "','" + this.state.comment.replace('\n', '\\n') + "','" + this.state.userid + "');";
-		this.db.executeQuery(query);
+		this.db.insertPhoto(this.state.uniqkey, this.state.regdate, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
 	}
 	_insertTag() {
-		let i_tags = this.state.tags;
-		let tagquery = '';
-		let tagreturn = (tag) => "INSERT INTO `ca_tag`(`name`,`photo_key`,`user_key`) VALUES ('"+tag+"','"+this.state.uniqkey+"','"+this.state.userid+"');";
-		i_tags.forEach((tag) => {
-			tagquery += tagreturn(tag);
-		});
-		this.db.executeQuery(tagquery);
+		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
 	}
 
 	_formCheck() {
@@ -182,7 +173,7 @@ export default class SubscribeScreen extends Component {
 	}
 	_getUniqkey() {
 		let regdate = new Date().getTime();
-		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userid, 1));
+		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));
 		this.setState({regdate, uniqkey});
 		return uniqkey;
 	}

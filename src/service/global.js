@@ -8,3 +8,13 @@ export function setVar(key, tvar) {
 export function getVar(key) {
 	return gvar[key];
 }
+export function getUntil(key, callback) {
+	if(gvar.hasOwnProperty(key)){
+		callback(gvar[key]);
+	}
+	else {
+		setTimeout(()=>{
+			getUntil(key, callback);
+		}, 10);
+	}
+}
