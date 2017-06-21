@@ -59,10 +59,11 @@ export default class dbSVC {
 			tx.executeSql("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniquekey+"' AND `passphase`='"+arg_passphase+"';", [], (tx, results) => {});
 		});
 	}
-	getAlbum(callback, user_key) {
-		let userFind = user_key ? " WHERE user_key='"+user_key +"';" : "";
+	getPhoto(callback, user_key) {
+		let userFind = user_key ? " WHERE user_key='"+user_key +"' ORDER BY `albumname`;" : " ORDER BY `albumname`";
+		console.log("SELECT * FROM ca_photo" + userFind);
 		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_album" + userFind, [], (tx, results) => {
+			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
 				var len = results.rows.length;
 				var ret = [];
 				for (let i = 0; i < len; i++) {
@@ -73,8 +74,8 @@ export default class dbSVC {
 			});
 		});
 	}
-	getPhoto(callback, user_key) {
-		let userFind = user_key ? " WHERE user_key='"+user_key +"';" : "";
+	getPhotoByAlbum(callback, user_key, albumname) {
+		let userFind = user_key ? " WHERE user_key='"+user_key +"' albumname='"+albumname+"' ORDER BY `albumname`;" : " ORDER BY `albumname`";
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
 				var len = results.rows.length;
@@ -91,7 +92,7 @@ export default class dbSVC {
     	let postfix = user_key||unique_key ? ' WHERE' : '';
 		postfix += user_key ? " user_key='"+user_key +"'" : "";
 		postfix += unique_key ? " `unique_key`='" + unique_key+"'" : "";
-		postfix += ';';
+		postfix += ' ORDER BY `albumname`;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
 				var len = results.rows.length;
@@ -111,12 +112,16 @@ export default class dbSVC {
 		});
 	}
 	insertPhoto(uniqkey, regdate, title, recipe, album, comment, userkey) {
-		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`album_key`,`comment`,`user_key`) " +
+		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`albumname`,`comment`,`user_key`) " +
 			"VALUES ('" + uniqkey + "','" + regdate + "','" + title + "','" + recipe.replace('\n', '\\n') + "','" + album + "','" + comment.replace('\n', '\\n') + "','" + userkey + "');";
 		this.executeQuery(query);
 	}
+	insertAlbum(albumname, userkey) {
+		let albumquery = "INSERT INTO `ca_album`(`albumname`, `user_key`) SELECT '"+albumname+"', '"+userkey+"' WHERE NOT EXISTS(SELECT 1 FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"');";
+		this.executeQuery(albumquery);
+	}
 	insertTag(i_tags, uniqkey, userkey) {
-		let tagquery = '';
+		let tagquery = "DELETE FROM `ca_tag` WHERE `photo_key`='"+uniqkey+"' AND `user_key`='"+userkey+"';";
 		let tagreturn = (tag) => "INSERT INTO `ca_tag`(`name`,`photo_key`,`user_key`) VALUES ('"+tag+"','"+uniqkey+"','"+userkey+"');";
 		let tagnamereturn = (tag) => "INSERT INTO `ca_tagname`(`tagname`) SELECT '"+tag+"' WHERE NOT EXISTS(SELECT 1 FROM `ca_tagname` WHERE `tagname` = '"+tag+"');";
 		i_tags.forEach((tag) => {
@@ -125,9 +130,9 @@ export default class dbSVC {
 		});
 		this.executeQuery(tagquery);
 	}
-	getTags(callback) {
+	getAlbums(callback) {
 		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_tag", [], (tx, results) => {
+			tx.executeSql("SELECT albumname FROM ca_album", [], (tx, results) => {
 				var len = results.rows.length;
 				var ret = [];
 				for (let i = 0; i < len; i++) {
@@ -138,9 +143,9 @@ export default class dbSVC {
 			});
 		});
 	}
-	getTagsByUser(userkey, callback) {
+	getAlbumsByUser(userkey, callback) {
 		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_tag WHERE user_key='"+userkey+"'", [], (tx, results) => {
+			tx.executeSql("SELECT albumname FROM ca_album WHERE user_key='"+userkey+"'", [], (tx, results) => {
 				var len = results.rows.length;
 				var ret = [];
 				for (let i = 0; i < len; i++) {
@@ -151,9 +156,9 @@ export default class dbSVC {
 			});
 		});
 	}
-	getTagsByPhoto(photokey, callback) {
+	getTagnames(callback) {
 		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_tag WHERE photo_key='"+photokey+"'", [], (tx, results) => {
+			tx.executeSql("SELECT tagname FROM ca_tagname", [], (tx, results) => {
 				var len = results.rows.length;
 				var ret = [];
 				for (let i = 0; i < len; i++) {
@@ -164,18 +169,4 @@ export default class dbSVC {
 			});
 		});
 	}
-	getTagsByName(name, callback) {
-		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_tag WHERE name='"+name+"'", [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
-		});
-	}
-
 }

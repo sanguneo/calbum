@@ -23,6 +23,7 @@ export default class SideMenu extends Component {
 			uniquekey: ''
         }
         props.global.setVar('side', this);
+
     }
 	_initializeUser() {
 		this.props.dbsvc.getUSER((ret) =>{
@@ -51,6 +52,7 @@ export default class SideMenu extends Component {
 	}
 	componentDidMount() {
     	this._initializeUser();
+		this.props.global.getVar('parent')._getPhoto([this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]);
 	}
 	componentWillUnmount() {
 		this.props.dbsvc.close();
@@ -70,21 +72,14 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.name}>{this.state.name}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('subscribe')}}>
-                    <Image
-                        source={require('../../img/quill.png')}
-                        style={[styles.leftIcon]}
-                    />
-                    <Text style={styles.sidetext}>작성하기</Text>
-                </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('intro')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('total')}}>
                     <Image
                         source={require('../../img/images.png')}
                         style={[styles.leftIcon]}
                     />
                     <Text style={styles.sidetext}>전체보기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('view')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('album')}}>
                     <Image
                         source={require('../../img/book.png')}
                         style={[styles.leftIcon]}
@@ -98,7 +93,13 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>태그보기</Text>
                 </TouchableOpacity>
-
+				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('subscribe')}}>
+					<Image
+						source={require('../../img/quill.png')}
+						style={[styles.leftIcon]}
+					/>
+					<Text style={styles.sidetext}>작성하기</Text>
+				</TouchableOpacity>
                 <TouchableOpacity style={[{position: 'absolute', bottom: 10, left: 0},styles.sideBtn]} onPress={() => {this._toggleDrawer()}}>
                     <Image source={require('../../img/navicon_add.png')} style={[styles.leftIcon, styles.rotate45]} />
                     <Text style={styles.sidetext}>닫기</Text>
@@ -127,7 +128,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.SubscribeScreen",
 				title: "디자인 작성하기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
 				navigatorStyle: {},
 				navigatorButtons: {rightButtons: [
 					{
@@ -149,12 +150,12 @@ export default class SideMenu extends Component {
 				animated: true,
 				animationType: 'fade'
 			});
-		} else if (screen === 'intro') {
+		} else if (screen === 'total') {
 			this._toggleDrawer();
 			this.props.navigator.resetTo({
-				screen: "calbum.IntroScreen",
-				title: "인트로",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				screen: "calbum.TotalScreen",
+				title: "전체보기",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {leftButtons: [
 					{
@@ -164,12 +165,12 @@ export default class SideMenu extends Component {
 				animated: false,
 				animationType: 'none'
 			});
-		} else if (screen === 'view') {
+		} else if (screen === 'album') {
 			this._toggleDrawer();
 			this.props.navigator.push({
-				screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
+				screen: "calbum.AlbumScreen", // unique ID registered with Navigation.registerScreen
 				title: "디자인 보기", // title of the screen as appears in the nav bar (optional)
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 				animated: true,

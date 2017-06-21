@@ -25,7 +25,7 @@ const owidth = (function() {
 	return Math.round(w/p) - 8;
 })();
 
-export default class IntroScreen extends Component {
+export default class TotalScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
 			{
@@ -37,32 +37,47 @@ export default class IntroScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.global = props.global;
+		this.props.global.setVar('parent', this);
 		this.state = {
 			rows: [],
-			userid: ''
 		}
-		props.dbsvc.getPhoto((ret) => {
+		if (this.props.profile)
+			this._getPhoto(this.props.profile);
+	}
+	_getPhoto(profilearg) {
+		let profile = profilearg ? profilearg :  [false];
+		this.props.dbsvc.getPhoto((ret) => {
+			let res = [];
+			let curr_an = '_reset_';
+			for (var i=0;i < ret.length;i++){
+				if (!ret[i].albumname)
+					ret[i].albumname = '사진첩 선택안함';
+				if (curr_an !== ret[i].albumname) {
+					curr_an = ret[i].albumname;
+					res.push(curr_an);
+				}
+				res.push(ret[i]);
+			}
 			this.setState({
-				rows: ret.map((i, idx) => {
-						return <Thumbnail
-							key={idx}
-							style={styles.thumbnail}
-							title={i.title}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + i.user_key + '.jpg'}
-						/>
-					})
+				rows: res.map((i, idx) => {
+					if (typeof i === 'string') {
+						return <Text key={idx} style={styles.text}>{i}</Text>;
+					}
+					return <Thumbnail
+						key={idx}
+						style={styles.thumbnail}
+						title={i.title}
+						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + i.user_key + '.jpg'}
+					/>
+				})
 			});
-		});
-
+		}, profile[0]);
 	}
 	onNavigatorEvent(event) {
-
 	}
 	render() {
 		return (
 			<ScrollView>
-				<Text>{this.state.userid}</Text>
 				<View style={styles.container}>
 					{this.state.rows}
 				</View>
@@ -76,7 +91,13 @@ const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',
-		// justifyContent: 'space-around',
+	},
+	text: {
+		width: Dimensions.get('window').width,
+		height: 40,
+
+		textAlign: 'center',
+		textAlignVertical: 'center'
 	},
 	thumbnail: {
 		width: owidth,

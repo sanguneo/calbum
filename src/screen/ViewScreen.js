@@ -82,7 +82,7 @@ export default class ViewScreen extends Component {
 			this.setState({
 				merged: {uri: pPath},
 				title: res.title,
-				album: res.album_key,
+				album: res.albumname,
 				recipe: res.recipe,
 				comment: res.comment.replace('\\n', '\n'),
 

@@ -59,6 +59,7 @@ export default class SubscribeScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+
 		this.props.navigator.setStyle({
 			navBarHideOnScroll: true,
 		})
@@ -81,6 +82,7 @@ export default class SubscribeScreen extends Component {
 			comment: '',
 			albums: []
 		}
+
 		this._getAlbums();
 	}
 
@@ -97,10 +99,10 @@ export default class SubscribeScreen extends Component {
 	}
 
 	_getAlbums() {
-		this.db.getAlbum((ret) => {
+		this.db.getAlbumsByUser(this.state.userkey, (ret) => {
 			let albums = [];
 			ret.forEach((item) => {
-				albums.push({label: item.name, value: item.unique_key})
+				albums.push({label: item.albumname, value: item.albumname})
 			});
 			this.setState({albums});
 		});
@@ -186,11 +188,11 @@ export default class SubscribeScreen extends Component {
 				{
 					text: '확인',
 					onPress: () => {
-						console.log('key : ' + this.state.uniqkey);
 						this._mergeImage();
 						this._saveSourceImage();
 						this._insertDB();
 						this._insertTag();
+						this.props.global.getVar('parent')._getPhoto();
 						this.props.navigator.pop();
 					}
 				},
