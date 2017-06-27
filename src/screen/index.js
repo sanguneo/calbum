@@ -3,6 +3,8 @@ import {Navigation} from 'react-native-navigation';
 import ProfileScreen from './ProfileScreen';
 import SubscribeScreen from './SubscribeScreen';
 import TotalScreen from './TotalScreen';
+import SummaryScreen from './SummaryScreen';
+import InAlbumScreen from './InAlbumScreen';
 import AlbumScreen from './AlbumScreen';
 import ViewScreen from './ViewScreen';
 import ThirdScreen from './ThirdScreen';
@@ -13,6 +15,8 @@ export function registerScreens() {
 	Navigation.registerComponent('calbum.ProfileScreen', () => ProfileScreen);
 	Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen);
 	Navigation.registerComponent('calbum.TotalScreen', () => TotalScreen);
+	Navigation.registerComponent('calbum.SummaryScreen', () => SummaryScreen);
+	Navigation.registerComponent('calbum.InAlbumScreen', () => InAlbumScreen);
 	Navigation.registerComponent('calbum.AlbumScreen', () => AlbumScreen);
 	Navigation.registerComponent('calbum.ViewScreen', () => ViewScreen);
     Navigation.registerComponent('calbum.ThirdScreen', () => ThirdScreen);

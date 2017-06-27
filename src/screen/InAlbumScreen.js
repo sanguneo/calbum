@@ -25,7 +25,7 @@ const owidth = (function() {
 	return Math.round(w/p) - 8;
 })();
 
-export default class TotalScreen extends Component {
+export default class InAlbumScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
 			{
@@ -46,23 +46,9 @@ export default class TotalScreen extends Component {
 	}
 	_getPhoto(profilearg) {
 		let profile = profilearg ? profilearg :  [false];
-		this.props.dbsvc.getPhoto((ret) => {
-			let res = [];
-			let curr_an = '_reset_';
-			for (var i=0;i < ret.length;i++){
-				if (!ret[i].albumname)
-					ret[i].albumname = '앨범 선택안함';
-				if (curr_an !== ret[i].albumname) {
-					curr_an = ret[i].albumname;
-					res.push(curr_an);
-				}
-				res.push(ret[i]);
-			}
+		this.props.dbsvc.getPhotoByAlbum((ret) => {
 			this.setState({
-				rows: res.map((i, idx) => {
-					if (typeof i === 'string') {
-						return <Text key={idx} style={styles.text}>{i}</Text>;
-					}
+				rows: ret.map((i, idx) => {
 					return <Thumbnail
 						key={idx}
 						style={styles.thumbnail}
@@ -71,7 +57,7 @@ export default class TotalScreen extends Component {
 					/>
 				})
 			});
-		}, profile[0]);
+		}, profile[0], this.props.albumname);
 	}
 	onNavigatorEvent(event) {
 	}

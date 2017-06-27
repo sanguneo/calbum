@@ -11,6 +11,7 @@ import {
 	View,
 	ScrollView,
 	Alert,
+	TouchableOpacity,
 	Image,
 	Dimensions
 } from 'react-native';
@@ -19,13 +20,16 @@ import Thumbnail from '../component/Thumbnail';
 
 const RNFS = require('react-native-fs');
 
-const owidth = (function() {
+const owidth = (() => {
 	let w = Dimensions.get('window').width;
 	let p = Math.round(w / 150);
 	return Math.round(w/p) - 8;
 })();
+const ot = (() => {
+	return Math.round(Dimensions.get('window').width / 150);
+})();
 
-export default class TotalScreen extends Component {
+export default class SummaryScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
 			{
@@ -44,9 +48,24 @@ export default class TotalScreen extends Component {
 		if (this.props.profile)
 			this._getPhoto(this.props.profile);
 	}
+	_goAlbum(albumname) {
+		this.props.navigator.resetTo({
+			screen: "calbum.InAlbumScreen",
+			title: albumname,
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+			navigatorStyle: {},
+			navigatorButtons: {leftButtons: [
+				{
+					id: 'sideMenu' // id is locked up 'sideMenu'
+				}
+			]},
+			animated: false,
+			animationType: 'none'
+		});
+	}
 	_getPhoto(profilearg) {
 		let profile = profilearg ? profilearg :  [false];
-		this.props.dbsvc.getPhoto((ret) => {
+		this.props.dbsvc.getPhotoEachGroup((ret) => {
 			let res = [];
 			let curr_an = '_reset_';
 			for (var i=0;i < ret.length;i++){
@@ -61,7 +80,9 @@ export default class TotalScreen extends Component {
 			this.setState({
 				rows: res.map((i, idx) => {
 					if (typeof i === 'string') {
-						return <Text key={idx} style={styles.text}>{i}</Text>;
+						return <TouchableOpacity key={idx} onPress={()=>{this._goAlbum(i + '');}}>
+									<Text style={styles.text}>{i}</Text>
+								</TouchableOpacity>;
 					}
 					return <Thumbnail
 						key={idx}
@@ -71,7 +92,7 @@ export default class TotalScreen extends Component {
 					/>
 				})
 			});
-		}, profile[0]);
+		}, profile[0], ot);
 	}
 	onNavigatorEvent(event) {
 	}

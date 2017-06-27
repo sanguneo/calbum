@@ -25,7 +25,7 @@ const owidth = (function() {
 	return Math.round(w/p) - 8;
 })();
 
-export default class TotalScreen extends Component {
+export default class AlbumScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
 			{
@@ -42,27 +42,13 @@ export default class TotalScreen extends Component {
 			rows: [],
 		}
 		if (this.props.profile)
-			this._getPhoto(this.props.profile);
+			this._getPhoto();
 	}
 	_getPhoto(profilearg) {
-		let profile = profilearg ? profilearg :  [false];
+		let profile = profilearg ? profilearg :  this.props.profile;
 		this.props.dbsvc.getPhoto((ret) => {
-			let res = [];
-			let curr_an = '_reset_';
-			for (var i=0;i < ret.length;i++){
-				if (!ret[i].albumname)
-					ret[i].albumname = '앨범 선택안함';
-				if (curr_an !== ret[i].albumname) {
-					curr_an = ret[i].albumname;
-					res.push(curr_an);
-				}
-				res.push(ret[i]);
-			}
 			this.setState({
-				rows: res.map((i, idx) => {
-					if (typeof i === 'string') {
-						return <Text key={idx} style={styles.text}>{i}</Text>;
-					}
+				rows: ret.map((i, idx) => {
 					return <Thumbnail
 						key={idx}
 						style={styles.thumbnail}
@@ -91,13 +77,7 @@ const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',
-	},
-	text: {
-		width: Dimensions.get('window').width,
-		height: 40,
-
-		textAlign: 'center',
-		textAlignVertical: 'center'
+		// justifyContent: 'space-around',
 	},
 	thumbnail: {
 		width: owidth,

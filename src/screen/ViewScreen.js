@@ -102,7 +102,7 @@ export default class ViewScreen extends Component {
 						<Text style={styles.textboxag}>{this.state.title}</Text>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"사진첩"}>
+					<LabeledInput label={"앨범"}>
 						<Text style={styles.textboxag}>{this.state.album}</Text>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>

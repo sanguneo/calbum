@@ -233,7 +233,7 @@ export default class SubscribeScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"사진첩"}>
+					<LabeledInput label={"앨범"}>
 						<Picker style={[styles.album, pickerColor]} selectedValue={this.state.album} itemStyle={styles.itemStyle}
 								onValueChange={(itemValue, itemIndex) => {this.setState({album: itemValue});}}>
 							<Picker.Item label={'선택안함'} value={''}/>

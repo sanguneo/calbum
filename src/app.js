@@ -31,7 +31,7 @@ const crypt = new cryptSVC();
 
 Navigation.startSingleScreenApp({
     screen: {
-        screen: 'calbum.TotalScreen',
+        screen: 'calbum.SummaryScreen',
         title: '컨설팅 앨범',
     },
     appStyle: {
@@ -42,7 +42,7 @@ Navigation.startSingleScreenApp({
 		navBarBackgroundColor: '#f26968',
         navBarTextColor: '#fff',
         navBarButtonColor: '#fff',
-		navBarTitleTextCentered: true, // default: false. centers the title.
+		navBarTitleTextCentered: false, // default: false. centers the title.
 		topBarElevationShadowEnabled: false,
         statusBarHidden: true,
         statusBarTextColorScheme: 'dark',

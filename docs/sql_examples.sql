@@ -17,3 +17,6 @@ from ca_photo as p
 	left join ca_tags as t
 		on t.unique_key = c.tag_key
 	where photo_key = 'ghjk';
+
+
+SELECT * FROM ca_photo as s WHERE (SELECT COUNT(*) FROM ca_photo AS f WHERE f.albumname = s.albumname AND f.idx <= s.idx) <= 2;

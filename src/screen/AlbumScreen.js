@@ -12,19 +12,14 @@ import {
 	ScrollView,
 	Alert,
 	Image,
+	TextInput,
+	TouchableOpacity,
 	Dimensions
 } from 'react-native';
 
-import Thumbnail from '../component/Thumbnail';
-
-const RNFS = require('react-native-fs');
-
-const owidth = (function() {
-	let w = Dimensions.get('window').width;
-	let p = Math.round(w / 150);
-	return Math.round(w/p) - 8;
-})();
-
+const commonStyle = {
+	placeholderTextColor: '#bbb'
+}
 export default class AlbumScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
@@ -39,54 +34,129 @@ export default class AlbumScreen extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.global.setVar('parent', this);
 		this.state = {
+			albumname: '',
 			rows: [],
 		}
 		if (this.props.profile)
-			this._getPhoto();
-	}
-	_getPhoto(profilearg) {
-		let profile = profilearg ? profilearg :  this.props.profile;
-		this.props.dbsvc.getPhoto((ret) => {
-			this.setState({
-				rows: ret.map((i, idx) => {
-					return <Thumbnail
-						key={idx}
-						style={styles.thumbnail}
-						title={i.title}
-						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + i.user_key + '.jpg'}
-					/>
-				})
-			});
-		}, profile[0]);
+			this._getAlbums();
 	}
 	onNavigatorEvent(event) {
 	}
+	_getAlbums() {
+		this.props.dbsvc.getAlbumsByUser(this.props.profile[0], (ret) => {
+			this.setState({rows: ret.map((item)=>{return item.albumname})});
+		});
+	}
+	_insertAlbum() {
+		Alert.alert(
+			'작성완료', this.state.albumname + '앨범을 등록할까요?\n확인을 누르시면 등록됩니다.',
+			[
+				{
+					text: '확인',
+					onPress: () => {
+						this.setState({
+							rows : this.state.rows.concat([this.state.albumname])
+						});
+						this.props.dbsvc.insertAlbum(this.state.albumname, this.props.profile[0]);
+					}
+				},
+				{text: '취소'},
+			],
+			{cancelable: true}
+		);
+	}
+	_removeAlbum(albumname) {
+		Alert.alert(
+			'작성완료', albumname + '앨범을 삭제할까요?\n확인을 누르시면 삭제됩니다.',
+			[
+				{
+					text: '확인',
+					onPress: () => {
+						this.setState({
+							rows: this.state.rows.filter(function(_albumname) {
+								return _albumname != albumname;
+							})
+						});
+						this.props.dbsvc.removeAlbum(albumname, this.props.profile[0]);
+					}
+				},
+				{text: '취소'},
+			],
+			{cancelable: true}
+		);
+
+	}
 	render() {
-		return (
-			<ScrollView>
-				<View style={styles.container}>
-					{this.state.rows}
+		let albumlist = this.state.rows.map((item, idx) => {
+			return (
+				<View  style={styles.row} key={idx}>
+					<Text style={styles.rowContent}>{item}</Text>
+					<TouchableOpacity onPress={()=>{this._removeAlbum(item+'')}}>
+						<Image source={require('../../img/minus.png')} style={styles.rowButtonRemove}/>
+					</TouchableOpacity>
 				</View>
+			);
+		});
+		return (
+			<ScrollView style={styles.container}>
+				<View  style={styles.row}>
+					<TextInput
+						ref={"albumname"}
+						style={styles.rowContent}
+						underlineColorAndroid={'transparent'}
+						onChangeText={(albumname) => this.setState({albumname})}
+						value={this.state.albumname}
+						placeholder={'앨범 이름을 입력하세요.'}
+						placeholderTextColor={commonStyle.placeholderTextColor}
+					/>
+					<TouchableOpacity onPress={()=> {this._insertAlbum()}}>
+						<Image source={require('../../img/plus.png')} style={styles.rowButton}/>
+					</TouchableOpacity>
+				</View>
+				{albumlist}
 			</ScrollView>
 		);
 	}
 }
-
 const styles = StyleSheet.create({
 	container: {
-		flexWrap: 'wrap',
-		flexDirection: 'row',
-		alignItems: 'flex-start',
-		// justifyContent: 'space-around',
 	},
-	thumbnail: {
-		width: owidth,
-		height: owidth,
+	row: {
+		flexDirection: 'row',
+		width: Dimensions.get('window').width,
+		height: 60,
+		paddingHorizontal: 10,
 
-		marginVertical: 5,
-		marginHorizontal: 4,
+		borderBottomWidth: 1,
+		borderColor: '#ccc',
+	},
+	rowContent: {
+		width: Dimensions.get('window').width - 60,
 
-		borderColor: 'rgba(0,0,0,0.2)',
-		borderWidth: 1
+		paddingHorizontal: 0,
+
+		textAlignVertical: 'center',
+
+		fontSize: 18,
+		color: '#000',
+	},
+	rowButton: {
+		width: 30,
+		height: 30,
+
+		marginVertical: 15,
+		marginLeft: 5,
+		marginRight: 10,
+
+		tintColor: '#11bb44',
+	},
+	rowButtonRemove: {
+		width: 30,
+		height: 30,
+
+		marginVertical: 15,
+		marginLeft: 5,
+		marginRight: 10,
+		tintColor: '#cc5533',
 	}
 });

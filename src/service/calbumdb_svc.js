@@ -59,9 +59,11 @@ export default class dbSVC {
 			tx.executeSql("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniquekey+"' AND `passphase`='"+arg_passphase+"';", [], (tx, results) => {});
 		});
 	}
-	getPhoto(callback, user_key) {
-		let userFind = user_key ? " WHERE user_key='"+user_key +"' ORDER BY `albumname`;" : " ORDER BY `albumname`";
-		console.log("SELECT * FROM ca_photo" + userFind);
+	getPhoto(callback, user_key, limit) {
+		let userFind = user_key ? " WHERE user_key='"+user_key +"'" : "";
+		userFind += ' ORDER BY `idx`';
+		userFind += limit ? ' LIMIT ' + limit : '';
+		userFind += ';';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
 				var len = results.rows.length;
@@ -74,8 +76,24 @@ export default class dbSVC {
 			});
 		});
 	}
+	getPhotoEachGroup(callback, user_key, limit) {
+		let quserkey = user_key ? "s.user_key='"+user_key+"' and " : "";
+		let query = "SELECT * FROM ca_photo as s WHERE " + quserkey + "(SELECT COUNT(*) FROM ca_photo as f WHERE f.albumname = s.albumname AND f.idx <= s.idx) <= " + limit + ";";
+		this.db.transaction((tx) => {
+			tx.executeSql(query, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
 	getPhotoByAlbum(callback, user_key, albumname) {
-		let userFind = user_key ? " WHERE user_key='"+user_key +"' albumname='"+albumname+"' ORDER BY `albumname`;" : " ORDER BY `albumname`";
+		let userFind = user_key ? " WHERE user_key='"+user_key +"' albumname='"+albumname+"'" : "";
+		userFind += ' ORDER BY `idx`;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
 				var len = results.rows.length;
@@ -118,6 +136,7 @@ export default class dbSVC {
 	}
 	insertAlbum(albumname, userkey) {
 		let albumquery = "INSERT INTO `ca_album`(`albumname`, `user_key`) SELECT '"+albumname+"', '"+userkey+"' WHERE NOT EXISTS(SELECT 1 FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"');";
+		console.log(albumquery);
 		this.executeQuery(albumquery);
 	}
 	insertTag(i_tags, uniqkey, userkey) {
@@ -130,9 +149,13 @@ export default class dbSVC {
 		});
 		this.executeQuery(tagquery);
 	}
+	removeAlbum(albumname, userkey) {
+		let albumquery = "DELETE FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"';";
+		this.executeQuery(albumquery);
+	}
 	getAlbums(callback) {
 		this.db.transaction((tx) => {
-			tx.executeSql("SELECT albumname FROM ca_album", [], (tx, results) => {
+			tx.executeSql("SELECT albumname, idx, user_key FROM ca_album", [], (tx, results) => {
 				var len = results.rows.length;
 				var ret = [];
 				for (let i = 0; i < len; i++) {
@@ -145,7 +168,7 @@ export default class dbSVC {
 	}
 	getAlbumsByUser(userkey, callback) {
 		this.db.transaction((tx) => {
-			tx.executeSql("SELECT albumname FROM ca_album WHERE user_key='"+userkey+"'", [], (tx, results) => {
+			tx.executeSql("SELECT albumname, idx, user_key FROM ca_album WHERE user_key='"+userkey+"'", [], (tx, results) => {
 				var len = results.rows.length;
 				var ret = [];
 				for (let i = 0; i < len; i++) {
