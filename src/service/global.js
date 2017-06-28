@@ -8,13 +8,20 @@ export function setVar(key, tvar) {
 export function getVar(key) {
 	return gvar[key];
 }
-export function getUntil(key, callback) {
+export function getUntil(key, callback, checker) {
+	let check = checker ? checker : () => true;
 	if(gvar.hasOwnProperty(key)){
-		callback(gvar[key]);
+		if (check(gvar[key])){
+			callback(gvar[key]);
+		}else {
+			setTimeout(()=>{
+				getUntil(key, callback, check);
+			}, 10);
+		}
 	}
 	else {
 		setTimeout(()=>{
-			getUntil(key, callback);
+			getUntil(key, callback, check);
 		}, 10);
 	}
 }

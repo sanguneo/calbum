@@ -169,7 +169,18 @@ export default class SideMenu extends Component {
 			this._toggleDrawer();
 			this.props.navigator.push({
 				screen: "calbum.AlbumScreen", // unique ID registered with Navigation.registerScreen
-				title: "디자인 보기", // title of the screen as appears in the nav bar (optional)
+				title: "앨범등록/삭제", // title of the screen as appears in the nav bar (optional)
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+				animated: true,
+				animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+			});
+		} else if (screen === 'tag') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.TagScreen", // unique ID registered with Navigation.registerScreen
+				title: "태그목록", // title of the screen as appears in the nav bar (optional)
 				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)

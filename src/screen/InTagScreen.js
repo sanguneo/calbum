@@ -25,7 +25,7 @@ const owidth = (function() {
 	return Math.round(w/p) - 8;
 })();
 
-export default class InAlbumScreen extends Component {
+export default class InTagScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [
 			{
@@ -43,8 +43,9 @@ export default class InAlbumScreen extends Component {
 		}
 		this._getPhoto(this.props.profile);
 	}
+
 	_getPhoto(profilearg) {
-		this.props.dbsvc.getPhotoByAlbum((ret) => {
+		this.props.dbsvc.getPhotoByTag((ret) => {
 			this.setState({
 				rows: ret.map((i, idx) => {
 					return <Thumbnail
@@ -55,7 +56,7 @@ export default class InAlbumScreen extends Component {
 					/>
 				})
 			});
-		}, this.props.profile[0], this.props.albumname);
+		}, this.props.profile[0], this.props.tagname);
 	}
 	onNavigatorEvent(event) {
 	}

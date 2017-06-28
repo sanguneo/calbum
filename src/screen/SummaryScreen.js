@@ -45,13 +45,29 @@ export default class SummaryScreen extends Component {
 		this.state = {
 			rows: [],
 		}
-		if (this.props.profile)
+		this.props.global.getUntil('side',
+			(e) =>{
+				this.setState({
+					profile: e.state.profile,
+					uniquekey: e.state.uniquekey,
+					userid: e.state.userid,
+					name: e.state.name,
+					email: e.state.email,
+				})
+			},
+			(c) => {
+				return c.state.uniquekey !== undefined && c.state.uniquekey !== null && c.state.uniquekey !== '';
+			}
+		);
+		if (this.props.profile){
 			this._getPhoto(this.props.profile);
+		}
+
 	}
 	_goAlbum(albumname) {
-		this.props.navigator.resetTo({
+		let aobj = {
 			screen: "calbum.InAlbumScreen",
-			title: albumname,
+			title: '"' + albumname + '" 앨범',
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 			navigatorStyle: {},
 			navigatorButtons: {leftButtons: [
@@ -61,7 +77,14 @@ export default class SummaryScreen extends Component {
 			]},
 			animated: false,
 			animationType: 'none'
-		});
+		}
+		if (albumname === '선택안함') {
+			aobj.title = '앨범 선택안됨';
+		}else {
+			aobj.passProps.albumname = albumname;
+		}
+
+		this.props.navigator.push(aobj);
 	}
 	_getPhoto(profilearg) {
 		let profile = profilearg ? profilearg :  [false];
@@ -70,7 +93,7 @@ export default class SummaryScreen extends Component {
 			let curr_an = '_reset_';
 			for (var i=0;i < ret.length;i++){
 				if (!ret[i].albumname)
-					ret[i].albumname = '앨범 선택안함';
+					ret[i].albumname = '선택안함';
 				if (curr_an !== ret[i].albumname) {
 					curr_an = ret[i].albumname;
 					res.push(curr_an);
