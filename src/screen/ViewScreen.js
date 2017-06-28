@@ -51,13 +51,13 @@ export default class ViewScreen extends Component {
 		this.state = {
 			success: 'no',
 			merged: {uri: null},
-			title: '',
+			title: this.props.title,
 			recipe: '',
-			userid: '',
-			userkey: '',
+			userid: this.props.profile[2],
+			userkey: this.props.profile[0],
 			tags: [],
 			regdate: new Date().getTime(),
-			uniqkey: '',
+			unique_key: this.props.unique_key,
 			album: '',
 			comment: '',
 			albums: []
@@ -70,8 +70,6 @@ export default class ViewScreen extends Component {
 				side: 'left',
 				animated: true
 			});
-		}
-		if (event.id === 'save') {
 		}
 	}
 
@@ -87,7 +85,7 @@ export default class ViewScreen extends Component {
 				comment: res.comment.replace('\\n', '\n'),
 
 			});
-		}, '', '686565686c6574');
+		}, this.state.userkey, this.state.unique_key);
 	}
 
 	render() {

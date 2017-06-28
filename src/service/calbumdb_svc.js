@@ -128,8 +128,8 @@ export default class dbSVC {
 	getPhotoSpecific(callback, user_key, unique_key) {
     	let postfix = user_key||unique_key ? ' WHERE' : '';
 		postfix += user_key ? " user_key='"+user_key +"'" : "";
-		postfix += unique_key ? " `unique_key`='" + unique_key+"'" : "";
-		postfix += ' ORDER BY `albumname`;';
+		postfix += unique_key ? "AND `unique_key`='" + unique_key+"'" : "";
+		postfix += ' ORDER BY `idx`;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
 				var len = results.rows.length;

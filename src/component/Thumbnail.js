@@ -13,7 +13,7 @@ export default class Thumbnail extends Component{
 	}
 	render() {
 		return (
-			<TouchableOpacity style={[styles.thumbnail, this.props.style]}>
+			<TouchableOpacity style={[styles.thumbnail, this.props.style]} onPress={this.props.onPress}>
 				<Image source={{uri:this.props.uri}} style={styles.thumbImage}></Image>
 				<Text style={styles.thumbnailText}>{this.props.title}</Text>
 			</TouchableOpacity>

@@ -126,25 +126,25 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         Canvas canvas = new Canvas(result);
         Paint id = new Paint();
         Paint paint = new Paint();
-        Paint stroke = new Paint();
+        //Paint stroke = new Paint();
 
         canvas.drawBitmap(image, 0, 0, paint);
 
         int w = result.getWidth();
         int h = result.getHeight();
 
-        stroke.setStyle(Paint.Style.STROKE);
-        stroke.setStrokeWidth(3);
-        stroke.setColor(Color.WHITE);
-        stroke.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        stroke.setTextSize(30);
-        stroke.setAntiAlias(true);
-        stroke.setAlpha(80);
+        //stroke.setStyle(Paint.Style.STROKE);
+        //stroke.setStrokeWidth(3);
+        //stroke.setColor(Color.WHITE);
+        //stroke.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        //stroke.setTextSize(30);
+        //stroke.setAntiAlias(true);
+        //stroke.setAlpha(80);
 
 
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        paint.setTextSize(30);
-        paint.setAntiAlias(true);
+        //paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        //paint.setTextSize(30);
+        //paint.setAntiAlias(true);
 
 
         Rect bounds = new Rect();
@@ -157,15 +157,15 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         id.setAlpha(95);
 
 
-        canvas.drawText("Before", w/4 - 35, h - 30, stroke);
-        canvas.drawText("After", 3*w/4 - 35, h - 30, stroke);
+        //canvas.drawText("Before", w/4 - 35, h - 30, stroke);
+        //canvas.drawText("After", 3*w/4 - 35, h - 30, stroke);
 
-        paint.setColor(Color.parseColor("#ff0000"));
-        paint.setAlpha(90);
-        canvas.drawText("Before", w/4 - 35, h - 30, paint);
-        paint.setColor(Color.parseColor("#0000ff"));
-        paint.setAlpha(90);
-        canvas.drawText("After", 3*w/4 - 35, h - 30, paint);
+        //paint.setColor(Color.parseColor("#ff0000"));
+        //paint.setAlpha(90);
+        //canvas.drawText("Before", w/4 - 35, h - 30, paint);
+        //paint.setColor(Color.parseColor("#0000ff"));
+        //paint.setAlpha(90);
+        //canvas.drawText("After", 3*w/4 - 35, h - 30, paint);
 
         canvas.drawText(idString, (canvas.getWidth() / 2) - (bounds.width() / 2), 40, id);
 
