@@ -76,7 +76,7 @@ export default class ViewScreen extends Component {
 	componentDidMount() {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
-			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + res.user_key + '.jpg?key=' + key;
+			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpg?key=' + key;
 			this.setState({
 				merged: {uri: pPath},
 				title: res.title,
@@ -84,6 +84,13 @@ export default class ViewScreen extends Component {
 				recipe: res.recipe,
 				comment: res.comment.replace('\\n', '\n'),
 
+			});
+		}, this.state.userkey, this.state.unique_key);
+		this.db.getTagSpecific((res) => {
+			this.setState({
+				tags: res.map((res)=>{
+					return '#' + res.name;
+				})
 			});
 		}, this.state.userkey, this.state.unique_key);
 	}

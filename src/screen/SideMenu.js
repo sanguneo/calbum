@@ -72,6 +72,13 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.name}>{this.state.name}</Text>
                 </TouchableOpacity>
+				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('subscribe')}}>
+					<Image
+						source={require('../../img/quill.png')}
+						style={[styles.leftIcon]}
+					/>
+					<Text style={styles.sidetext}>작성하기</Text>
+				</TouchableOpacity>
                 <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('total')}}>
                     <Image
                         source={require('../../img/images.png')}
@@ -93,13 +100,6 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>태그보기</Text>
                 </TouchableOpacity>
-				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('subscribe')}}>
-					<Image
-						source={require('../../img/quill.png')}
-						style={[styles.leftIcon]}
-					/>
-					<Text style={styles.sidetext}>작성하기</Text>
-				</TouchableOpacity>
                 <TouchableOpacity style={[{position: 'absolute', bottom: 10, left: 0},styles.sideBtn]} onPress={() => {this._toggleDrawer()}}>
                     <Image source={require('../../img/navicon_add.png')} style={[styles.leftIcon, styles.rotate45]} />
                     <Text style={styles.sidetext}>닫기</Text>

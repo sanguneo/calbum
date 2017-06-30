@@ -142,6 +142,23 @@ export default class dbSVC {
 			});
 		});
 	}
+	getTagSpecific(callback, user_key, unique_key) {
+		let postfix = user_key||unique_key ? ' WHERE' : '';
+		postfix += user_key ? " user_key='"+user_key +"'" : "";
+		postfix += unique_key ? "AND `photo_key`='" + unique_key+"'" : "";
+		postfix += ' ORDER BY `idx`;';
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_tag" + postfix, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
 	executeQuery(query) {
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {

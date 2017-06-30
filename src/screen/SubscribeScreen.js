@@ -82,7 +82,7 @@ export default class SubscribeScreen extends Component {
 			comment: '',
 			albums: []
 		}
-
+		RNFS.readDir(RNFS.DocumentDirectoryPath + '/_thumb_/').then((res) => {console.log(res)});
 		this._getAlbums();
 	}
 
@@ -115,12 +115,12 @@ export default class SubscribeScreen extends Component {
 	_saveSourceImage() {
 		RNFS.copyFile(
 			this.state.srcLeft.replace('file://', ''),
-			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+ '_left.jpg'
+			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpg'
 		).then(() => {}).catch((e) => {console.error('error left', e)});
 
 		RNFS.copyFile(
 			this.state.srcRight.replace('file://', ''),
-			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+ '_right.jpg'
+			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid+ '_right.jpg'
 		).then(() => {}).catch((e) => {console.error('error right', e)});
 	}
 	_changeImage(direct) {

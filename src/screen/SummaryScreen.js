@@ -122,7 +122,7 @@ export default class SummaryScreen extends Component {
 						key={idx}
 						style={styles.thumbnail}
 						title={i.title}
-						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + i.user_key + '.jpg'}
+						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.state.userid + '.jpg'}
 						onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
 					/>
 				})

@@ -2,7 +2,7 @@ package com.calbum;
 
 import android.widget.LinearLayout;
 import android.graphics.Color;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.view.Gravity;
 import android.util.TypedValue;
 
@@ -13,17 +13,14 @@ public class MainActivity extends SplashActivity {
     @Override
     public LinearLayout createSplashLayout() {
         LinearLayout view = new LinearLayout(this);
-        TextView textView = new TextView(this);
 
-        view.setBackgroundColor(Color.parseColor("#A2AAB0"));
+        ImageView image = new ImageView(this);
+        image.setImageResource(R.drawable.splash) ;
+
+        view.setBackgroundColor(Color.parseColor("#000000"));
         view.setGravity(Gravity.CENTER);
 
-        textView.setTextColor(Color.parseColor("#EBECED"));
-        textView.setText("Consulting\nAlbum");
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40);
-
-        view.addView(textView);
+        view.addView(image);
         return view;
     }
 
