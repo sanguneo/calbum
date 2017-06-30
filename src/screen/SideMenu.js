@@ -55,7 +55,7 @@ export default class SideMenu extends Component {
 		this.props.global.getVar('parent')._getPhoto([this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]);
 	}
 	componentWillUnmount() {
-		this.props.dbsvc.close();
+		this.props.dbsvc.closeDB();
 	}
     render() {
 		let profile = this.state.profile;

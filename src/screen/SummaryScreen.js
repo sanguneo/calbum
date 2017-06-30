@@ -18,6 +18,7 @@ import {
 
 import Thumbnail from '../component/Thumbnail';
 
+
 const RNFS = require('react-native-fs');
 
 const owidth = (() => {
@@ -43,7 +44,7 @@ export default class SummaryScreen extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.global.setVar('parent', this);
 		this.state = {
-			rows: [],
+			rows: []
 		}
 		this.props.global.getUntil('side',
 			(e) =>{
@@ -56,12 +57,10 @@ export default class SummaryScreen extends Component {
 				})
 			},
 			(c) => {
+				this._getPhoto(this.props.profile);
 				return c.state.uniquekey !== undefined && c.state.uniquekey !== null && c.state.uniquekey !== '';
 			}
 		);
-		if (this.props.profile){
-			this._getPhoto(this.props.profile);
-		}
 
 	}
 	_goAlbum(albumname) {
@@ -133,11 +132,13 @@ export default class SummaryScreen extends Component {
 	}
 	render() {
 		return (
-			<ScrollView>
-				<View style={styles.container}>
-					{this.state.rows}
-				</View>
-			</ScrollView>
+			<View>
+				<ScrollView>
+					<View style={styles.container}>
+						{this.state.rows}
+					</View>
+				</ScrollView>
+			</View>
 		);
 	}
 }

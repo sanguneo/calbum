@@ -18,6 +18,8 @@ import {
 	Picker,
 } from 'react-native';
 
+import Button from '../component/Button';
+import Lightbox from '../component/Lightbox';
 import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
 const RNFS = require('react-native-fs');
@@ -60,7 +62,8 @@ export default class ViewScreen extends Component {
 			unique_key: this.props.unique_key,
 			album: '',
 			comment: '',
-			albums: []
+			albums: [],
+			lightbox: true
 		}
 	}
 
@@ -94,47 +97,57 @@ export default class ViewScreen extends Component {
 			});
 		}, this.state.userkey, this.state.unique_key);
 	}
+	_getSideOriginal(side) {
+
+	}
 
 	render() {
 		return (
-			<ScrollView style={styles.container}>
-				<Image source={this.state.merged} style={styles.imgView}/>
-				<View style={[styles.bgView,{marginTop: 15}]}>
-					<Text style={{fontSize: 17}}>기본정보</Text>
-				</View>
-				<View style={styles.formWrapper}>
-					<LabeledInput label={"제목"}>
-						<Text style={styles.textboxag}>{this.state.title}</Text>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"앨범"}>
-						<Text style={styles.textboxag}>{this.state.album}</Text>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"테그"}>
-						<Text style={styles.textboxag}>{this.state.tags.join(', ')}</Text>
-					</LabeledInput>
-				</View>
-				<View style={styles.bgView}>
-					<Text style={{fontSize: 17}}>레시피</Text>
-				</View>
-				<View style={styles.formWrapper}>
-					<Text style={styles.textboxag}>{this.state.recipe}</Text>
-				</View>
-				<View style={styles.bgView}>
-					<Text style={{fontSize: 17}}>코멘트</Text>
-				</View>
-				<View style={[styles.formWrapper, {marginBottom: 50}]}>
-					<Text style={styles.textboxag}>{this.state.comment}</Text>
-				</View>
-			</ScrollView>
+			<View>
+				<ScrollView style={styles.container}>
+					<View style={styles.imgView}>
+						<Image source={this.state.merged} style={styles.img}/>
+						<TouchableOpacity style={[styles.oimg, styles.leftImg]} onPress={()=> {this._getSideOriginal('left')}}></TouchableOpacity>
+						<TouchableOpacity style={[styles.oimg, styles.rightImg]} onPress={()=> {this._getSideOriginal('right')}}></TouchableOpacity>
+					</View>
+					<View style={[styles.bgView,{marginTop: 15}]}>
+						<Text style={{fontSize: 17}}>기본정보</Text>
+					</View>
+					<View style={styles.formWrapper}>
+						<LabeledInput label={"제목"}>
+							<Text style={styles.textboxag}>{this.state.title}</Text>
+						</LabeledInput>
+						<Hr lineColor={commonStyle.hrColor}/>
+						<LabeledInput label={"앨범"}>
+							<Text style={styles.textboxag}>{this.state.album}</Text>
+						</LabeledInput>
+						<Hr lineColor={commonStyle.hrColor}/>
+						<LabeledInput label={"테그"}>
+							<Text style={styles.textboxag}>{this.state.tags.join(', ')}</Text>
+						</LabeledInput>
+					</View>
+					<View style={[styles.formWrapperDiv, {marginBottom: 30}]}>
+						<Button imgsource={require('../../img/recipe.png')} style={{flex: 0.5, backgroundColor: '#2a93d5'}} onPress={()=>{this.refs.recipe._open();}} btnname={'레시피 보기'}/>
+						<Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#aed9da'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>
+					</View>
+				</ScrollView>
+				<Lightbox ref={'recipe'} title={'레시피'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'}>
+					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
+						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
+					</View>
+				</Lightbox>
+				<Lightbox ref={'comment'} title={'코멘트'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'}>
+					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
+						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
+					</View>
+				</Lightbox>
+			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 	},
 	imgView: {
 		flex: 1,
@@ -145,11 +158,29 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	img: {
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width  : 800,
 		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
+	},
+	oimg: {
+		position: 'absolute',
+		backgroundColor: 'rgba(255,255,255,0.05)',
+		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width /2  : 400,
+		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
+	},
+	leftImg: {
+		left:0
+	},
+	rightImg: {
+		right:0
 	},
 	formWrapper: {
 		flex: 1,
+		margin: 10,
+		borderRadius:5,
+		backgroundColor: commonStyle.backgroundColor
+	},
+	formWrapperDiv: {
+		flexDirection: 'row',
 		margin: 10,
 		borderRadius:5,
 		backgroundColor: commonStyle.backgroundColor

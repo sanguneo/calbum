@@ -16,7 +16,7 @@ export default class dbSVC {
                         let row = results.rows.item(i);
                         if(row.name !== 'sqlite_sequence' && row.name !== 'android_metadata') ret.push(row.name);
                     }
-                    console.log('DB Loaded : ' + ret.join(', '));
+                    console.log('DB Loaded Success!! : ' + ret.join(', '));
                 });
             });
         }
@@ -33,7 +33,7 @@ export default class dbSVC {
     }
     closeDB() {
     	this.db.close();
-		console.log('DB Closed');
+		console.log('DB Closed Success!!');
 	}
     getUSER(callback) {
         this.db.transaction((tx) => {

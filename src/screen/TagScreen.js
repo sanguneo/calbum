@@ -73,7 +73,7 @@ export default class TagScreen extends Component {
 			return (
 				<View  style={styles.row} key={idx}>
 					<TouchableOpacity key={idx} onPress={()=>{this._goTag(item + '');}} >
-						<Text style={styles.rowContent}>{item}</Text>
+						<Text style={styles.rowContent}>{'#' + item}</Text>
 					</TouchableOpacity>
 				</View>
 			);

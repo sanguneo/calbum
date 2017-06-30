@@ -11,7 +11,7 @@ export default class Button extends Component{
 	render() {
 		return (
 			<TouchableOpacity style={[styles.button, this.props.style]} onPress={this.props.onPress}>
-				<Image source={this.props.imgsource} style={styles.btnimg} /><Text style={styles.btntext} >저장</Text>
+				<Image source={this.props.imgsource} style={styles.btnimg} /><Text style={styles.btntext} >{this.props.btnname}</Text>
 			</TouchableOpacity>
 		);
 	}
@@ -29,17 +29,18 @@ const styles = StyleSheet.create({
 		borderWidth:1
 	},
 	btnimg: {
-		width: 20,
-		height: 20,
-		marginTop: 13,
-		marginBottom: 12,
+		width: 26,
+		height: 26,
+		marginTop: 9,
+		marginBottom: 6,
 		tintColor: '#fff',
 	},
 	btntext: {
-		marginLeft: 20,
+		marginLeft: 10,
 		height: 30,
 		fontSize: 20,
 		marginTop:7,
+		marginBottom: 5,
 		textAlignVertical: 'center',
 		color: '#fff'
 	}
