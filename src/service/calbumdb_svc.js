@@ -5,8 +5,10 @@
 const SQLite = require('react-native-sqlite-storage');
 
 export default class dbSVC {
+	isDebug = false;
     constructor(debug=false) {
         this.db = SQLite.openDatabase({name: 'consultAlbum.db', createFromLocation: 1});
+        this.isDebug = debug;
         if (debug) {
             this.db.transaction((tx) => {
                 tx.executeSql("SELECT name FROM sqlite_master WHERE type='table'", [], (tx, results) => {
@@ -33,7 +35,8 @@ export default class dbSVC {
     }
     closeDB() {
     	this.db.close();
-		console.log('DB Closed Success!!');
+    	if (this.isDebug)
+			console.log('DB Closed Success!!');
 	}
     getUSER(callback) {
         this.db.transaction((tx) => {
@@ -128,7 +131,8 @@ export default class dbSVC {
 	getPhotoSpecific(callback, user_key, unique_key) {
     	let postfix = user_key||unique_key ? ' WHERE' : '';
 		postfix += user_key ? " user_key='"+user_key +"'" : "";
-		postfix += unique_key ? "AND `unique_key`='" + unique_key+"'" : "";
+		postfix += user_key&&unique_key ? " AND" : "";
+		postfix += unique_key ? " `unique_key`='" + unique_key+"'" : "";
 		postfix += ' ORDER BY `idx`;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {

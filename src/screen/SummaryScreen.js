@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
-
+import Titler from '../component/Titler';
 
 const RNFS = require('react-native-fs');
 
@@ -113,9 +113,7 @@ export default class SummaryScreen extends Component {
 			this.setState({
 				rows: res.map((i, idx) => {
 					if (typeof i === 'string') {
-						return <TouchableOpacity key={idx} onPress={()=>{this._goAlbum(i + '');}}>
-									<Text style={styles.text}>{i}</Text>
-								</TouchableOpacity>;
+						return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
 					}
 					return <Thumbnail
 						key={idx}

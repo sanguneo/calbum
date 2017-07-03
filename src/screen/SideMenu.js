@@ -200,13 +200,6 @@ export default class SideMenu extends Component {
 			});
 		}
     }
-    _openImagePicker() {
-    	console.log(this.props.userinfo);
-        // ImagePicker.openPicker(imgOpt).then((profile) => {
-        //     this.setState({profile: {uri: profile.path}});
-        //     RNFS.copyFile(profile.path.replace('file://',''), RNFS.DocumentDirectoryPath + '/_profiles_/'+this.state.uniquekey+'_'+this.state.userid+'.jpg');
-        // });
-    }
 }
 
 const styles = StyleSheet.create({

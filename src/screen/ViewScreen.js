@@ -161,7 +161,7 @@ export default class ViewScreen extends Component {
 						{imgBefore}
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesafter'} title={'after'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lbClose()}}>
+				<Lightbox ref={'imagesafter'} title={'After'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lbClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgAfter}
 					</View>

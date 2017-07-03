@@ -54,17 +54,21 @@ var Hr = function (_Component) {
 	_createClass(Hr, [{
 		key: 'renderLine',
 		value: function renderLine(key) {
-			return _react2.default.createElement(_reactNative.View, { key: key, style: [styles.line, { backgroundColor: this.props.lineColor }] });
+			let lineWidth = {};
+			if (this.props.lineWidth) {
+				lineWidth.height = this.props.lineWidth;
+			}
+			return _react2.default.createElement(_reactNative.View, { key: key, style: [styles.line, { backgroundColor: this.props.lineColor }, lineWidth] });
 		}
 	}, {
 		key: 'renderText',
 		value: function renderText(key) {
 			return _react2.default.createElement(
 				_reactNative.View,
-				{ key: key, style: styles.textContainer },
+				{ key: key, style: [styles.textContainer, {height: this.props.containerHeight}] },
 				_react2.default.createElement(
 					_reactNative.Text,
-					{ style: [styles.text, { color: this.props.textColor }] },
+					{ style: [styles.text, { color: this.props.textColor }, this.props.textStyle] },
 					this.props.text
 				)
 			);
@@ -93,8 +97,11 @@ var Hr = function (_Component) {
 
 Hr.propTypes = {
 	lineColor: _react.PropTypes.string.isRequired,
+	lineWidth: _react.PropTypes.number,
 	text: _react.PropTypes.string,
-	textColor: _react.PropTypes.string
+	textColor: _react.PropTypes.string,
+	textStyle: _react.PropTypes.object,
+	containerHeight: _react.PropTypes.number,
 };
 
 exports.default = Hr;

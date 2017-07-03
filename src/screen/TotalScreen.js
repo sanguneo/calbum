@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
+import Titler from '../component/Titler';
 
 const RNFS = require('react-native-fs');
 
@@ -43,6 +44,28 @@ export default class TotalScreen extends Component {
 		}
 		if (this.props.profile)
 			this._getPhoto(this.props.profile);
+	}
+	_goAlbum(albumname) {
+		let aobj = {
+			screen: "calbum.InAlbumScreen",
+			title: '"' + albumname + '" 앨범',
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+			navigatorStyle: {},
+			navigatorButtons: {leftButtons: [
+				{
+					id: 'sideMenu' // id is locked up 'sideMenu'
+				}
+			]},
+			animated: false,
+			animationType: 'none'
+		}
+		if (albumname === '선택안함') {
+			aobj.title = '앨범 선택안됨';
+		}else {
+			aobj.passProps.albumname = albumname;
+		}
+
+		this.props.navigator.push(aobj);
 	}
 	_goPhoto(title, unique_key) {
 		this.props.navigator.push({
@@ -72,9 +95,8 @@ export default class TotalScreen extends Component {
 			this.setState({
 				rows: res.map((i, idx) => {
 					if (typeof i === 'string') {
-						return <Text key={idx} style={styles.text}>{i}</Text>;
+						return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
 					}
-					console.log('file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg');
 					return <Thumbnail
 						key={idx}
 						style={styles.thumbnail}

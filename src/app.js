@@ -4,17 +4,6 @@
  * @flow
  */
 
-console.sdebug = true;
-var orig_log = console.log;
-var orig_error = console.error;
-console.log = function(){
-	return console.sdebug ? orig_log.apply(this, arguments) : null;
-}
-console.error = function(){
-	return console.sdebug ? orig_error.apply(this, arguments) : null;
-}
-
-JSON.clone = (arg) => {JSON.parse(JSON.stringify(arg))};
 JSON.formatedString= (arg) => JSON.stringify(arg, null, 4);
 
 import {Navigation} from 'react-native-navigation';
@@ -26,7 +15,7 @@ import * as global from './service/global';
 import dbSVC from './service/calbumdb_svc';
 import cryptSVC from './service/crypt_svc';
 
-const dbsvc = new dbSVC(true);
+const dbsvc = new dbSVC(false);
 const crypt = new cryptSVC();
 
 Navigation.startSingleScreenApp({

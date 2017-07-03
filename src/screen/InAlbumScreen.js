@@ -54,7 +54,7 @@ export default class InAlbumScreen extends Component {
 			animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
 		});
 	}
-	_getPhoto(profilearg) {
+	_getPhoto() {
 		this.props.dbsvc.getPhotoByAlbum((ret) => {
 			this.setState({
 				rows: ret.map((i, idx) => {
@@ -62,7 +62,7 @@ export default class InAlbumScreen extends Component {
 						key={idx}
 						style={styles.thumbnail}
 						title={i.title}
-						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + i.user_key + '.jpg'}
+						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg'}
 						onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
 					/>
 				})

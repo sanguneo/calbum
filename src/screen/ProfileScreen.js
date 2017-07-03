@@ -106,10 +106,9 @@ export default class ProfileScreen extends Component {
 		let key = Math.random()*100000;
 		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpg';
 		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.log('error_del', e)});
-		}).catch((e) => {console.log('error', e)});
+			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
+		}).catch((e) => {console.error('error', e)});
 		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
-
 	}
 	_submit() {
 		if (!this._formCheck()) return;
@@ -124,7 +123,11 @@ export default class ProfileScreen extends Component {
 						this.props.dbsvc.editUSER(this.state.uniquekey, this.state.name, this.state.email, md5(this.state.pass));
 					}
 					this._saveProfileImage();
-					this.global.getVar('side').setState({name: this.state.name});
+					this.global.getVar('side').setState({
+						name: this.state.name,
+						uniquekey: this.state.uniquekey,
+						userid: this.state.userid
+					});
 					this.props.navigator.pop();
 				}},
 				{text: '취소'},

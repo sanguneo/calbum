@@ -25,6 +25,8 @@ export default class Lightbox extends Component {
     //     toValue: number,
     //     duration: number,
     //     key: string,
+	//	   close: function,
+	//     collapsed: boolean
     // }
 	constructor(props) {
 		super(props);
@@ -35,6 +37,10 @@ export default class Lightbox extends Component {
 		if (props.collapsed) {
 			this.collapsedStyle = {paddingTop: 0, marginBottom: 0};
 		}
+
+		if (this.props.close) {
+
+		}
 	}
 
 
@@ -43,6 +49,11 @@ export default class Lightbox extends Component {
     }
 	componentDidMount() {
         // this._open();
+	}
+	_propclose() {
+		if (this.props.close) {
+			this.props.close();
+		}
 	}
 	_open() {
 		setTimeout(() => {
@@ -74,7 +85,7 @@ export default class Lightbox extends Component {
             <Animated.View style={[styles.container, animatedStyle, this.props.style, this.state]}>
                 <View style={[styles.animatedview, {backgroundColor: this.props.bgColor}, this.collapsedStyle]}>
                     <Text style={[styles.title, {color: this.props.color}]}>{this.props.title}</Text>
-                    <TouchableOpacity style={[styles.closeBtn]} onPress={() => {this._close();this.props.close();}}>
+                    <TouchableOpacity style={[styles.closeBtn]} onPress={() => {this._close();this._propclose();}}>
                         <Image source={require('../../img/navicon_add.png')} style={[styles.close,{tintColor: this.props.color}]} />
                     </TouchableOpacity>
 					{this.props.children}

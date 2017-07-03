@@ -82,7 +82,6 @@ export default class SubscribeScreen extends Component {
 			comment: '',
 			albums: []
 		}
-		RNFS.readDir(RNFS.DocumentDirectoryPath + '/_thumb_/').then((res) => {console.log(res)});
 		this._getAlbums();
 	}
 
