@@ -284,7 +284,7 @@ export default class SubscribeScreen extends Component {
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
-					<Button imgsource={require('../../img/checkmark.png')} onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button imgsource={require('../../img/checkmark.png')}  style={{backgroundColor: '#36384C'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
 			</ScrollView>
 		);

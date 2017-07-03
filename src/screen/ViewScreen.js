@@ -51,11 +51,8 @@ export default class ViewScreen extends Component {
 	}
 
 	onNavigatorEvent(event) {
-		if (event.id === 'menu') {
-			this.props.navigator.toggleDrawer({
-				side: 'left',
-				animated: true
-			});
+		if (event.id === 'close') {
+			this._lightboxClose();
 		}
 	}
 
@@ -81,15 +78,28 @@ export default class ViewScreen extends Component {
 		}, this.state.userkey, this.state.unique_key);
 	}
 	_getSideOriginal(side) {
+		let close = () => {};
+		this.side = null;
 		if(side === 'left'){
-			this.refs.imagesbefore._open();
+			this.side = 'imagesbefore';
 		} else {
-			this.refs.imagesafter._open();
+			this.side = 'imagesafter';
 		}
+		this.refs[this.side]._open();
+		this.props.navigator.setButtons({
+			leftButtons: [], // see "Adding buttons to the navigator" below for format (optional)
+			rightButtons: [{id: 'close', icon: require('../../img/navicon_close.png')}], // see "Adding buttons to the navigator" below for format (optional)
+			animated: true // does the change have transition animation or does it happen immediately (optional)
+		});
+
 	}
 	_lightboxClose() {
-		this.refs.imagesbefore._close();
-		this.refs.imagesafter._close();
+		this.refs[this.side]._close();
+		this.props.navigator.setButtons({
+			leftButtons: [{id: 'back'}],
+			rightButtons: [],
+			animated: true // does the change have transition animation or does it happen immediately (optional)
+		});
 	}
 
 	render() {
@@ -120,26 +130,26 @@ export default class ViewScreen extends Component {
 						</LabeledInput>
 					</View>
 					<View style={[styles.formWrapperDiv, {marginBottom: 30}]}>
-						<Button imgsource={require('../../img/recipe.png')} style={{flex: 0.5, backgroundColor: '#2a93d5'}} onPress={()=>{this.refs.recipe._open();}} btnname={'레시피 보기'}/>
-						<Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#aed9da'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>
+						<Button imgsource={require('../../img/recipe.png')} style={{flex: 0.5, backgroundColor: '#E3BAB3'}} onPress={()=>{this.refs.recipe._open();}} btnname={'레시피 보기'}/>
+						<Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#A1BBD0'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>
 					</View>
 				</ScrollView>
-				<Lightbox ref={'recipe'} title={'레시피'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000000'} color={'#ffffff'}>
+				<Lightbox ref={'recipe'} title={'레시피'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
 					</View>
 				</Lightbox>
-				<Lightbox ref={'comment'} title={'코멘트'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000000'} color={'#ffffff'}>
+				<Lightbox ref={'comment'} title={'코멘트'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesbefore'} title={'Before'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lightboxClose()}}>
+				<Lightbox ref={'imagesbefore'} title={'Before'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgBefore}
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesafter'} title={'After'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lightboxClose()}}>
+				<Lightbox ref={'imagesafter'} title={'After'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgAfter}
 					</View>

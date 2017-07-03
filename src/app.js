@@ -31,9 +31,9 @@ Navigation.startSingleScreenApp({
 		navBarTranslucent: false,
         drawUnderNavBar: false,
 		navBarHideOnScroll: false,
-		navBarBackgroundColor: '#fff',
-        navBarTextColor: '#000',
-        navBarButtonColor: '#000',
+		navBarBackgroundColor: '#36384C',
+        navBarTextColor: '#fff',
+        navBarButtonColor: '#fff',
 		navBarTitleTextCentered: false, // default: false. centers the title.
 		topBarElevationShadowEnabled: false,
         statusBarHidden: false,

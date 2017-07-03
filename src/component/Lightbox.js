@@ -80,13 +80,18 @@ export default class Lightbox extends Component {
     render() {
         const animatedStyle = {};
         animatedStyle[this.props.stylekey] = this.animatedValue;
+        const top = !this.props.hideTop ? [<Text key={'title'} style={[styles.title, {color: this.props.color}]}>{this.props.title}</Text>,
+			<TouchableOpacity key={'icon'} style={[styles.closeBtn]} onPress={() => {this._close();this._propclose();}}>
+				<Image source={require('../../img/navicon_add.png')} style={[styles.close,{tintColor: this.props.color}]} />
+			</TouchableOpacity>] : null;
+		const collapsedStyle = {};
+		if (this.props.hideTop) {
+			collapsedStyle.paddingTop = 0;
+		}
         return (
             <Animated.View style={[styles.container, animatedStyle, this.props.style, this.state]}>
-                <View style={[styles.animatedview, {backgroundColor: this.props.bgColor}, this.collapsedStyle]}>
-                    <Text style={[styles.title, {color: this.props.color}]}>{this.props.title}</Text>
-                    <TouchableOpacity style={[styles.closeBtn]} onPress={() => {this._close();this._propclose();}}>
-                        <Image source={require('../../img/navicon_add.png')} style={[styles.close,{tintColor: this.props.color}]} />
-                    </TouchableOpacity>
+                <View style={[styles.animatedview, {backgroundColor: this.props.bgColor}, collapsedStyle]}>
+					{top}
 					{this.props.children}
                 </View>
             </Animated.View>
