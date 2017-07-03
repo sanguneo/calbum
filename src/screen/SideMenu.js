@@ -65,35 +65,35 @@ export default class SideMenu extends Component {
 		}
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.profile} onPress={() => {this._openModal('profile')}}>
+                <TouchableOpacity style={styles.profile} onPress={() => {this._openScreen('profile')}}>
                     <Image
                         source={profile}
                         style={styles.stretch}
                     />
                     <Text style={styles.name}>{this.state.name}</Text>
                 </TouchableOpacity>
-				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('subscribe')}}>
+				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('subscribe')}}>
 					<Image
 						source={require('../../img/quill.png')}
 						style={[styles.leftIcon]}
 					/>
 					<Text style={styles.sidetext}>작성하기</Text>
 				</TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('total')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('total')}}>
                     <Image
                         source={require('../../img/images.png')}
                         style={[styles.leftIcon]}
                     />
                     <Text style={styles.sidetext}>전체보기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('album')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('album')}}>
                     <Image
                         source={require('../../img/book.png')}
                         style={[styles.leftIcon]}
                     />
                     <Text style={styles.sidetext}>앨범보기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openModal('tag')}}>
+                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('tag')}}>
                     <Image
                         source={require('../../img/price-tags.png')}
                         style={[styles.leftIcon]}
@@ -117,7 +117,7 @@ export default class SideMenu extends Component {
         });
 
     }
-    _openModal(screen) {
+    _openScreen(screen) {
     	let userinfo = {
     		name: this.state.name,
 			userid: this.state.userid,
@@ -137,7 +137,7 @@ export default class SideMenu extends Component {
 					}
 				]},
 				animated: true,
-				animationType: 'fade'
+				animationType: 'slide-up'
 			});
 		} else if (screen === 'profile') {
 			this._toggleDrawer();
@@ -148,7 +148,7 @@ export default class SideMenu extends Component {
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
-				animationType: 'fade'
+				animationType: 'slide-up'
 			});
 		} else if (screen === 'total') {
 			this._toggleDrawer();
@@ -163,7 +163,7 @@ export default class SideMenu extends Component {
 					}
 				]},
 				animated: false,
-				animationType: 'none'
+				animationType: 'slide-up'
 			});
 		} else if (screen === 'album') {
 			this._toggleDrawer();
@@ -174,7 +174,7 @@ export default class SideMenu extends Component {
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 				animated: true,
-				animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+				animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
 			});
 		} else if (screen === 'tag') {
 			this._toggleDrawer();
@@ -185,13 +185,13 @@ export default class SideMenu extends Component {
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 				animated: true,
-				animationType: 'fade' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+				animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
 			});
 		} else {
 			this._toggleDrawer();
-			this.props.navigator.push({
-				screen: "calbum.ThirdScreen", // unique ID registered with Navigation.registerScreen
-				title: "Modal", // title of the screen as appears in the nav bar (optional)
+			this.props.navigator.resetTo({
+				screen: "calbum.SummeryScreen", // unique ID registered with Navigation.registerScreen
+				title: "요약", // title of the screen as appears in the nav bar (optional)
 				passProps: {}, // simple serializable object that will pass as props to the modal (optional)
 				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)

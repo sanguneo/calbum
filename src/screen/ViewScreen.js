@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
 	StyleSheet,
@@ -13,9 +7,6 @@ import {
 	Image,
 	Dimensions,
 	TouchableOpacity,
-	Alert,
-	TextInput,
-	Picker,
 } from 'react-native';
 
 import Button from '../component/Button';
@@ -24,18 +15,6 @@ import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
 const RNFS = require('react-native-fs');
 
-const imgOpt = {
-	width: 400,
-	height: 800,
-	cropping: true
-};
-
-const inputProps = {
-	keyboardType: 'default',
-	placeholder: '테그',
-	autoFocus: false,
-};
-
 const commonStyle = {
 	placeholderTextColor: '#bbb',
 	hrColor: '#000',
@@ -43,7 +22,6 @@ const commonStyle = {
 }
 
 import ImageViewer from 'react-native-image-zoom-viewer';
-const images = [{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]
 export default class ViewScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -109,7 +87,7 @@ export default class ViewScreen extends Component {
 			this.refs.imagesafter._open();
 		}
 	}
-	_lbClose() {
+	_lightboxClose() {
 		this.refs.imagesbefore._close();
 		this.refs.imagesafter._close();
 	}
@@ -156,12 +134,12 @@ export default class ViewScreen extends Component {
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesbefore'} title={'Before'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lbClose()}}>
+				<Lightbox ref={'imagesbefore'} title={'Before'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lightboxClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgBefore}
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesafter'} title={'After'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lbClose()}}>
+				<Lightbox ref={'imagesafter'} title={'After'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lightboxClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgAfter}
 					</View>
@@ -173,8 +151,6 @@ export default class ViewScreen extends Component {
 
 
 const styles = StyleSheet.create({
-	container: {
-	},
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',

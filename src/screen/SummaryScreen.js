@@ -7,12 +7,9 @@
 import React, {Component} from 'react';
 import {
 	StyleSheet,
-	Text,
 	View,
 	ScrollView,
-	Alert,
 	TouchableOpacity,
-	Image,
 	Dimensions
 } from 'react-native';
 

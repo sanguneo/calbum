@@ -18,7 +18,6 @@ export default class Button extends Component{
 };
 
 const styles = StyleSheet.create({
-
 	button: {
 		flex: 1,
 		flexDirection: 'row',

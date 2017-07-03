@@ -4,7 +4,6 @@ import {
 	Image,
 	StyleSheet,
 	Text,
-	View,
 } from 'react-native';
 
 export default class Thumbnail extends Component{

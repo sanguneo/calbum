@@ -135,7 +135,6 @@ export default class ProfileScreen extends Component {
 			{ cancelable: true }
 		);
 	}
-
 	render() {
 		return (
 			<ScrollView style={styles.container}>

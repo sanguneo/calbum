@@ -11,7 +11,6 @@ import TagScreen from './TagScreen';
 import ViewScreen from './ViewScreen';
 import SideMenu from './SideMenu';
 
-// register all screens of the app (including internal ones)
 export function registerScreens() {
 	Navigation.registerComponent('calbum.ProfileScreen', () => ProfileScreen);
 	Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen);

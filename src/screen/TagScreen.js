@@ -10,11 +10,7 @@ import {
 	Text,
 	View,
 	ScrollView,
-	Alert,
-	Image,
-	TextInput,
 	TouchableOpacity,
-	Dimensions
 } from 'react-native';
 
 const commonStyle = {

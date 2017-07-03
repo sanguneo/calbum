@@ -15,7 +15,6 @@ import {
     Image,
     Text,
     Animated,
-    Easing,
     Dimensions
 } from 'react-native';
 
