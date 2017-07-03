@@ -10,6 +10,7 @@ import AlbumScreen from './AlbumScreen';
 import TagScreen from './TagScreen';
 import ViewScreen from './ViewScreen';
 import ThirdScreen from './ThirdScreen';
+import LightboxScreen from './LightboxScreen';
 import SideMenu from './SideMenu';
 
 // register all screens of the app (including internal ones)
@@ -24,5 +25,6 @@ export function registerScreens() {
 	Navigation.registerComponent('calbum.TagScreen', () => TagScreen);
 	Navigation.registerComponent('calbum.ViewScreen', () => ViewScreen);
     Navigation.registerComponent('calbum.ThirdScreen', () => ThirdScreen);
+	Navigation.registerComponent('calbum.LightboxScreen', () => LightboxScreen);
     Navigation.registerComponent('calbum.SideMenu', () => SideMenu);
 }

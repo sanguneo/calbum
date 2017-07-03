@@ -26,9 +26,18 @@ export default class Lightbox extends Component {
     //     duration: number,
     //     key: string,
     // }
-    state = {
-        height: 0
-    }
+	constructor(props) {
+		super(props);
+		this.state = {
+			height: 0,
+		}
+		this.collapsedStyle = {};
+		if (props.collapsed) {
+			this.collapsedStyle = {paddingTop: 0, marginBottom: 0};
+		}
+	}
+
+
     componentWillMount() {
         this.animatedValue = new Animated.Value(this.props.fromValue);
     }
@@ -62,11 +71,11 @@ export default class Lightbox extends Component {
         const animatedStyle = {};
         animatedStyle[this.props.stylekey] = this.animatedValue;
         return (
-            <Animated.View style={[styles.container, animatedStyle, this.state]}>
-                <View style={[styles.animatedview]}>
-                    <Text style={styles.title}>{this.props.title}</Text>
-                    <TouchableOpacity style={styles.closeBtn} onPress={() => {this._close()}}>
-                        <Image source={require('../../img/navicon_add.png')} style={[styles.close]} />
+            <Animated.View style={[styles.container, animatedStyle, this.props.style, this.state]}>
+                <View style={[styles.animatedview, {backgroundColor: this.props.bgColor}, this.collapsedStyle]}>
+                    <Text style={[styles.title, {color: this.props.color}]}>{this.props.title}</Text>
+                    <TouchableOpacity style={[styles.closeBtn]} onPress={() => {this._close();this.props.close();}}>
+                        <Image source={require('../../img/navicon_add.png')} style={[styles.close,{tintColor: this.props.color}]} />
                     </TouchableOpacity>
 					{this.props.children}
                 </View>

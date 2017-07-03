@@ -41,6 +41,9 @@ const commonStyle = {
 	hrColor: '#000',
 	backgroundColor: '#f5f5f5'
 }
+
+import ImageViewer from 'react-native-image-zoom-viewer';
+const images = [{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]
 export default class ViewScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -63,7 +66,9 @@ export default class ViewScreen extends Component {
 			album: '',
 			comment: '',
 			albums: [],
-			lightbox: true
+			lightbox: true,
+			side: '이미지',
+			imageurl: [{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]
 		}
 	}
 
@@ -98,10 +103,20 @@ export default class ViewScreen extends Component {
 		}, this.state.userkey, this.state.unique_key);
 	}
 	_getSideOriginal(side) {
-
+		if(side === 'left'){
+			this.refs.imagesbefore._open();
+		} else {
+			this.refs.imagesafter._open();
+		}
+	}
+	_lbClose() {
+		this.refs.imagesbefore._close();
+		this.refs.imagesafter._close();
 	}
 
 	render() {
+		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpg', '_left.jpg')}]}/> : null;
+		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpg', '_right.jpg')}]}/> : null;
 		return (
 			<View>
 				<ScrollView style={styles.container}>
@@ -131,20 +146,31 @@ export default class ViewScreen extends Component {
 						<Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#aed9da'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>
 					</View>
 				</ScrollView>
-				<Lightbox ref={'recipe'} title={'레시피'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'}>
+				<Lightbox ref={'recipe'} title={'레시피'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000000'} color={'#ffffff'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
 					</View>
 				</Lightbox>
-				<Lightbox ref={'comment'} title={'코멘트'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'}>
+				<Lightbox ref={'comment'} title={'코멘트'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000000'} color={'#ffffff'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
+					</View>
+				</Lightbox>
+				<Lightbox ref={'imagesbefore'} title={'Before'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lbClose()}}>
+					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
+						{imgBefore}
+					</View>
+				</Lightbox>
+				<Lightbox ref={'imagesafter'} title={'after'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsed={true} close={()=>{this._lbClose()}}>
+					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
+						{imgAfter}
 					</View>
 				</Lightbox>
 			</View>
 		);
 	}
 }
+
 
 const styles = StyleSheet.create({
 	container: {
