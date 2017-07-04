@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('calbum', () => calbum);
+AppRegistry.registerComponent('hairpin', () => calbum);

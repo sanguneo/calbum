@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-JSON.formatedString= (arg) => JSON.stringify(arg, null, 4);
-
 import {Navigation} from 'react-native-navigation';
 const RNFS = require('react-native-fs');
 import {registerScreens} from './screen'
