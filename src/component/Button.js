@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
-		backgroundColor: '#6cbf84',
+		backgroundColor: '#bdbdbd',
 		borderRadius: 5,
-		borderColor: '#dfe2d2',
+		borderColor: '#e0e0e0',
 		borderWidth:1
 	},
 	btnimg: {

@@ -17,7 +17,7 @@ public class MainActivity extends SplashActivity {
         ImageView image = new ImageView(this);
         image.setImageResource(R.drawable.splash) ;
 
-        view.setBackgroundColor(Color.parseColor("#000000"));
+        view.setBackgroundColor(Color.parseColor("#36384C"));
         view.setGravity(Gravity.CENTER);
 
         view.addView(image);
