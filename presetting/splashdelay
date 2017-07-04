@@ -1,1 +1,10 @@
- try {Thread.sleep(1000);} catch (Exception e) {e.printStackTrace();}
+public static void startApp(Bundle params) {
+        Intent intent = new Intent(NavigationApplication.instance, NavigationActivity.class);
+        IntentDataHandler.onStartApp(intent);
+        try {Thread.sleep(1000);} catch (Exception e) {e.printStackTrace();}
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(ACTIVITY_PARAMS_BUNDLE, params);
+        intent.putExtra("animationType", params.getString("animationType"));
+        NavigationApplication.instance.startActivity(intent);
+    }
+C:\Users\sknah\study\calbum\node_modules\react-native-navigation\android\app\src\main\java\com\reactnativenavigation\controllers\NavigationCommandsHandler.java
