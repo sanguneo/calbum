@@ -51,3 +51,4 @@ buck-out/
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
+!/node_modules/react-native-navigation/android/app/src/main/java/com/reactnativenavigation/controllers/NavigationCommandsHandler.java
