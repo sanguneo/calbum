@@ -263,7 +263,7 @@ export default class SubscribeScreen extends Component {
 						value={this.state.recipe}
 						placeholder={'레시피'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
-						blurOnSubmit={true}
+						blurOnSubmit={false}
 					/>
 				</View>
 				<View style={styles.bgView}>
@@ -280,7 +280,7 @@ export default class SubscribeScreen extends Component {
 						value={this.state.comment}
 						placeholder={'코멘트'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
-						blurOnSubmit={true}
+						blurOnSubmit={false}
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>

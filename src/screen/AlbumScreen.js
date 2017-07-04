@@ -80,11 +80,35 @@ export default class AlbumScreen extends Component {
 		);
 
 	}
+	_goAlbum(albumname) {
+		let aobj = {
+			screen: "calbum.InAlbumScreen",
+			title: '"' + albumname + '" 앨범',
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			navigatorStyle: {},
+			navigatorButtons: {leftButtons: [
+				{
+					id: 'sideMenu' // id is locked up 'sideMenu'
+				}
+			]},
+			animated: false,
+			animationType: 'none'
+		}
+		if (albumname === '선택안함') {
+			aobj.title = '앨범 선택안됨';
+		}else {
+			aobj.passProps.albumname = albumname;
+		}
+
+		this.props.navigator.push(aobj);
+	}
 	render() {
 		let albumlist = this.state.rows.map((item, idx) => {
 			return (
 				<View  style={styles.row} key={idx}>
-					<Text style={styles.rowContent}>{item}</Text>
+					<TouchableOpacity style={{height: 60,justifyContent: 'center'}} onPress={()=>{this._goAlbum(item+'')}}>
+						<Text style={styles.rowContent}>{item}</Text>
+					</TouchableOpacity>
 					<TouchableOpacity onPress={()=>{this._removeAlbum(item+'')}}>
 						<Image source={require('../../img/minus.png')} style={styles.rowButtonRemove}/>
 					</TouchableOpacity>

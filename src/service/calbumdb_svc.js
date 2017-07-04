@@ -95,9 +95,11 @@ export default class dbSVC {
 		});
 	}
 	getPhotoByAlbum(callback, user_key, albumname) {
+    	console.log(user_key, albumname);
 		let query = "SELECT * FROM ca_photo WHERE";
 		query += user_key ? " user_key='"+user_key+"'" : "";
-		query += albumname ? " AND albumname='"+albumname+"'" : "";
+		query += user_key && albumname ? " AND" : "";
+		query += albumname ? " albumname='"+albumname+"'" : "";
 		query += ' ORDER BY `idx`;';
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {
@@ -114,7 +116,8 @@ export default class dbSVC {
 	getPhotoByTag(callback, user_key, tagname) {
 		let query = "SELECT p.idx, p.unique_key, p.reg_date, p.title, p.recipe, p.albumname, p.comment, p.user_key FROM ca_photo as p LEFT JOIN ca_tag as t ON p.unique_key = t.photo_key WHERE";
 		query += user_key ? " t.user_key='"+user_key+"'" : "";
-		query += tagname ? " AND t.name='"+tagname+"'" : "";
+		query += user_key && tagname ? " AND" : "";
+		query += tagname ? " t.name='"+tagname+"'" : "";
 		query += ' ORDER BY p.idx;';
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {

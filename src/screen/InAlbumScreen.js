@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
 	StyleSheet,
 	View,
+	Text,
 	ScrollView,
 	Dimensions
 } from 'react-native';
@@ -31,8 +32,9 @@ export default class InAlbumScreen extends Component {
 		this.props.global.setVar('parent', this);
 		this.state = {
 			rows: [],
+			style:{}
 		}
-		this._getPhoto(this.props.profile);
+		this._getPhoto();
 	}
 	_goPhoto(title, unique_key) {
 		this.props.navigator.push({
@@ -47,29 +49,47 @@ export default class InAlbumScreen extends Component {
 	}
 	_getPhoto() {
 		this.props.dbsvc.getPhotoByAlbum((ret) => {
-			this.setState({
-				rows: ret.map((i, idx) => {
-					return <Thumbnail
-						key={idx}
-						style={styles.thumbnail}
-						title={i.title}
-						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg'}
-						onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
-					/>
-				})
-			});
+			if(ret.length > 0) {
+				this.setState({
+					style: null,
+					rows: ret.map((i, idx) => {
+						return <Thumbnail
+							key={idx}
+							style={styles.thumbnail}
+							title={i.title}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg'}
+							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
+						/>
+					})
+				});
+			} else {
+				this.setState({
+					style: {
+						flex: 1,
+						flexWrap: 'nowrap',
+						justifyContent: 'center',
+						alignItems: 'center',
+					},
+					rows: <Text style={{fontSize: 20}}>{'결과가 없습니다.'}</Text>
+				});
+			}
 		}, this.props.profile[0], this.props.albumname);
 	}
 	onNavigatorEvent(event) {
 	}
 	render() {
-		return (
-			<ScrollView>
-				<View style={styles.container}>
-					{this.state.rows}
-				</View>
-			</ScrollView>
-		);
+		if (this.state.rows.length >0)
+			return (<View>
+				<ScrollView>
+					<View style={styles.container}>
+						{this.state.rows}
+					</View>
+				</ScrollView>
+			</View>)
+		else
+			return (<View style={[styles.container, this.state.style]}>
+				{this.state.rows}
+			</View>);
 	}
 }
 

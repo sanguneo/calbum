@@ -20,11 +20,6 @@
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustResize">
-        <alpha
-            android:duration="2000"
-            android:fromAlpha="0.0"
-            android:toAlpha="1.0" >
-        </alpha>
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />

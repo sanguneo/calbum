@@ -41,7 +41,8 @@ export default class SummaryScreen extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.global.setVar('parent', this);
 		this.state = {
-			rows: []
+			rows: [],
+			style:{}
 		}
 		this.props.global.getUntil('side',
 			(e) =>{
@@ -96,49 +97,68 @@ export default class SummaryScreen extends Component {
 	_getPhoto(profilearg) {
 		let profile = profilearg ? profilearg :  [false];
 		this.props.dbsvc.getPhotoEachGroup((ret) => {
-			let res = [];
-			let curr_an = '_reset_';
-			for (var i=0;i < ret.length;i++){
-				if (!ret[i].albumname)
-					ret[i].albumname = '선택안함';
-				if (curr_an !== ret[i].albumname) {
-					curr_an = ret[i].albumname;
-					res.push(curr_an);
-				}
-				res.push(ret[i]);
-			}
-			this.setState({
-				rows: res.map((i, idx) => {
-					if (typeof i === 'string') {
-						return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
+			if(ret.length > 0) {
+				let res = [];
+				let curr_an = '_reset_';
+				for (var i = 0; i < ret.length; i++) {
+					if (!ret[i].albumname)
+						ret[i].albumname = '선택안함';
+					if (curr_an !== ret[i].albumname) {
+						curr_an = ret[i].albumname;
+						res.push(curr_an);
 					}
-					return <Thumbnail
-						key={idx}
-						style={styles.thumbnail}
-						title={i.title}
-						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.state.userid + '.jpg'}
-						onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
-					/>
-				})
-			});
+					res.push(ret[i]);
+				}
+				this.setState({
+					rows: res.map((i, idx) => {
+						if (typeof i === 'string') {
+							return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
+						}
+						return <Thumbnail
+							key={idx}
+							style={styles.thumbnail}
+							title={i.title}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.state.userid + '.jpg'}
+							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
+						/>
+					})
+				});
+			} else {
+				this.setState({
+					style: {
+						flex: 1,
+						flexWrap: 'nowrap',
+						justifyContent: 'center',
+						alignItems: 'center',
+					},
+					rows: <Text style={{fontSize: 20}}>{'결과가 없습니다.'}</Text>
+				});
+			}
 		}, profile[0], ot);
 	}
 	onNavigatorEvent(event) {
 	}
 	render() {
-		return (
-			<View>
+		if (this.state.rows.length >0)
+			return (<View>
 				<ScrollView>
 					<View style={styles.container}>
 						{this.state.rows}
 					</View>
 				</ScrollView>
-			</View>
-		);
+			</View>)
+		else
+			return (<View style={[styles.container, this.state.style]}>
+				{this.state.rows}
+			</View>);
 	}
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: Dimensions.get('window').width,
+		height: Dimensions.get('window').height,
+	},
 	container: {
 		flexWrap: 'wrap',
 		flexDirection: 'row',

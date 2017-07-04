@@ -21,22 +21,21 @@ const crypt = new cryptSVC();
 Navigation.startSingleScreenApp({
     screen: {
         screen: 'calbum.SummaryScreen',
-        title: '컨설팅 앨범',
+        title: 'hair.pin',
     },
     appStyle: {
-		navBarTextFontFamily: 'namsan',
-		navBarSubtitleFontFamily: 'namsan',
         screenBackgroundColor: 'white',
         navBarTransparent: false, // make the nav bar transparent, works best with drawUnderNavBar:true,
 		navBarTranslucent: false,
         drawUnderNavBar: false,
 		navBarHideOnScroll: false,
+		statusBarColor: '#36384C',
 		navBarBackgroundColor: '#36384C',
         navBarTextColor: '#fff',
         navBarButtonColor: '#fff',
 		navBarTitleTextCentered: false, // default: false. centers the title.
 		topBarElevationShadowEnabled: false,
-        statusBarHidden: false,
+        statusBarHidden: true,
         statusBarTextColorScheme: 'light',
         statusBarTextColorSchemeSingleScreen: 'light',
         statusBarBlur: true,

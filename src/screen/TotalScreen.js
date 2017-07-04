@@ -38,6 +38,7 @@ export default class TotalScreen extends Component {
 		this.props.global.setVar('parent', this);
 		this.state = {
 			rows: [],
+			style:{}
 		}
 		if (this.props.profile)
 			this._getPhoto(this.props.profile);
@@ -78,43 +79,61 @@ export default class TotalScreen extends Component {
 	_getPhoto(profilearg) {
 		let profile = profilearg ? profilearg :  [false];
 		this.props.dbsvc.getPhoto((ret) => {
-			let res = [];
-			let curr_an = '_reset_';
-			for (var i=0;i < ret.length;i++){
-				if (!ret[i].albumname)
-					ret[i].albumname = '앨범 선택안함';
-				if (curr_an !== ret[i].albumname) {
-					curr_an = ret[i].albumname;
-					res.push(curr_an);
-				}
-				res.push(ret[i]);
-			}
-			this.setState({
-				rows: res.map((i, idx) => {
-					if (typeof i === 'string') {
-						return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
+			if(ret.length > 0) {
+				let res = [];
+				let curr_an = '_reset_';
+				for (var i = 0; i < ret.length; i++) {
+					if (!ret[i].albumname)
+						ret[i].albumname = '앨범 선택안함';
+					if (curr_an !== ret[i].albumname) {
+						curr_an = ret[i].albumname;
+						res.push(curr_an);
 					}
-					return <Thumbnail
-						key={idx}
-						style={styles.thumbnail}
-						title={i.title}
-						uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg'}
-						onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
-					/>
-				})
-			});
+					res.push(ret[i]);
+				}
+				this.setState({
+					style: null,
+					rows: res.map((i, idx) => {
+						if (typeof i === 'string') {
+							return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
+						}
+						return <Thumbnail
+							key={idx}
+							style={styles.thumbnail}
+							title={i.title}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg'}
+							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
+						/>
+					})
+				});
+			}else {
+				this.setState({
+					style: {
+						flex: 1,
+						flexWrap: 'nowrap',
+						justifyContent: 'center',
+						alignItems: 'center',
+					},
+					rows: <Text style={{fontSize: 20}}>{'결과가 없습니다.'}</Text>
+				});
+			}
 		}, profile[0]);
 	}
 	onNavigatorEvent(event) {
 	}
 	render() {
-		return (
-			<ScrollView>
-				<View style={styles.container}>
-					{this.state.rows}
-				</View>
-			</ScrollView>
-		);
+		if (this.state.rows.length >0)
+			return (<View>
+				<ScrollView>
+					<View style={styles.container}>
+						{this.state.rows}
+					</View>
+				</ScrollView>
+			</View>)
+		else
+			return (<View style={[styles.container, this.state.style]}>
+				{this.state.rows}
+			</View>);
 	}
 }
 
