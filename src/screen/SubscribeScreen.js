@@ -76,6 +76,10 @@ export default class SubscribeScreen extends Component {
 			comment: '',
 			albums: []
 		}
+
+	}
+
+	componentWillMount() {
 		this._getAlbums();
 	}
 
