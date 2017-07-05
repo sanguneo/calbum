@@ -15,7 +15,7 @@ export default class Titler extends Component{
 	render() {
 		return (
 			<TouchableOpacity style={styles.container} onPress={()=>{this.props.onPress();}}>
-				<Hr lineColor={'#000'} lineWidth={2} text={this.props.children} textStyle={{fontSize: 18}} containerHeight={23}/>
+				<Hr lineColor={'#000'} lineWidth={2} text={this.props.children} textStyle={{fontSize: 17}} containerHeight={23}/>
 			</TouchableOpacity>
 		);
 	}

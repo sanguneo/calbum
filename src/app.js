@@ -42,7 +42,7 @@ Navigation.startSingleScreenApp({
         disableOpenGesture: false
     },
     passProps: {dbsvc, crypt, global},
-    animationType: 'fade'
+    animationType: 'fade',
 });
 
 RNFS.readDir(RNFS.DocumentDirectoryPath).then((result) => {

@@ -44,6 +44,7 @@ export default class SideMenu extends Component {
 					navigatorStyle: {navBarHidden: false},
 					navigatorButtons: {},
 					backButtonHidden: true,
+					overrideBackPress: true,
 					animated: true,
 					animationType: 'fade'
 				});
@@ -148,7 +149,7 @@ export default class SideMenu extends Component {
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
-				animationType: 'slide-up'
+				animationType: 'slide-up',
 			});
 		} else if (screen === 'total') {
 			this._toggleDrawer();

@@ -6,7 +6,7 @@ import {
 	View,
 	Image,
 	Dimensions,
-	TouchableOpacity,
+	TouchableOpacity
 } from 'react-native';
 
 import Button from '../component/Button';
@@ -34,7 +34,6 @@ export default class ViewScreen extends Component {
 		this.state = {
 			success: 'no',
 			merged: {uri: null},
-			title: this.props.title,
 			recipe: '',
 			userid: this.props.profile[2],
 			userkey: this.props.profile[0],
@@ -46,7 +45,7 @@ export default class ViewScreen extends Component {
 			albums: [],
 			lightbox: true,
 			side: '이미지',
-			imageurl: [{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]
+			imageurl: [{ url: ''}]
 		}
 	}
 
@@ -54,8 +53,13 @@ export default class ViewScreen extends Component {
 		if (event.id === 'close') {
 			this._lightboxClose();
 		}
+		if (event.id === 'backPress') {
+			if (!this.side)
+				this.props.navigator.pop();
+			else
+				this._lightboxClose();
+		}
 	}
-
 	componentDidMount() {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
@@ -80,26 +84,34 @@ export default class ViewScreen extends Component {
 	_getSideOriginal(side) {
 		let close = () => {};
 		this.side = null;
-		if(side === 'left'){
-			this.side = 'imagesbefore';
-		} else {
-			this.side = 'imagesafter';
-		}
-		this.refs[this.side]._open();
+
 		this.props.navigator.setButtons({
 			leftButtons: [], // see "Adding buttons to the navigator" below for format (optional)
 			rightButtons: [{id: 'close', icon: require('../../img/navicon_close.png')}], // see "Adding buttons to the navigator" below for format (optional)
 			animated: true // does the change have transition animation or does it happen immediately (optional)
 		});
+		if(side === 'left'){
+			this.side = 'imagesbefore';
+			this.props.navigator.setTitle({title: 'Before'});
+		} else {
+			this.side = 'imagesafter';
+			this.props.navigator.setTitle({title: 'After'});
+		}
+		this.refs[this.side]._open();
+
 
 	}
 	_lightboxClose() {
 		this.refs[this.side]._close();
+		this.props.navigator.setTitle({
+			title: this.props.title // the new title of the screen as appears in the nav bar
+		});
 		this.props.navigator.setButtons({
 			leftButtons: [{id: 'back'}],
 			rightButtons: [],
 			animated: true // does the change have transition animation or does it happen immediately (optional)
 		});
+		this.side = null;
 	}
 
 	render() {
@@ -110,6 +122,8 @@ export default class ViewScreen extends Component {
 				<ScrollView style={styles.container}>
 					<View style={styles.imgView}>
 						<Image source={this.state.merged} style={styles.img}/>
+						<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
+						<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
 						<TouchableOpacity style={[styles.oimg, styles.leftImg]} onPress={()=> {this._getSideOriginal('left')}}></TouchableOpacity>
 						<TouchableOpacity style={[styles.oimg, styles.rightImg]} onPress={()=> {this._getSideOriginal('right')}}></TouchableOpacity>
 					</View>
@@ -134,22 +148,22 @@ export default class ViewScreen extends Component {
 						<Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#A1BBD0'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>
 					</View>
 				</ScrollView>
-				<Lightbox ref={'recipe'} title={'레시피'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
+				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
 					</View>
 				</Lightbox>
-				<Lightbox ref={'comment'} title={'코멘트'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
+				<Lightbox ref={'comment'} title={'코멘트'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesbefore'} title={'Before'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
+				<Lightbox ref={'imagesbefore'} title={'Before'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgBefore}
 					</View>
 				</Lightbox>
-				<Lightbox ref={'imagesafter'} title={'After'} duration={1000} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
+				<Lightbox ref={'imagesafter'} title={'After'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
 					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
 						{imgAfter}
 					</View>
@@ -258,4 +272,21 @@ const styles = StyleSheet.create({
 		borderColor: commonStyle.placeholderTextColor,
 		alignItems: 'center',
 	},
+	imglabel: {
+		position: 'absolute',
+		bottom: 10,
+		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		fontSize: 20,
+		fontWeight: 'bold',
+		textAlign: 'center',
+		color: 'white',
+	},
+	lblLeft: {
+		color: 'rgba(227,48,45,0.9)',
+		right: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+	},
+	lblRight: {
+		color: 'rgba(58,142,207,0.8)',
+		left: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+	}
 });

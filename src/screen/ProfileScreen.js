@@ -14,7 +14,8 @@ import {
 	Dimensions,
 	TouchableOpacity,
 	Alert,
-	TextInput
+	TextInput,
+	BackHandler
 } from 'react-native';
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
@@ -35,7 +36,6 @@ const commonStyle = {
 	hrColor: '#000',
 	backgroundColor: '#f5f5f5'
 }
-
 export default class ProfileScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -52,9 +52,7 @@ export default class ProfileScreen extends Component {
 			passchk: '',
 			uniquekey: this.props.profile[0]
 		}
-
 	}
-
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {
 			this.props.navigator.toggleDrawer({
@@ -64,6 +62,9 @@ export default class ProfileScreen extends Component {
 		}
 		if (event.id === 'save') {
 			this._submit();
+		}
+		if (event.id === 'backPress') {
+			console.log('back');
 		}
 	}
 	_formCheck() {

@@ -201,11 +201,11 @@ export default class SubscribeScreen extends Component {
 				<View style={styles.imgView}>
 					<TouchableOpacity onPress={() => {this._changeImage('left')}}>
 						<Image source={this.state.uriLeft} style={[styles.img, {borderRightWidth: 0}]}/>
-						<Text style={[styles.imglabel]}>Before</Text>
+						<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => {this._changeImage('right')}}>
 						<Image source={this.state.uriRight} style={[styles.img, {borderLeftWidth: 0}]}/>
-						<Text style={[styles.imglabel]}>After</Text>
+						<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={[styles.bgView,{marginTop: 15}]}>
@@ -324,8 +324,16 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		bottom: 10,
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
-		fontSize: 15,
-		textAlign: 'center'
+		fontSize: 20,
+		fontWeight: 'bold',
+		textAlign: 'center',
+		color: 'white',
+	},
+	lblLeft: {
+		color: 'rgba(227,48,45,0.9)',
+	},
+	lblRight: {
+		color: 'rgba(58,142,207,0.8)',
 	},
 	labeledtextbox: {
 		height: 42,
