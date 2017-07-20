@@ -30,7 +30,7 @@ export default class SideMenu extends Component {
 			if (ret.length > 0) {
 				let row = ret[0];
 				this.setState({
-					profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpg'},
+					profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpghidden'},
 					userid: row.user_id,
 					name: row.name,
 					email: row.email,

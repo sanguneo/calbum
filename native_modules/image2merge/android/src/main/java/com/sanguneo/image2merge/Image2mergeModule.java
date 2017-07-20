@@ -95,7 +95,7 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
                 directory.mkdir();
             }
             OutputStream fOutputStream = null;
-            file = new File(directory, name + ".jpg");
+            file = new File(directory, name + ".jpghidden");
             fOutputStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOutputStream);
             fOutputStream.flush();

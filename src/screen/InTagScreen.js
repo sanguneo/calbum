@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
 	StyleSheet,
+	Text,
 	View,
 	ScrollView,
 	Dimensions
@@ -57,20 +58,10 @@ export default class InTagScreen extends Component {
 							key={idx}
 							style={styles.thumbnail}
 							title={i.title}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpg'}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden'}
 							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
 						/>
 					})
-				});
-			} else {
-				this.setState({
-					style: {
-						flex: 1,
-						flexWrap: 'nowrap',
-						justifyContent: 'center',
-						alignItems: 'center',
-					},
-					rows: <Text style={{fontSize: 20}}>{'결과가 없습니다.'}</Text>
 				});
 			}
 		}, this.props.profile[0], this.props.tagname);
@@ -78,13 +69,18 @@ export default class InTagScreen extends Component {
 	onNavigatorEvent(event) {
 	}
 	render() {
-		return (
-			<ScrollView>
-				<View style={styles.container}>
-					{this.state.rows}
-				</View>
-			</ScrollView>
-		);
+		if (this.state.rows.length >0)
+			return (<View>
+				<ScrollView>
+					<View style={styles.container}>
+						{this.state.rows}
+					</View>
+				</ScrollView>
+			</View>);
+		else
+			return (<View style={[styles.container, styles.nodatastyle]}>
+				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
+			</View>);
 	}
 }
 
@@ -93,6 +89,12 @@ const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',
+	},
+	nodatastyle: {
+		flex: 1,
+		flexWrap: 'nowrap',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	text: {
 		width: Dimensions.get('window').width,

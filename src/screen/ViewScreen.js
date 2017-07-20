@@ -63,7 +63,7 @@ export default class ViewScreen extends Component {
 	componentDidMount() {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
-			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpg?key=' + key;
+			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
 			this.setState({
 				merged: {uri: pPath},
 				title: res.title,
@@ -115,8 +115,8 @@ export default class ViewScreen extends Component {
 	}
 
 	render() {
-		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpg', '_left.jpg')}]}/> : null;
-		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpg', '_right.jpg')}]}/> : null;
+		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_left.jpghidden')}]}/> : null;
+		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_right.jpghidden')}]}/> : null;
 		return (
 			<View>
 				<ScrollView style={styles.container}>

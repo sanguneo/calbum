@@ -105,7 +105,7 @@ export default class ProfileScreen extends Component {
 	}
 	_saveProfileImage() {
 		let key = Math.random()*100000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpg';
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpghidden';
 		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
 			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
 		}).catch((e) => {console.error('error', e)});

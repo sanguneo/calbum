@@ -112,12 +112,12 @@ export default class SubscribeScreen extends Component {
 	_saveSourceImage() {
 		RNFS.copyFile(
 			this.state.srcLeft.replace('file://', ''),
-			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpg'
+			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpghidden'
 		).then(() => {}).catch((e) => {console.error('error left', e)});
 
 		RNFS.copyFile(
 			this.state.srcRight.replace('file://', ''),
-			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid+ '_right.jpg'
+			RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid+ '_right.jpghidden'
 		).then(() => {}).catch((e) => {console.error('error right', e)});
 	}
 	_changeImage(direct) {
