@@ -303,9 +303,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		width: Dimensions.get('window').width ,
-		height: Dimensions.get('window').width,
+		height: Dimensions.get('window').width + 30,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		borderColor: 'lightgray',
+		borderBottomWidth: 1
 	},
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
@@ -325,9 +327,9 @@ const styles = StyleSheet.create({
 		marginBottom: 2,
 	},
 	imglabel: {
-		position: 'absolute',
-		bottom: 10,
+		marginTop: 10,
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		height: 40,
 		fontSize: 20,
 		fontWeight: 'bold',
 		textAlign: 'center',

@@ -179,9 +179,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		width: Dimensions.get('window').width ,
-		height: Dimensions.get('window').width,
+		height: Dimensions.get('window').width + 40,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'flex-start',
+		borderColor: 'lightgray',
+		borderBottomWidth: 1
 	},
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width  : 800,
@@ -217,13 +219,6 @@ const styles = StyleSheet.create({
 		marginRight: 20,
 		marginTop: 3,
 		marginBottom: 2,
-	},
-	imglabel: {
-		position: 'absolute',
-		bottom: 10,
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
-		fontSize: 15,
-		textAlign: 'center'
 	},
 	labeledtextbox: {
 		height: 42,
@@ -274,8 +269,9 @@ const styles = StyleSheet.create({
 	},
 	imglabel: {
 		position: 'absolute',
-		bottom: 10,
+		bottom: -15,
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		height: 50,
 		fontSize: 20,
 		fontWeight: 'bold',
 		textAlign: 'center',
