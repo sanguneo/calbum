@@ -51,15 +51,15 @@ export default class dbSVC {
             })
         });
     }
-	regUSER(arg_uniquekey, arg_reg_date, arg_user_id, arg_name, arg_email, arg_passphase) {
+	regUSER(arg_uniqkey, arg_reg_date, arg_user_id, arg_name, arg_email, arg_passphase) {
 		this.db.transaction((tx) => {
 			tx.executeSql( "INSERT INTO `ca_user`(`unique_key`,`reg_date`,`user_id`,`name`,`email`,`passphase`) " +
-				"VALUES ('"+arg_uniquekey+"','"+arg_reg_date+"','"+arg_user_id+"','"+arg_name+"','"+arg_email+"','"+arg_passphase+"');", [], (tx, results) => {});
+				"VALUES ('"+arg_uniqkey+"','"+arg_reg_date+"','"+arg_user_id+"','"+arg_name+"','"+arg_email+"','"+arg_passphase+"');", [], (tx, results) => {});
 		});
 	}
-	editUSER(arg_uniquekey, arg_name, arg_email, arg_passphase) {
+	editUSER(arg_uniqkey, arg_name, arg_email, arg_passphase) {
 		this.db.transaction((tx) => {
-			tx.executeSql("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniquekey+"' AND `passphase`='"+arg_passphase+"';", [], (tx, results) => {});
+			tx.executeSql("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniqkey+"' AND `passphase`='"+arg_passphase+"';", [], (tx, results) => {});
 		});
 	}
 	getPhoto(callback, user_key, limit) {
@@ -131,11 +131,11 @@ export default class dbSVC {
 			});
 		});
 	}
-	getPhotoSpecific(callback, user_key, unique_key) {
-    	let postfix = user_key||unique_key ? ' WHERE' : '';
+	getPhotoSpecific(callback, user_key, uniqkey) {
+    	let postfix = user_key||uniqkey ? ' WHERE' : '';
 		postfix += user_key ? " user_key='"+user_key +"'" : "";
-		postfix += user_key&&unique_key ? " AND" : "";
-		postfix += unique_key ? " `unique_key`='" + unique_key+"'" : "";
+		postfix += user_key&&uniqkey ? " AND" : "";
+		postfix += uniqkey ? " `unique_key`='" + uniqkey+"'" : "";
 		postfix += ' ORDER BY `idx`;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
@@ -149,10 +149,10 @@ export default class dbSVC {
 			});
 		});
 	}
-	getTagSpecific(callback, user_key, unique_key) {
-		let postfix = user_key||unique_key ? ' WHERE' : '';
+	getTagSpecific(callback, user_key, uniqkey) {
+		let postfix = user_key||uniqkey ? ' WHERE' : '';
 		postfix += user_key ? " user_key='"+user_key +"'" : "";
-		postfix += unique_key ? "AND `photo_key`='" + unique_key+"'" : "";
+		postfix += uniqkey ? "AND `photo_key`='" + uniqkey+"'" : "";
 		postfix += ' ORDER BY `idx`;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_tag" + postfix, [], (tx, results) => {

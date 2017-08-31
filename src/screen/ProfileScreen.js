@@ -50,7 +50,7 @@ export default class ProfileScreen extends Component {
 			email: this.props.profile[4],
 			pass: '',
 			passchk: '',
-			uniquekey: this.props.profile[0]
+			uniqkey: this.props.profile[0]
 		}
 	}
 	onNavigatorEvent(event) {
@@ -105,7 +105,7 @@ export default class ProfileScreen extends Component {
 	}
 	_saveProfileImage() {
 		let key = Math.random()*100000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniquekey + '.jpghidden';
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpghidden';
 		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
 			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
 		}).catch((e) => {console.error('error', e)});
@@ -119,14 +119,14 @@ export default class ProfileScreen extends Component {
 				{text: '확인', onPress: () => {
 
 					if (this.props.profileCreate) {
-						this.props.dbsvc.regUSER(this.state.uniquekey, new Date().getTime(), this.state.userid, this.state.name, this.state.email, md5(this.state.pass));
+						this.props.dbsvc.regUSER(this.state.uniqkey, new Date().getTime(), this.state.userid, this.state.name, this.state.email, md5(this.state.pass));
 					} else {
-						this.props.dbsvc.editUSER(this.state.uniquekey, this.state.name, this.state.email, md5(this.state.pass));
+						this.props.dbsvc.editUSER(this.state.uniqkey, this.state.name, this.state.email, md5(this.state.pass));
 					}
 					this._saveProfileImage();
 					this.global.getVar('side').setState({
 						name: this.state.name,
-						uniquekey: this.state.uniquekey,
+						uniqkey: this.state.uniqkey,
 						userid: this.state.userid
 					});
 					this.props.navigator.pop();
@@ -155,7 +155,7 @@ export default class ProfileScreen extends Component {
 							onChangeText={(userid) => {
                             	this.setState({
                             		userid,
-                            		uniquekey : this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(userid, 1))
+                            		uniqkey : this.crypt.getCryptedCode(this.crypt.getCharCodeSerial(userid, 1))
                             	});
 
                             }}

@@ -23,6 +23,15 @@ const commonStyle = {
 
 import ImageViewer from 'react-native-image-zoom-viewer';
 export default class ViewScreen extends Component {
+	static navigatorButtons = {
+		leftButtons: [],
+		rightButtons: [
+			{
+				icon: require('../../img/modify.png'),
+				id: 'edit'
+			}
+		]
+	};
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -39,7 +48,7 @@ export default class ViewScreen extends Component {
 			userkey: this.props.profile[0],
 			tags: [],
 			regdate: new Date().getTime(),
-			unique_key: this.props.unique_key,
+			uniqkey: this.props.uniqkey,
 			album: '',
 			comment: '',
 			albums: [],
@@ -52,6 +61,42 @@ export default class ViewScreen extends Component {
 	onNavigatorEvent(event) {
 		if (event.id === 'close') {
 			this._lightboxClose();
+		}
+		if (event.id === 'edit') {
+			this.props.navigator.push({
+				screen: "calbum.ModifyScreen",
+				title: "디자인 수정하기",
+				passProps: {
+					dbsvc: this.props.dbsvc,
+					crypt: this.props.crypt,
+					global: this.props.global,
+					profile: [
+						this.state.uniqkey,
+						this.state.profile,
+						this.state.userid,
+						this.state.name,
+						this.state.email
+					],
+					targetProps : {
+						merged: this.state.merged,
+						title: this.state.title,
+						album: this.state.album,
+						recipe: this.state.recipe,
+						comment: this.state.comment,
+						tags: this.state.tags,
+						uniqkey: this.props.uniqkey,
+					}
+				},
+				navigatorStyle: {},
+				navigatorButtons: {rightButtons: [
+					{
+						icon: require('../../img/checkmark.png'),
+						id: 'save'
+					}
+				]},
+				animated: true,
+				animationType: 'slide-up'
+			});
 		}
 		if (event.id === 'backPress') {
 			if (!this.side)
@@ -68,18 +113,16 @@ export default class ViewScreen extends Component {
 				merged: {uri: pPath},
 				title: res.title,
 				album: res.albumname,
-				recipe: res.recipe,
+				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
 
 			});
-		}, this.state.userkey, this.state.unique_key);
+		}, this.state.userkey, this.state.uniqkey);
 		this.db.getTagSpecific((res) => {
 			this.setState({
-				tags: res.map((res)=>{
-					return '#' + res.name;
-				})
+				tags: res
 			});
-		}, this.state.userkey, this.state.unique_key);
+		}, this.state.userkey, this.state.uniqkey);
 	}
 	_getSideOriginal(side) {
 		let close = () => {};
@@ -108,7 +151,10 @@ export default class ViewScreen extends Component {
 		});
 		this.props.navigator.setButtons({
 			leftButtons: [{id: 'back'}],
-			rightButtons: [],
+			rightButtons: [{
+				icon: require('../../img/modify.png'),
+				id: 'edit'
+			}],
 			animated: true // does the change have transition animation or does it happen immediately (optional)
 		});
 		this.side = null;
@@ -140,7 +186,9 @@ export default class ViewScreen extends Component {
 						</LabeledInput>
 						<Hr lineColor={commonStyle.hrColor}/>
 						<LabeledInput label={"테그"}>
-							<Text style={styles.textboxag}>{this.state.tags.join(', ')}</Text>
+							<Text style={styles.textboxag}>{this.state.tags.map((res)=>{
+								return '#' + res.name;
+							}).join(', ')}</Text>
 						</LabeledInput>
 					</View>
 					<View style={[styles.formWrapperDiv, {marginBottom: 30}]}>
@@ -150,12 +198,12 @@ export default class ViewScreen extends Component {
 				</ScrollView>
 				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
-						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
+						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
 					</View>
 				</Lightbox>
 				<Lightbox ref={'comment'} title={'코멘트'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
-						<Text style={{lineHeight: 30,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
+						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
 					</View>
 				</Lightbox>
 				<Lightbox ref={'imagesbefore'} title={'Before'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>

@@ -36,11 +36,11 @@ export default class InTagScreen extends Component {
 		}
 		this._getPhoto(this.props.profile);
 	}
-	_goPhoto(title, unique_key) {
+	_goPhoto(title, uniqkey) {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
 			title: title, // title of the screen as appears in the nav bar (optional)
-			passProps: {title, unique_key, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
 			navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 			navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 			animated: true,

@@ -32,7 +32,6 @@ Navigation.startSingleScreenApp({
         statusBarTextColorSchemeSingleScreen: 'light',
         statusBarBlur: true,
         orientation: 'portrait',
-		navBarTextFontSize: 5,
     },
     drawer: {
         left: {
@@ -48,6 +47,10 @@ Navigation.startSingleScreenApp({
 RNFS.readDir(RNFS.DocumentDirectoryPath).then((result) => {
     let resarr = [];
     result.forEach((e) => resarr.push(e.path));
+	if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_original_') < 0) {
+		RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_original_');
+		console.log('mkdir \'_original_\' success!!');
+	}
     if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_profiles_') < 0) {
         RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_profiles_');
         console.log('mkdir \'_profiles_\' success!!');

@@ -39,7 +39,7 @@ const commonStyle = {
 	hrColor: '#000',
 	backgroundColor: '#f5f5f5'
 }
-export default class SubscribeScreen extends Component {
+export default class ModifyScreen extends Component {
 	static navigatorButtons = {
 		leftButtons: [],
 		rightButtons: [
@@ -64,24 +64,24 @@ export default class SubscribeScreen extends Component {
 			userid: props.profile[2],
 			userkey: props.profile[0],
 			regdate: new Date().getTime(),
-			uriLeft: require('../../img/pickphoto.png'),
-			uriRight: require('../../img/pickphoto.png'),
+			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropleft.jpghidden')},
+			uriRight: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropright.jpghidden')},
 			srcLeft: '',
 			srcRight: '',
-			title: '',
-			recipe: '',
-			tags: [],
-			uniqkey: '',
-			album: '',
-			comment: '',
-			albums: []
+			title: this.props.targetProps.title,
+			recipe: this.props.targetProps.recipe,
+			tags: this.props.targetProps.tags.map((res)=>{
+				return '#' + res.name;
+			}),
+			uniqkey: this.props.targetProps.uniqkey,
+			album: this.props.targetProps.album,
+			comment: this.props.targetProps.comment,
+			albums: [],
 		}
-
 	}
 
 	componentWillMount() {
 		this._getAlbums();
-		this._getUniqkey();
 	}
 
 	onNavigatorEvent(event) {
@@ -124,9 +124,6 @@ export default class SubscribeScreen extends Component {
 					result.src.replace('file://', ''),
 					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpghidden'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
-				RNFS.readDir(RNFS.DocumentDirectoryPath + '/_original_/').then((result) => {
-					console.log(result);
-				})
 			}).catch(e => {
 				console.log(e);
 			});
@@ -163,16 +160,8 @@ export default class SubscribeScreen extends Component {
 			this.refs.title.focus();
 			return false;
 		}
-		if (this.state.srcLeft.uri === '') {
-			Alert.alert('확인', '왼쪽 이미지를 선택해주세요.');
-			return false;
-		}
 		if (this.state.uriLeft.uri === '') {
 			Alert.alert('확인', '선택한 왼쪽 이미지에 오류가 있습니다.\n다시 선택해주세요.');
-			return false;
-		}
-		if (this.state.srcRight.uri === '') {
-			Alert.alert('확인', '오른쪽 이미지를 선택해주세요.');
 			return false;
 		}
 		if (this.state.uriRight.uri === '') {
@@ -180,12 +169,6 @@ export default class SubscribeScreen extends Component {
 			return false;
 		}
 		return true;
-	}
-	_getUniqkey() {
-		let regdate = new Date().getTime();
-		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));
-		this.setState({regdate, uniqkey});
-		return uniqkey;
 	}
 	_submit() {
 		if (!this._formCheck()) return;
@@ -207,6 +190,18 @@ export default class SubscribeScreen extends Component {
 			],
 			{cancelable: true}
 		);
+	}
+	componentDidMount() {
+		setTimeout(() => {
+			this.refs.tag.parseTags();
+		},100);
+		setTimeout(() => {
+			this.refs.tag.calculateWidth();
+		},200);
+		setTimeout(() => {
+			this.refs.tag.scrollToBottom();
+		},500);
+
 	}
 	render() {
 		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
@@ -260,6 +255,7 @@ export default class SubscribeScreen extends Component {
 							inputProps={inputProps}
 							parseOnBlur={true}
 							numberOfLines={99}
+							ref={"tag"}
 						/>
 					</LabeledInput>
 				</View>
@@ -350,7 +346,6 @@ const styles = StyleSheet.create({
 		marginTop: 3,
 		marginBottom: 2,
 	},
-
 	labeledtextbox: {
 		height: 42,
 

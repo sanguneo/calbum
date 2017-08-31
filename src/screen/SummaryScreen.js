@@ -22,10 +22,14 @@ const RNFS = require('react-native-fs');
 const owidth = (() => {
 	let w = Dimensions.get('window').width;
 	let p = Math.round(w / 150);
+	p = p < 3 ? 3 : p;
 	return Math.round(w/p) - 8;
 })();
+
 const ot = (() => {
-	return Math.round(Dimensions.get('window').width / 150);
+	let w = Dimensions.get('window').width;
+	let p = Math.round(w / 150);
+	return p < 3 ? 3 : p;
 })();
 
 export default class SummaryScreen extends Component {
@@ -49,7 +53,7 @@ export default class SummaryScreen extends Component {
 			(e) =>{
 				this.setState({
 					profile: e.state.profile,
-					uniquekey: e.state.uniquekey,
+					uniqkey: e.state.uniqkey,
 					userid: e.state.userid,
 					name: e.state.name,
 					email: e.state.email,
@@ -57,7 +61,7 @@ export default class SummaryScreen extends Component {
 			},
 			(c) => {
 				this._getPhoto(this.props.profile);
-				return c.state.uniquekey !== undefined && c.state.uniquekey !== null && c.state.uniquekey !== '';
+				return c.state.uniqkey !== undefined && c.state.uniqkey !== null && c.state.uniqkey !== '';
 			}
 		);
 
@@ -66,7 +70,7 @@ export default class SummaryScreen extends Component {
 		let aobj = {
 			screen: "calbum.InAlbumScreen",
 			title: '"' + albumname + '" 앨범',
-			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 			navigatorStyle: {},
 			navigatorButtons: {leftButtons: [
 				{
@@ -84,11 +88,11 @@ export default class SummaryScreen extends Component {
 
 		this.props.navigator.push(aobj);
 	}
-	_goPhoto(title, unique_key) {
+	_goPhoto(title, uniqkey) {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
 			title: title, // title of the screen as appears in the nav bar (optional)
-			passProps: {title, unique_key, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniquekey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 			navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 			navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 			animated: true,
