@@ -124,9 +124,6 @@ export default class SubscribeScreen extends Component {
 					result.src.replace('file://', ''),
 					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpghidden'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
-				RNFS.readDir(RNFS.DocumentDirectoryPath + '/_original_/').then((result) => {
-					console.log(result);
-				})
 			}).catch(e => {
 				console.log(e);
 			});

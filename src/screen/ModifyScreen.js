@@ -70,9 +70,7 @@ export default class ModifyScreen extends Component {
 			srcRight: '',
 			title: this.props.targetProps.title,
 			recipe: this.props.targetProps.recipe,
-			tags: this.props.targetProps.tags.map((res)=>{
-				return '#' + res.name;
-			}),
+			tags: this.props.targetProps.tags,
 			uniqkey: this.props.targetProps.uniqkey,
 			album: this.props.targetProps.album,
 			comment: this.props.targetProps.comment,
@@ -148,7 +146,7 @@ export default class ModifyScreen extends Component {
 	}
 
 	_insertDB() {
-		this.db.insertPhoto(this.state.uniqkey, this.state.regdate, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
+		this.db.updatePhoto(this.state.uniqkey, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
 	}
 	_insertTag() {
 		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
@@ -182,6 +180,7 @@ export default class ModifyScreen extends Component {
 						// this._saveSourceImage();
 						this._insertDB();
 						this._insertTag();
+						this.props.parentUpdate(this.state.title);
 						this.props.global.getVar('parent')._getPhoto();
 						this.props.navigator.pop();
 					}
@@ -192,16 +191,10 @@ export default class ModifyScreen extends Component {
 		);
 	}
 	componentDidMount() {
-		setTimeout(() => {
-			this.refs.tag.parseTags();
+		let int,tf=!1;
+		int=setInterval(() =>{
+			tf&&this.refs.tag.props.value.length+1<=this.refs.tag.state.lines?clearInterval(int):(this.refs.tag.calculateWidth(),tf=!0)
 		},100);
-		setTimeout(() => {
-			this.refs.tag.calculateWidth();
-		},200);
-		setTimeout(() => {
-			this.refs.tag.scrollToBottom();
-		},500);
-
 	}
 	render() {
 		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
@@ -321,7 +314,8 @@ const styles = StyleSheet.create({
 	},
 	imglabel: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
-		height: 40,
+		height: 44,
+		marginTop: 4,
 		fontSize: 20,
 		fontWeight: 'bold',
 		textAlign: 'center',

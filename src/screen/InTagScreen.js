@@ -49,6 +49,7 @@ export default class InTagScreen extends Component {
 		});
 	}
 	_getPhoto() {
+		let key = Math.random()*100000;
 		this.props.dbsvc.getPhotoByTag((ret) => {
 			if(ret.length > 0) {
 				this.setState({
@@ -58,7 +59,7 @@ export default class InTagScreen extends Component {
 							key={idx}
 							style={styles.thumbnail}
 							title={i.title}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden'}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden?key=' + key}
 							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
 						/>
 					})

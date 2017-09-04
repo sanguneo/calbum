@@ -65,25 +65,31 @@ export default class ViewScreen extends Component {
 		if (event.id === 'edit') {
 			this.props.navigator.push({
 				screen: "calbum.ModifyScreen",
-				title: "디자인 수정하기",
+				title: "'" + this.state.title + "' 수정하기",
 				passProps: {
 					dbsvc: this.props.dbsvc,
 					crypt: this.props.crypt,
 					global: this.props.global,
 					profile: [
-						this.state.uniqkey,
+						this.state.userkey,
 						this.state.profile,
 						this.state.userid,
 						this.state.name,
 						this.state.email
 					],
+					parentUpdate : (title) => {
+						this.getPhotoInformation();
+						this.props.navigator.setTitle({title: title})
+					},
 					targetProps : {
 						merged: this.state.merged,
 						title: this.state.title,
 						album: this.state.album,
 						recipe: this.state.recipe,
 						comment: this.state.comment,
-						tags: this.state.tags,
+						tags: this.state.tags.map((res)=>{
+							return res.name;
+						}),
 						uniqkey: this.props.uniqkey,
 					}
 				},
@@ -105,7 +111,7 @@ export default class ViewScreen extends Component {
 				this._lightboxClose();
 		}
 	}
-	componentDidMount() {
+	getPhotoInformation() {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
 			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
@@ -115,7 +121,6 @@ export default class ViewScreen extends Component {
 				album: res.albumname,
 				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
-
 			});
 		}, this.state.userkey, this.state.uniqkey);
 		this.db.getTagSpecific((res) => {
@@ -123,6 +128,9 @@ export default class ViewScreen extends Component {
 				tags: res
 			});
 		}, this.state.userkey, this.state.uniqkey);
+	}
+	componentDidMount() {
+		this.getPhotoInformation();
 	}
 	_getSideOriginal(side) {
 		let close = () => {};
@@ -161,6 +169,10 @@ export default class ViewScreen extends Component {
 	}
 
 	render() {
+		let album = this.state.album ? this.state.album : '선택안함';
+		let tags = this.state.tags.length === 0 ? '테그 없음' : this.state.tags.map((res)=>{
+			return '#' + res.name;
+		}).join(', ');
 		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_left.jpghidden')}]}/> : null;
 		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_right.jpghidden')}]}/> : null;
 		return (
@@ -182,13 +194,11 @@ export default class ViewScreen extends Component {
 						</LabeledInput>
 						<Hr lineColor={commonStyle.hrColor}/>
 						<LabeledInput label={"앨범"}>
-							<Text style={styles.textboxag}>{this.state.album}</Text>
+							<Text style={styles.textboxag}>{album}</Text>
 						</LabeledInput>
 						<Hr lineColor={commonStyle.hrColor}/>
 						<LabeledInput label={"테그"}>
-							<Text style={styles.textboxag}>{this.state.tags.map((res)=>{
-								return '#' + res.name;
-							}).join(', ')}</Text>
+							<Text style={styles.textboxag}>{tags}</Text>
 						</LabeledInput>
 					</View>
 					<View style={[styles.formWrapperDiv, {marginBottom: 30}]}>

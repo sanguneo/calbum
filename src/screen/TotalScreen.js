@@ -93,6 +93,7 @@ export default class TotalScreen extends Component {
 					}
 					res.push(ret[i]);
 				}
+				let key = Math.random()*100000;
 				this.setState({
 					style: null,
 					rows: res.map((i, idx) => {
@@ -103,7 +104,7 @@ export default class TotalScreen extends Component {
 							key={idx}
 							style={styles.thumbnail}
 							title={i.title}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden'}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden?key=' + key}
 							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
 						/>
 					})

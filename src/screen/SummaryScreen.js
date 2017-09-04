@@ -115,6 +115,7 @@ export default class SummaryScreen extends Component {
 					}
 					res.push(ret[i]);
 				}
+				let key = Math.random()*100000;
 				this.setState({
 					rows: res.map((i, idx) => {
 						if (typeof i === 'string') {
@@ -124,7 +125,7 @@ export default class SummaryScreen extends Component {
 							key={idx}
 							style={styles.thumbnail}
 							title={i.title}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.state.userid + '.jpghidden'}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key}
 							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
 						/>
 					})

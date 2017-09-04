@@ -177,6 +177,11 @@ export default class dbSVC {
 			"VALUES ('" + uniqkey + "','" + regdate + "','" + title + "','" + recipe.replace('\n', '\\n') + "','" + album + "','" + comment.replace('\n', '\\n') + "','" + userkey + "');";
 		this.executeQuery(query);
 	}
+	updatePhoto(uniqkey, title, recipe, album, comment, userkey) {
+		let query = "UPDATE `ca_photo` SET `title` = '" + title + "',`recipe` = '" + recipe.replace('\n', '\\n') + "',`albumname` = '" + album + "',`comment` = '" + comment.replace('\n', '\\n') + "'" +
+			"  WHERE `unique_key` = '"+uniqkey+"' AND `user_key` = '"+userkey+"'";
+		this.executeQuery(query);
+	}
 	insertAlbum(albumname, userkey) {
 		let albumquery = "INSERT INTO `ca_album`(`albumname`, `user_key`) SELECT '"+albumname+"', '"+userkey+"' WHERE NOT EXISTS(SELECT 1 FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"');";
 		this.executeQuery(albumquery);
@@ -193,6 +198,10 @@ export default class dbSVC {
 			this.executeQuery(tagnamereturn(tag));
 		});
 	}
+
+
+
+
 	removeAlbum(albumname, userkey) {
 		let albumquery = "DELETE FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"';";
 		this.executeQuery(albumquery);
