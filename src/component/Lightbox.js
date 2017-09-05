@@ -29,16 +29,8 @@ export default class Lightbox extends Component {
 		children: PropTypes.element.isRequired,
 	};
 
-	constructor(props) {
-		super(props);
-		this.state ={
-			height: 0,
-		};
-		this.collapsedStyle = {};
-		if (this.props.collapsed) {
-			this.collapsedStyle = {paddingTop: 0, marginBottom: 0};
-		}
-	}
+	state = {height: 0}
+	collapsedStyle = {}
 
 	_propclose() {
 		if (this.props.close) {
@@ -66,6 +58,9 @@ export default class Lightbox extends Component {
 
 
 	componentWillMount() {
+		if (this.props.collapsed) {
+			this.collapsedStyle = {paddingTop: 0, marginBottom: 0};
+		}
 		this.animatedValue = new Animated.Value(this.props.fromValue);
 	}
 	componentDidMount() {
