@@ -15,6 +15,7 @@ import {
 
 import Thumbnail from '../component/Thumbnail';
 import Titler from '../component/Titler';
+import AdBar from '../component/AdBar';
 
 const RNFS = require('react-native-fs');
 
@@ -116,21 +117,31 @@ export default class TotalScreen extends Component {
 	}
 	render() {
 		if (this.state.rows.length >0)
-			return (<View>
-				<ScrollView>
+			return (<View style={styles.wrapper}>
+				<ScrollView style={styles.scrollview}>
 					<View style={styles.container}>
 						{this.state.rows}
 					</View>
 				</ScrollView>
+				<AdBar/>
 			</View>);
 		else
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
+				<AdBar style={{position: 'absolute',width: Dimensions.get('window').width,bottom: 0}}/>
 			</View>);
 	}
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: Dimensions.get('window').width,
+		height: Dimensions.get('window').height,
+	},
+	scrollview: {
+		width: Dimensions.get('window').width,
+		height: Dimensions.get('window').height - 260,
+	},
 	container: {
 		flexWrap: 'wrap',
 		flexDirection: 'row',

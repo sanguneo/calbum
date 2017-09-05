@@ -12,6 +12,7 @@ import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.sanguneo.image2merge.Image2mergePackage;
 import org.pgsqlite.SQLitePluginPackage;
 import com.rnfs.RNFSPackage;
+import com.sbugert.rnadmob.RNAdMobPackage;
 
 
 
@@ -36,7 +37,8 @@ public class MainApplication extends NavigationApplication {
             new SQLitePluginPackage(),
             new PickerPackage(),
             new Image2mergePackage(),
-            new RNFSPackage()
+            new RNFSPackage(),
+            new RNAdMobPackage()
         );
     }
 }

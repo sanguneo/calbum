@@ -39,6 +39,8 @@
 		6512F8378BA0413F992E4A6C /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C14BA3B078194427884298C8 /* libimageCropPicker.a */; };
 		A0D029F0078D422CA08AD995 /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2F49A318194D318B5C7343 /* libReactNativeNavigation.a */; };
 		1A658B763F444E6FA1877149 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA76495FCE40198D646C62 /* libSQLite.a */; };
+		BD863730FA3444C9A3F7BF99 /* libRNAdMobManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A3F53DF0FC46A7A76C663A /* libRNAdMobManager.a */; };
+		9077CF8998574DA180D88D51 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C9729681E84576A14B4881 /* libAutoGrowTextInput.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -266,6 +268,10 @@
 		8C2F49A318194D318B5C7343 /* libReactNativeNavigation.a */ = {isa = PBXFileReference; name = "libReactNativeNavigation.a"; path = "libReactNativeNavigation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		EEAA270B9E93420F8D64BDD2 /* SQLite.xcodeproj */ = {isa = PBXFileReference; name = "SQLite.xcodeproj"; path = "../node_modules/react-native-sqlite-storage/src/ios/SQLite.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		61CA76495FCE40198D646C62 /* libSQLite.a */ = {isa = PBXFileReference; name = "libSQLite.a"; path = "libSQLite.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		25FDE8CD13C54B25BF8CC1C2 /* RNAdMobManager.xcodeproj */ = {isa = PBXFileReference; name = "RNAdMobManager.xcodeproj"; path = "../node_modules/react-native-admob/ios/RNAdMobManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		83A3F53DF0FC46A7A76C663A /* libRNAdMobManager.a */ = {isa = PBXFileReference; name = "libRNAdMobManager.a"; path = "libRNAdMobManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A57187AC72374801AFE42AB7 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; name = "AutoGrowTextInput.xcodeproj"; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		21C9729681E84576A14B4881 /* libAutoGrowTextInput.a */ = {isa = PBXFileReference; name = "libAutoGrowTextInput.a"; path = "libAutoGrowTextInput.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,6 +302,8 @@
 				6512F8378BA0413F992E4A6C /* libimageCropPicker.a in Frameworks */,
 				A0D029F0078D422CA08AD995 /* libReactNativeNavigation.a in Frameworks */,
 				1A658B763F444E6FA1877149 /* libSQLite.a in Frameworks */,
+				BD863730FA3444C9A3F7BF99 /* libRNAdMobManager.a in Frameworks */,
+				9077CF8998574DA180D88D51 /* libAutoGrowTextInput.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +474,8 @@
 				F04441BE1D9D45D0A2EBD53C /* imageCropPicker.xcodeproj */,
 				545909AB21DD4D36B842527F /* ReactNativeNavigation.xcodeproj */,
 				EEAA270B9E93420F8D64BDD2 /* SQLite.xcodeproj */,
+				25FDE8CD13C54B25BF8CC1C2 /* RNAdMobManager.xcodeproj */,
+				A57187AC72374801AFE42AB7 /* AutoGrowTextInput.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -994,6 +1004,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1001,6 +1013,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-customized-image-picker\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
 				);
 			};
 			name = Debug;
@@ -1022,6 +1036,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1029,6 +1045,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-customized-image-picker\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
 				);
 			};
 			name = Release;
@@ -1054,6 +1072,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-customized-image-picker\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
 				);
 			};
 			name = Debug;
@@ -1078,6 +1098,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-customized-image-picker\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
 				);
 			};
 			name = Release;
@@ -1108,6 +1130,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1115,6 +1139,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-customized-image-picker\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
 				);
 			};
 			name = Debug;
@@ -1145,6 +1171,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1152,6 +1180,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-customized-image-picker\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
 				);
 			};
 			name = Release;
@@ -1177,6 +1207,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1201,6 +1233,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};

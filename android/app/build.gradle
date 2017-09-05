@@ -143,6 +143,7 @@ dependencies {
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':Image2merge')
     compile project(':react-native-fs')
+    compile project(':react-native-admob')
     compile project(':react-native-sqlite-storage')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-navigation')
