@@ -41,13 +41,7 @@ const commonStyle = {
 }
 export default class SubscribeScreen extends Component {
 	static navigatorButtons = {
-		leftButtons: [],
-		rightButtons: [
-			{
-				icon: require('../../img/checkmark.png'),
-				id: 'save'
-			}
-		]
+		rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
 	};
 
 	constructor(props) {
@@ -78,24 +72,25 @@ export default class SubscribeScreen extends Component {
 		}
 
 	}
-
-	componentWillMount() {
-		this._getAlbums();
-		this._getUniqkey();
-	}
-
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {
-			this.props.navigator.toggleDrawer({
-				side: 'left',
-				animated: true
-			});
+			this.props.navigator.toggleDrawer({side: 'left', animated: true});
 		}
 		if (event.id === 'save') {
 			this._submit();
 		}
 	}
 
+
+	_onChangeTags = (tags) => {
+		this.setState({tags});
+	}
+	_getUniqkey() {
+		let regdate = new Date().getTime();
+		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));
+		this.setState({regdate, uniqkey});
+		return uniqkey;
+	}
 	_getAlbums() {
 		this.db.getAlbumsByUser(this.state.userkey, (ret) => {
 			let albums = [];
@@ -104,13 +99,6 @@ export default class SubscribeScreen extends Component {
 			});
 			this.setState({albums});
 		});
-	}
-	_onChangeTags = (tags) => {
-		this.setState({
-			tags,
-		});
-	};
-	_saveSourceImage() {
 	}
 	_changeImage(direct) {
 		if (direct === 'left') {
@@ -146,14 +134,12 @@ export default class SubscribeScreen extends Component {
 	_mergeImage() {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
 	}
-
 	_insertDB() {
 		this.db.insertPhoto(this.state.uniqkey, this.state.regdate, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
 	}
 	_insertTag() {
 		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
 	}
-
 	_formCheck() {
 		if (this.state.title === '') {
 			Alert.alert('확인', '제목을 입력해주세요.');
@@ -178,12 +164,6 @@ export default class SubscribeScreen extends Component {
 		}
 		return true;
 	}
-	_getUniqkey() {
-		let regdate = new Date().getTime();
-		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));
-		this.setState({regdate, uniqkey});
-		return uniqkey;
-	}
 	_submit() {
 		if (!this._formCheck()) return;
 		Alert.alert(
@@ -204,6 +184,12 @@ export default class SubscribeScreen extends Component {
 			],
 			{cancelable: true}
 		);
+	}
+
+
+	componentWillMount() {
+		this._getAlbums();
+		this._getUniqkey();
 	}
 	render() {
 		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
@@ -350,12 +336,9 @@ const styles = StyleSheet.create({
 
 	labeledtextbox: {
 		height: 42,
-
 		margin: 0,
 		marginLeft: 10,
 		marginRight: 10,
-
-
 		fontSize: 15,
 		color: '#000',
 		textAlign: 'left'

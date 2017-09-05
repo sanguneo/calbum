@@ -37,6 +37,7 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 }
 export default class ProfileScreen extends Component {
+
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -66,6 +67,21 @@ export default class ProfileScreen extends Component {
 		if (event.id === 'backPress') {
 			console.log('back');
 		}
+	}
+
+
+	_changeImage() {
+		ImagePicker.openPicker(imgOpt).then(profile => {
+			this.setState({profile: {uri: profile.path}});
+		}).catch(()=>{});
+	}
+	_saveProfileImage() {
+		let key = Math.random()*100000;
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpghidden';
+		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
+			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
+		}).catch((e) => {console.error('error', e)});
+		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
 	}
 	_formCheck() {
 		if (!this.state.profile.uri) {
@@ -98,26 +114,12 @@ export default class ProfileScreen extends Component {
 		}
 		return true;
 	}
-	_changeImage() {
-		ImagePicker.openPicker(imgOpt).then(profile => {
-			this.setState({profile: {uri: profile.path}});
-		}).catch(()=>{});
-	}
-	_saveProfileImage() {
-		let key = Math.random()*100000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpghidden';
-		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
-		}).catch((e) => {console.error('error', e)});
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
-	}
 	_submit() {
 		if (!this._formCheck()) return;
 		Alert.alert(
 			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
 			[
 				{text: '확인', onPress: () => {
-
 					if (this.props.profileCreate) {
 						this.props.dbsvc.regUSER(this.state.uniqkey, new Date().getTime(), this.state.userid, this.state.name, this.state.email, md5(this.state.pass));
 					} else {
@@ -136,6 +138,8 @@ export default class ProfileScreen extends Component {
 			{ cancelable: true }
 		);
 	}
+
+
 	render() {
 		return (
 			<ScrollView style={styles.container}>

@@ -19,13 +19,11 @@ const owidth = (function() {
 })();
 
 export default class InAlbumScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [
-			{
-				id: 'sideMenu' // id is locked up 'sideMenu'
-			}
-		]
+		leftButtons: [{ id: 'sideMenu'}]
 	};
+
 
 	constructor(props) {
 		super(props);
@@ -37,6 +35,10 @@ export default class InAlbumScreen extends Component {
 		}
 		this._getPhoto();
 	}
+	onNavigatorEvent(event) {
+	}
+
+
 	_goPhoto(title, uniqkey) {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
@@ -68,8 +70,8 @@ export default class InAlbumScreen extends Component {
 			}
 		}, this.props.profile[0], this.props.albumname);
 	}
-	onNavigatorEvent(event) {
-	}
+
+
 	render() {
 		if (this.state.rows.length >0)
 			return (<View style={styles.wrapper}>
@@ -111,17 +113,14 @@ const styles = StyleSheet.create({
 	text: {
 		width: Dimensions.get('window').width,
 		height: 40,
-
 		textAlign: 'center',
 		textAlignVertical: 'center'
 	},
 	thumbnail: {
 		width: owidth,
 		height: owidth,
-
 		marginVertical: 5,
 		marginHorizontal: 4,
-
 		borderColor: 'rgba(0,0,0,0.2)',
 		borderWidth: 1
 	}

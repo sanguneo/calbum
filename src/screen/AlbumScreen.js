@@ -14,14 +14,13 @@ import {
 const commonStyle = {
 	placeholderTextColor: '#bbb'
 }
+
 export default class AlbumScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [
-			{
-				id: 'sideMenu' // id is locked up 'sideMenu'
-			}
-		]
+		leftButtons: [{ id: 'sideMenu'}]
 	};
+
 
 	constructor(props) {
 		super(props);
@@ -31,11 +30,14 @@ export default class AlbumScreen extends Component {
 			albumname: '',
 			rows: [],
 		}
-		if (this.props.profile)
+		if (this.props.profile) {
 			this._getAlbums();
+		}
 	}
 	onNavigatorEvent(event) {
 	}
+
+
 	_getAlbums() {
 		this.props.dbsvc.getAlbumsByUser(this.props.profile[0], (ret) => {
 			this.setState({rows: ret.map((item)=>{return item.albumname})});
@@ -48,9 +50,7 @@ export default class AlbumScreen extends Component {
 				{
 					text: '확인',
 					onPress: () => {
-						this.setState({
-							rows : this.state.rows.concat([this.state.albumname])
-						});
+						this.setState({rows : this.state.rows.concat([this.state.albumname])});
 						this.props.dbsvc.insertAlbum(this.state.albumname, this.props.profile[0]);
 					}
 				},
@@ -78,7 +78,6 @@ export default class AlbumScreen extends Component {
 			],
 			{cancelable: true}
 		);
-
 	}
 	_goAlbum(albumname) {
 		let aobj = {
@@ -86,22 +85,16 @@ export default class AlbumScreen extends Component {
 			title: '"' + albumname + '" 앨범',
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
 			navigatorStyle: {},
-			navigatorButtons: {leftButtons: [
-				{
-					id: 'sideMenu' // id is locked up 'sideMenu'
-				}
-			]},
+			navigatorButtons: navigatorButtons,
 			animated: false,
 			animationType: 'none'
 		}
-		if (albumname === '선택안함') {
-			aobj.title = '앨범 선택안됨';
-		}else {
-			aobj.passProps.albumname = albumname;
-		}
-
+		if (albumname === '선택안함') aobj.title = '앨범 선택안됨';
+		else aobj.passProps.albumname = albumname;
 		this.props.navigator.push(aobj);
 	}
+
+
 	render() {
 		let albumlist = this.state.rows.map((item, idx) => {
 			return (
@@ -136,42 +129,34 @@ export default class AlbumScreen extends Component {
 		);
 	}
 }
+
 const styles = StyleSheet.create({
-	container: {
-	},
 	row: {
 		flexDirection: 'row',
 		width: Dimensions.get('window').width,
 		height: 60,
 		paddingHorizontal: 10,
-
 		borderBottomWidth: 1,
 		borderColor: '#ccc',
 	},
 	rowContent: {
 		width: Dimensions.get('window').width - 60,
-
 		paddingHorizontal: 0,
-
 		textAlignVertical: 'center',
-
 		fontSize: 18,
 		color: '#000',
 	},
 	rowButton: {
 		width: 30,
 		height: 30,
-
 		marginVertical: 15,
 		marginLeft: 5,
 		marginRight: 10,
-
 		tintColor: '#11bb44',
 	},
 	rowButtonRemove: {
 		width: 30,
 		height: 30,
-
 		marginVertical: 15,
 		marginLeft: 5,
 		marginRight: 10,

@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
 	StyleSheet,
@@ -13,17 +7,12 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 
-const commonStyle = {
-	placeholderTextColor: '#bbb'
-}
 export default class TagScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [
-			{
-				id: 'sideMenu' // id is locked up 'sideMenu'
-			}
-		]
+		leftButtons: [{ id: 'sideMenu'}]
 	};
+
 
 	constructor(props) {
 		super(props);
@@ -32,22 +21,21 @@ export default class TagScreen extends Component {
 			tagname: '',
 			rows: [],
 		}
-		if (this.props.profile)
+		if (this.props.profile) {
 			this._getTags();
+		}
 	}
 	onNavigatorEvent(event) {
 	}
+
+
 	_goTag(tagname) {
 		let aobj = {
 			screen: "calbum.InTagScreen",
 			title: '"' + tagname + '" 태그',
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
 			navigatorStyle: {},
-			navigatorButtons: {leftButtons: [
-				{
-					id: 'sideMenu' // id is locked up 'sideMenu'
-				}
-			]},
+			navigatorButtons: navigatorButtons,
 			animated: false,
 			animationType: 'none'
 		}
@@ -64,6 +52,8 @@ export default class TagScreen extends Component {
 			this.setState({rows: ret.map((item)=>{return item.name})});
 		});
 	}
+
+
 	render() {
 		let taglist = this.state.rows.map((item, idx) => {
 			return (
@@ -104,9 +94,7 @@ const styles = StyleSheet.create({
 	rowContent: {
 		height: 40,
 		paddingHorizontal: 0,
-
 		textAlignVertical: 'center',
-
 		fontSize: 18,
 		color: '#000',
 	},

@@ -1,14 +1,18 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
 	TouchableOpacity,
 	StyleSheet,
-	Text,
 	Dimensions
 } from 'react-native';
 
 import Hr from './Hr';
 
 export default class Titler extends Component{
+	static propTypes = {
+		onPress: PropTypes.func.isRequired,
+		children: PropTypes.node.isRequired
+	};
+
 	constructor(props) {
 		super(props);
 	}

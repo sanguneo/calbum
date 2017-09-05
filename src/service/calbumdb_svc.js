@@ -23,10 +23,6 @@ export default class dbSVC {
             });
         }
     }
-
-    test() {
-        return this.db;
-    }
     setDB(db) {
         this.db = db;
     }
@@ -37,6 +33,12 @@ export default class dbSVC {
     	this.db.close();
     	if (this.isDebug)
 			console.log('DB Closed Success!!');
+	}
+	executeQuery(query) {
+		this.db.transaction((tx) => {
+			tx.executeSql(query, [], (tx, results) => {
+			});
+		});
 	}
     getUSER(callback) {
         this.db.transaction((tx) => {
@@ -52,134 +54,16 @@ export default class dbSVC {
         });
     }
 	regUSER(arg_uniqkey, arg_reg_date, arg_user_id, arg_name, arg_email, arg_passphase) {
-		this.db.transaction((tx) => {
-			tx.executeSql( "INSERT INTO `ca_user`(`unique_key`,`reg_date`,`user_id`,`name`,`email`,`passphase`) " +
-				"VALUES ('"+arg_uniqkey+"','"+arg_reg_date+"','"+arg_user_id+"','"+arg_name+"','"+arg_email+"','"+arg_passphase+"');", [], (tx, results) => {});
-		});
+		this.executeQuery( "INSERT INTO `ca_user`(`unique_key`,`reg_date`,`user_id`,`name`,`email`,`passphase`) " +
+			"VALUES ('"+arg_uniqkey+"','"+arg_reg_date+"','"+arg_user_id+"','"+arg_name+"','"+arg_email+"','"+arg_passphase+"');", [], (tx, results) => {});
 	}
 	editUSER(arg_uniqkey, arg_name, arg_email, arg_passphase) {
-		this.db.transaction((tx) => {
-			tx.executeSql("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniqkey+"' AND `passphase`='"+arg_passphase+"';", [], (tx, results) => {});
-		});
+		this.executeQuery("UPDATE `ca_user` SET `name`='"+arg_name+"', `email`='"+arg_email+"' WHERE `unique_key`='"+arg_uniqkey+"' AND `passphase`='"+arg_passphase+"';");
 	}
-	getPhoto(callback, user_key, limit) {
-		let userFind = user_key ? " WHERE user_key='"+user_key +"'" : "";
-		userFind += ' ORDER BY `idx`';
-		userFind += limit ? ' LIMIT ' + limit : '';
-		userFind += ';';
-		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
-		});
-	}
-	getPhotoEachGroup(callback, user_key, limit) {
-		let quserkey = user_key ? "s.user_key='"+user_key+"' and " : "";
-		let query = "SELECT * FROM ca_photo as s WHERE " + quserkey + "(SELECT COUNT(*) FROM ca_photo as f WHERE f.albumname = s.albumname AND f.idx <= s.idx) <= " + limit + ";";
-		this.db.transaction((tx) => {
-			tx.executeSql(query, [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
-		});
-	}
-	getPhotoByAlbum(callback, user_key, albumname) {
-    	console.log(user_key, albumname);
-		let query = "SELECT * FROM ca_photo WHERE";
-		query += user_key ? " user_key='"+user_key+"'" : "";
-		query += user_key && albumname ? " AND" : "";
-		query += albumname ? " albumname='"+albumname+"'" : "";
-		query += ' ORDER BY `idx`;';
-		this.db.transaction((tx) => {
-			tx.executeSql(query, [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
-		});
-	}
-	getPhotoByTag(callback, user_key, tagname) {
-		let query = "SELECT p.idx, p.unique_key, p.reg_date, p.title, p.recipe, p.albumname, p.comment, p.user_key FROM ca_photo as p LEFT JOIN ca_tag as t ON p.unique_key = t.photo_key WHERE";
-		query += user_key ? " t.user_key='"+user_key+"'" : "";
-		query += user_key && tagname ? " AND" : "";
-		query += tagname ? " t.name='"+tagname+"'" : "";
-		query += ' ORDER BY p.idx;';
-		this.db.transaction((tx) => {
-			tx.executeSql(query, [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
-		});
-	}
-	getPhotoSpecific(callback, user_key, uniqkey) {
-    	let postfix = user_key||uniqkey ? ' WHERE' : '';
-		postfix += user_key ? " user_key='"+user_key +"'" : "";
-		postfix += user_key&&uniqkey ? " AND" : "";
-		postfix += uniqkey ? " `unique_key`='" + uniqkey+"'" : "";
-		postfix += ' ORDER BY `idx`;';
-		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret[0]);
-			});
-		});
-	}
-	getTagSpecific(callback, user_key, uniqkey) {
-		let postfix = user_key||uniqkey ? ' WHERE' : '';
-		postfix += user_key ? " user_key='"+user_key +"'" : "";
-		postfix += uniqkey ? "AND `photo_key`='" + uniqkey+"'" : "";
-		postfix += ' ORDER BY `idx`;';
-		this.db.transaction((tx) => {
-			tx.executeSql("SELECT * FROM ca_tag" + postfix, [], (tx, results) => {
-				var len = results.rows.length;
-				var ret = [];
-				for (let i = 0; i < len; i++) {
-					let row = results.rows.item(i);
-					ret.push(row);
-				}
-				callback(ret);
-			});
-		});
-	}
-	executeQuery(query) {
-		this.db.transaction((tx) => {
-			tx.executeSql(query, [], (tx, results) => {
-			});
-		});
-	}
+
 	insertPhoto(uniqkey, regdate, title, recipe, album, comment, userkey) {
 		let query = "INSERT INTO `ca_photo`(`unique_key`,`reg_date`,`title`,`recipe`,`albumname`,`comment`,`user_key`) " +
 			"VALUES ('" + uniqkey + "','" + regdate + "','" + title + "','" + recipe.replace('\n', '\\n') + "','" + album + "','" + comment.replace('\n', '\\n') + "','" + userkey + "');";
-		this.executeQuery(query);
-	}
-	updatePhoto(uniqkey, title, recipe, album, comment, userkey) {
-		let query = "UPDATE `ca_photo` SET `title` = '" + title + "',`recipe` = '" + recipe.replace('\n', '\\n') + "',`albumname` = '" + album + "',`comment` = '" + comment.replace('\n', '\\n') + "'" +
-			"  WHERE `unique_key` = '"+uniqkey+"' AND `user_key` = '"+userkey+"'";
 		this.executeQuery(query);
 	}
 	insertAlbum(albumname, userkey) {
@@ -197,14 +81,6 @@ export default class dbSVC {
 			this.executeQuery(tagreturn(tag));
 			this.executeQuery(tagnamereturn(tag));
 		});
-	}
-
-
-
-
-	removeAlbum(albumname, userkey) {
-		let albumquery = "DELETE FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"';";
-		this.executeQuery(albumquery);
 	}
 	getAlbums(callback) {
 		this.db.transaction((tx) => {
@@ -260,5 +136,118 @@ export default class dbSVC {
 				callback(ret);
 			});
 		});
+	}
+	getPhoto(callback, user_key, limit) {
+		let userFind = user_key ? " WHERE user_key='"+user_key +"'" : "";
+		userFind += ' ORDER BY `idx`';
+		userFind += limit ? ' LIMIT ' + limit : '';
+		userFind += ';';
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_photo" + userFind, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+	getPhotoEachGroup(callback, user_key, limit) {
+		let quserkey = user_key ? "s.user_key='"+user_key+"' and " : "";
+		let query = "SELECT * FROM ca_photo as s WHERE " + quserkey + "(SELECT COUNT(*) FROM ca_photo as f WHERE f.albumname = s.albumname AND f.idx <= s.idx) <= " + limit + ";";
+		this.db.transaction((tx) => {
+			tx.executeSql(query, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+	getPhotoByAlbum(callback, user_key, albumname) {
+		console.log(user_key, albumname);
+		let query = "SELECT * FROM ca_photo WHERE";
+		query += user_key ? " user_key='"+user_key+"'" : "";
+		query += user_key && albumname ? " AND" : "";
+		query += albumname ? " albumname='"+albumname+"'" : "";
+		query += ' ORDER BY `idx`;';
+		this.db.transaction((tx) => {
+			tx.executeSql(query, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+	getPhotoByTag(callback, user_key, tagname) {
+		let query = "SELECT p.idx, p.unique_key, p.reg_date, p.title, p.recipe, p.albumname, p.comment, p.user_key FROM ca_photo as p LEFT JOIN ca_tag as t ON p.unique_key = t.photo_key WHERE";
+		query += user_key ? " t.user_key='"+user_key+"'" : "";
+		query += user_key && tagname ? " AND" : "";
+		query += tagname ? " t.name='"+tagname+"'" : "";
+		query += ' ORDER BY p.idx;';
+		this.db.transaction((tx) => {
+			tx.executeSql(query, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+	getPhotoSpecific(callback, user_key, uniqkey) {
+		let postfix = user_key||uniqkey ? ' WHERE' : '';
+		postfix += user_key ? " user_key='"+user_key +"'" : "";
+		postfix += user_key&&uniqkey ? " AND" : "";
+		postfix += uniqkey ? " `unique_key`='" + uniqkey+"'" : "";
+		postfix += ' ORDER BY `idx`;';
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret[0]);
+			});
+		});
+	}
+	getTagSpecific(callback, user_key, uniqkey) {
+		let postfix = user_key||uniqkey ? ' WHERE' : '';
+		postfix += user_key ? " user_key='"+user_key +"'" : "";
+		postfix += uniqkey ? "AND `photo_key`='" + uniqkey+"'" : "";
+		postfix += ' ORDER BY `idx`;';
+		this.db.transaction((tx) => {
+			tx.executeSql("SELECT * FROM ca_tag" + postfix, [], (tx, results) => {
+				var len = results.rows.length;
+				var ret = [];
+				for (let i = 0; i < len; i++) {
+					let row = results.rows.item(i);
+					ret.push(row);
+				}
+				callback(ret);
+			});
+		});
+	}
+	updatePhoto(uniqkey, title, recipe, album, comment, userkey) {
+		let query = "UPDATE `ca_photo` SET `title` = '" + title + "',`recipe` = '" + recipe.replace('\n', '\\n') + "',`albumname` = '" + album + "',`comment` = '" + comment.replace('\n', '\\n') + "'" +
+			"  WHERE `unique_key` = '"+uniqkey+"' AND `user_key` = '"+userkey+"'";
+		this.executeQuery(query);
+	}
+	removeAlbum(albumname, userkey) {
+		let albumquery = "DELETE FROM `ca_album` WHERE `albumname` = '"+albumname+"' AND `user_key` = '"+userkey+"';";
+		this.executeQuery(albumquery);
 	}
 }

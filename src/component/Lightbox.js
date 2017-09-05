@@ -1,13 +1,8 @@
 /**
  * Created by 나상권 on 2017-05-18.
  */
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
     StyleSheet,
     View,
@@ -19,36 +14,32 @@ import {
 } from 'react-native';
 
 export default class Lightbox extends Component {
-    // {
-    //     fromValue: number,
-    //     toValue: number,
-    //     duration: number,
-    //     key: string,
-	//	   close: function,
-	//     collapsed: boolean
-    // }
+	static propTypes = {
+		fromValue: PropTypes.number.isRequired,
+		toValue: PropTypes.number.isRequired,
+		duration: PropTypes.number.isRequired,
+		stylekey: PropTypes.string.isRequired,
+		style: PropTypes.object,
+		title: PropTypes.string,
+		color: PropTypes.string,
+		bgColor: PropTypes.string.isRequired,
+		close: PropTypes.func,
+		collapsed: PropTypes.bool,
+		hideTop: PropTypes.bool,
+		children: PropTypes.element.isRequired,
+	};
+
 	constructor(props) {
 		super(props);
-		this.state = {
+		this.state ={
 			height: 0,
-		}
+		};
 		this.collapsedStyle = {};
-		if (props.collapsed) {
+		if (this.props.collapsed) {
 			this.collapsedStyle = {paddingTop: 0, marginBottom: 0};
 		}
-
-		if (this.props.close) {
-
-		}
 	}
 
-
-    componentWillMount() {
-        this.animatedValue = new Animated.Value(this.props.fromValue);
-    }
-	componentDidMount() {
-        // this._open();
-	}
 	_propclose() {
 		if (this.props.close) {
 			this.props.close();
@@ -56,15 +47,12 @@ export default class Lightbox extends Component {
 	}
 	_open() {
 		setTimeout(() => {
-			this.setState({
-				height: Dimensions.get('window').height
-			});
+			this.setState({ height: Dimensions.get('window').height});
 		}, 50);
 		Animated.timing(this.animatedValue, {
 			toValue: this.props.toValue,
 			duration: this.props.duration,
 		}).start();
-
     }
     _close() {
 		Animated.timing(this.animatedValue, {
@@ -72,11 +60,17 @@ export default class Lightbox extends Component {
 			duration: this.props.duration,
 		}).start();
 		setTimeout(() => {
-			this.setState({
-				height: 0
-			});
+			this.setState({height: 0});
 		},this.props.duration + 50);
     }
+
+
+	componentWillMount() {
+		this.animatedValue = new Animated.Value(this.props.fromValue);
+	}
+	componentDidMount() {
+		// this._open();
+	}
     render() {
         const animatedStyle = {};
         animatedStyle[this.props.stylekey] = this.animatedValue;

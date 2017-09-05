@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
 	StyleSheet,
@@ -26,7 +20,6 @@ const owidth = (() => {
 	p = p < 3 ? 3 : p;
 	return Math.round(w/p) - 8;
 })();
-
 const ot = (() => {
 	let w = Dimensions.get('window').width;
 	let p = Math.round(w / 150);
@@ -34,12 +27,9 @@ const ot = (() => {
 })();
 
 export default class SummaryScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [
-			{
-				id: 'sideMenu' // id is locked up 'sideMenu'
-			}
-		]
+		leftButtons: [{ id: 'sideMenu'}]
 	};
 
 	constructor(props) {
@@ -65,19 +55,20 @@ export default class SummaryScreen extends Component {
 				return c.state.uniqkey !== undefined && c.state.uniqkey !== null && c.state.uniqkey !== '';
 			}
 		);
-
 	}
+	onNavigatorEvent(event) {
+	}
+
+
 	_goAlbum(albumname) {
 		let aobj = {
 			screen: "calbum.InAlbumScreen",
 			title: '"' + albumname + '" 앨범',
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 			navigatorStyle: {},
-			navigatorButtons: {leftButtons: [
-				{
-					id: 'sideMenu' // id is locked up 'sideMenu'
-				}
-			]},
+			navigatorButtons: {
+				leftButtons: [{ id: 'sideMenu'}]
+			},
 			animated: false,
 			animationType: 'none'
 		}
@@ -105,18 +96,19 @@ export default class SummaryScreen extends Component {
 		let profile = profilearg ? profilearg :  [false];
 		this.props.dbsvc.getPhotoEachGroup((ret) => {
 			if(ret.length > 0) {
+				let key = Math.random()*100000;
 				let res = [];
 				let curr_an = '_reset_';
 				for (var i = 0; i < ret.length; i++) {
-					if (!ret[i].albumname)
+					if (!ret[i].albumname) {
 						ret[i].albumname = '선택안함';
+					}
 					if (curr_an !== ret[i].albumname) {
 						curr_an = ret[i].albumname;
 						res.push(curr_an);
 					}
 					res.push(ret[i]);
 				}
-				let key = Math.random()*100000;
 				this.setState({
 					rows: res.map((i, idx) => {
 						if (typeof i === 'string') {
@@ -134,10 +126,10 @@ export default class SummaryScreen extends Component {
 			}
 		}, profile[0], ot);
 	}
-	onNavigatorEvent(event) {
-	}
+
+
 	render() {
-		if (this.state.rows.length >0)
+		if (this.state.rows.length >0) {
 			return (<View style={styles.wrapper}>
 				<ScrollView style={styles.scrollview}>
 					<View style={styles.container}>
@@ -146,11 +138,12 @@ export default class SummaryScreen extends Component {
 				</ScrollView>
 				<AdBar/>
 			</View>);
-		else
+		} else {
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
-				<AdBar style={{position: 'absolute',width: Dimensions.get('window').width,bottom: 0}}/>
+				<AdBar style={{position: 'absolute', width: Dimensions.get('window').width, bottom: 0}}/>
 			</View>);
+		}
 	}
 }
 
@@ -177,17 +170,14 @@ const styles = StyleSheet.create({
 	text: {
 		width: Dimensions.get('window').width,
 		height: 40,
-
 		textAlign: 'center',
 		textAlignVertical: 'center'
 	},
 	thumbnail: {
 		width: owidth,
 		height: owidth,
-
 		marginVertical: 5,
 		marginHorizontal: 4,
-
 		borderColor: 'rgba(0,0,0,0.2)',
 		borderWidth: 1
 	}

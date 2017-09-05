@@ -40,30 +40,25 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 }
 export default class ModifyScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [],
-		rightButtons: [
-			{
-				icon: require('../../img/checkmark.png'),
-				id: 'save'
-			}
-		]
+		rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
 	};
+
 
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
 		this.props.navigator.setStyle({
 			navBarHideOnScroll: true,
-		})
+		});
 		this.crypt = this.props.crypt;
 		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
 			userid: props.profile[2],
 			userkey: props.profile[0],
-			regdate: new Date().getTime(),
+			// regdate: new Date().getTime(),
 			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropleft.jpghidden')},
 			uriRight: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropright.jpghidden')},
 			srcLeft: '',
@@ -77,22 +72,15 @@ export default class ModifyScreen extends Component {
 			albums: [],
 		}
 	}
-
-	componentWillMount() {
-		this._getAlbums();
-	}
-
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {
-			this.props.navigator.toggleDrawer({
-				side: 'left',
-				animated: true
-			});
+			this.props.navigator.toggleDrawer({side: 'left',animated: true});
 		}
 		if (event.id === 'save') {
 			this._submit();
 		}
 	}
+
 
 	_getAlbums() {
 		this.db.getAlbumsByUser(this.state.userkey, (ret) => {
@@ -108,8 +96,6 @@ export default class ModifyScreen extends Component {
 			tags,
 		});
 	};
-	_saveSourceImage() {
-	}
 	_changeImage(direct) {
 		if (direct === 'left') {
 			ImagePicker.openPicker(imgOpt).then(result => {
@@ -144,14 +130,12 @@ export default class ModifyScreen extends Component {
 	_mergeImage() {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
 	}
-
 	_insertDB() {
 		this.db.updatePhoto(this.state.uniqkey, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
 	}
 	_insertTag() {
 		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
 	}
-
 	_formCheck() {
 		if (this.state.title === '') {
 			Alert.alert('확인', '제목을 입력해주세요.');
@@ -177,7 +161,6 @@ export default class ModifyScreen extends Component {
 					text: '확인',
 					onPress: () => {
 						this._mergeImage();
-						// this._saveSourceImage();
 						this._insertDB();
 						this._insertTag();
 						this.props.parentUpdate(this.state.title);
@@ -190,9 +173,13 @@ export default class ModifyScreen extends Component {
 			{cancelable: true}
 		);
 	}
+
+	componentWillMount() {
+		this._getAlbums();
+	}
 	componentDidMount() {
 		let int,tf=!1;
-		int=setInterval(() =>{
+		int = setInterval(() =>{
 			tf&&this.refs.tag.props.value.length+1<=this.refs.tag.state.lines?clearInterval(int):(this.refs.tag.calculateWidth(),tf=!0)
 		},100);
 	}

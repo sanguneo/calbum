@@ -12,6 +12,7 @@ import {
 const RNFS = require('react-native-fs');
 
 export default class SideMenu extends Component {
+
     constructor(props) {
         super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -23,8 +24,10 @@ export default class SideMenu extends Component {
 			uniqkey: ''
         }
         props.global.setVar('side', this);
-
     }
+	onNavigatorEvent(event) {
+	}
+
 	_initializeUser() {
 		this.props.dbsvc.getUSER((ret) =>{
 			if (ret.length > 0) {
@@ -51,6 +54,93 @@ export default class SideMenu extends Component {
 			}
 		});
 	}
+	_toggleDrawer() {
+		this.props.navigator.toggleDrawer({
+			to: 'closed',
+			side: 'left',
+			animated: true
+		});
+	}
+	_openScreen(screen) {
+		let userinfo = {
+			name: this.state.name,
+			userid: this.state.userid,
+			uniqkey: this.state.uniqkey,
+		};
+		if (screen === 'subscribe') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.SubscribeScreen",
+				title: "디자인 작성하기",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {},
+				navigatorButtons: {
+					rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
+				},
+				animated: true,
+				animationType: 'slide-up'
+			});
+		} else if (screen === 'profile') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.ProfileScreen",
+				title: "프로필",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {},
+				navigatorButtons: {},
+				animated: true,
+				animationType: 'slide-up',
+			});
+		} else if (screen === 'total') {
+			this._toggleDrawer();
+			this.props.navigator.resetTo({
+				screen: "calbum.TotalScreen",
+				title: "전체보기",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {},
+				navigatorButtons: {
+					leftButtons: [{ id: 'sideMenu'}]
+				},
+				animated: false,
+				animationType: 'slide-up'
+			});
+		} else if (screen === 'album') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.AlbumScreen",
+				title: "앨범등록/삭제",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {},
+				navigatorButtons: {},
+				animated: true,
+				animationType: 'slide-up'
+			});
+		} else if (screen === 'tag') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.TagScreen",
+				title: "태그목록",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {},
+				navigatorButtons: {},
+				animated: true,
+				animationType: 'slide-up'
+			});
+		} else {
+			this._toggleDrawer();
+			this.props.navigator.resetTo({
+				screen: "calbum.SummeryScreen",
+				title: "요약",
+				passProps: {},
+				navigatorStyle: {},
+				navigatorButtons: {},
+				animated: true,
+				animationType: 'slide-up'
+			});
+		}
+	}
+
+
 	componentDidMount() {
     	this._initializeUser();
 		this.props.global.getVar('parent')._getPhoto([this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]);
@@ -60,9 +150,9 @@ export default class SideMenu extends Component {
 	}
     render() {
 		let profile = this.state.profile;
-		if (this.state.profile.uri) {
-			let key = Math.random() * 100000;
-			profile.uri = profile.uri.split('?key=')[0] + '?key=' + key;
+		if(this.state.profile.uri){
+			var key=1e5*Math.random();
+			profile.uri=profile.uri.split("?key=")[0]+"?key="+key
 		}
         return (
             <View style={styles.container}>
@@ -108,99 +198,9 @@ export default class SideMenu extends Component {
             </View>
         );
     }
-	onNavigatorEvent(event) {
-	}
-    _toggleDrawer() {
-        this.props.navigator.toggleDrawer({
-            to: 'closed',
-            side: 'left',
-            animated: true
-        });
 
-    }
-    _openScreen(screen) {
-    	let userinfo = {
-    		name: this.state.name,
-			userid: this.state.userid,
-			uniqkey: this.state.uniqkey,
-		};
-		if (screen === 'subscribe') {
-			this._toggleDrawer();
-			this.props.navigator.push({
-				screen: "calbum.SubscribeScreen",
-				title: "디자인 작성하기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]}, // simple serializable object that will pass as props to the modal (optional)
-				navigatorStyle: {},
-				navigatorButtons: {rightButtons: [
-					{
-						icon: require('../../img/checkmark.png'),
-						id: 'save'
-					}
-				]},
-				animated: true,
-				animationType: 'slide-up'
-			});
-		} else if (screen === 'profile') {
-			this._toggleDrawer();
-			this.props.navigator.push({
-				screen: "calbum.ProfileScreen",
-				title: "프로필",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-				navigatorStyle: {},
-				navigatorButtons: {},
-				animated: true,
-				animationType: 'slide-up',
-			});
-		} else if (screen === 'total') {
-			this._toggleDrawer();
-			this.props.navigator.resetTo({
-				screen: "calbum.TotalScreen",
-				title: "전체보기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-				navigatorStyle: {},
-				navigatorButtons: {leftButtons: [
-					{
-						id: 'sideMenu' // id is locked up 'sideMenu'
-					}
-				]},
-				animated: false,
-				animationType: 'slide-up'
-			});
-		} else if (screen === 'album') {
-			this._toggleDrawer();
-			this.props.navigator.push({
-				screen: "calbum.AlbumScreen", // unique ID registered with Navigation.registerScreen
-				title: "앨범등록/삭제", // title of the screen as appears in the nav bar (optional)
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
-				animated: true,
-				animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-			});
-		} else if (screen === 'tag') {
-			this._toggleDrawer();
-			this.props.navigator.push({
-				screen: "calbum.TagScreen", // unique ID registered with Navigation.registerScreen
-				title: "태그목록", // title of the screen as appears in the nav bar (optional)
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
-				animated: true,
-				animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-			});
-		} else {
-			this._toggleDrawer();
-			this.props.navigator.resetTo({
-				screen: "calbum.SummeryScreen", // unique ID registered with Navigation.registerScreen
-				title: "요약", // title of the screen as appears in the nav bar (optional)
-				passProps: {}, // simple serializable object that will pass as props to the modal (optional)
-				navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-				navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
-				animated: true,
-				animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
-			});
-		}
-    }
+
+
 }
 
 const styles = StyleSheet.create({

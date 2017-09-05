@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
 	StyleSheet,
@@ -16,7 +10,6 @@ import {
 import Thumbnail from '../component/Thumbnail';
 import Titler from '../component/Titler';
 import AdBar from '../component/AdBar';
-
 const RNFS = require('react-native-fs');
 
 const owidth = (function() {
@@ -26,13 +19,11 @@ const owidth = (function() {
 })();
 
 export default class TotalScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [
-			{
-				id: 'sideMenu' // id is locked up 'sideMenu'
-			}
-		]
+		leftButtons: [{ id: 'sideMenu'}]
 	};
+
 
 	constructor(props) {
 		super(props);
@@ -42,20 +33,21 @@ export default class TotalScreen extends Component {
 			rows: [],
 			style:{}
 		}
-		if (this.props.profile)
+		if (this.props.profile) {
 			this._getPhoto(this.props.profile);
+		}
 	}
+	onNavigatorEvent(event) {
+	}
+
+
 	_goAlbum(albumname) {
 		let aobj = {
 			screen: "calbum.InAlbumScreen",
 			title: '"' + albumname + '" 앨범',
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 			navigatorStyle: {},
-			navigatorButtons: {leftButtons: [
-				{
-					id: 'sideMenu' // id is locked up 'sideMenu'
-				}
-			]},
+			navigatorButtons: navigatorButtons,
 			animated: false,
 			animationType: 'none'
 		}
@@ -113,10 +105,10 @@ export default class TotalScreen extends Component {
 			}
 		}, profile[0]);
 	}
-	onNavigatorEvent(event) {
-	}
+
+
 	render() {
-		if (this.state.rows.length >0)
+		if (this.state.rows.length >0) {
 			return (<View style={styles.wrapper}>
 				<ScrollView style={styles.scrollview}>
 					<View style={styles.container}>
@@ -125,11 +117,12 @@ export default class TotalScreen extends Component {
 				</ScrollView>
 				<AdBar/>
 			</View>);
-		else
+		} else {
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
-				<AdBar style={{position: 'absolute',width: Dimensions.get('window').width,bottom: 0}}/>
+				<AdBar style={{position: 'absolute', width: Dimensions.get('window').width, bottom: 0}}/>
 			</View>);
+		}
 	}
 }
 
@@ -156,17 +149,14 @@ const styles = StyleSheet.create({
 	text: {
 		width: Dimensions.get('window').width,
 		height: 40,
-
 		textAlign: 'center',
 		textAlignVertical: 'center'
 	},
 	thumbnail: {
 		width: owidth,
 		height: owidth,
-
 		marginVertical: 5,
 		marginHorizontal: 4,
-
 		borderColor: 'rgba(0,0,0,0.2)',
 		borderWidth: 1
 	}

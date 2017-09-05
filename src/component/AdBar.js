@@ -3,8 +3,7 @@ import {
 	AdMobBanner,
 } from 'react-native-admob'
 import admob_svc from '../service/admob_svc'
-import {Text, View, StyleSheet, Dimensions} from 'react-native';
-
+import {View, StyleSheet} from 'react-native';
 
 export default class AdBar extends Component{
 	render() {
@@ -27,10 +26,5 @@ const styles = StyleSheet.create({
 		borderTopWidth: 1,
 		borderTopColor: 'gray',
 		marginRight: -0.5
-	},
-	text: {
-		width: 95,
-		height: 50,
-		backgroundColor: 'black'
 	}
 });

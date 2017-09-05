@@ -13,6 +13,7 @@ import Button from '../component/Button';
 import Lightbox from '../component/Lightbox';
 import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
+import ImageViewer from 'react-native-image-zoom-viewer';
 const RNFS = require('react-native-fs');
 
 const commonStyle = {
@@ -21,23 +22,19 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 }
 
-import ImageViewer from 'react-native-image-zoom-viewer';
 export default class ViewScreen extends Component {
+
 	static navigatorButtons = {
-		leftButtons: [],
-		rightButtons: [
-			{
-				icon: require('../../img/modify.png'),
-				id: 'edit'
-			}
-		]
+		rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit' }]
 	};
+
+
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.props.navigator.setStyle({
 			navBarHideOnScroll: true,
-		})
+		});
 		this.crypt = props.crypt;
 		this.db = props.dbsvc;
 		this.state = {
@@ -47,7 +44,6 @@ export default class ViewScreen extends Component {
 			userid: this.props.profile[2],
 			userkey: this.props.profile[0],
 			tags: [],
-			regdate: new Date().getTime(),
 			uniqkey: this.props.uniqkey,
 			album: '',
 			comment: '',
@@ -57,7 +53,6 @@ export default class ViewScreen extends Component {
 			imageurl: [{ url: ''}]
 		}
 	}
-
 	onNavigatorEvent(event) {
 		if (event.id === 'close') {
 			this._lightboxClose();
@@ -78,7 +73,7 @@ export default class ViewScreen extends Component {
 						this.state.email
 					],
 					parentUpdate : (title) => {
-						this.getPhotoInformation();
+						this._getPhotoInformation();
 						this.props.navigator.setTitle({title: title})
 					},
 					targetProps : {
@@ -87,31 +82,29 @@ export default class ViewScreen extends Component {
 						album: this.state.album,
 						recipe: this.state.recipe,
 						comment: this.state.comment,
-						tags: this.state.tags.map((res)=>{
-							return res.name;
-						}),
+						tags: this.state.tags.map((res)=>{ return res.name;}),
 						uniqkey: this.props.uniqkey,
 					}
 				},
 				navigatorStyle: {},
-				navigatorButtons: {rightButtons: [
-					{
-						icon: require('../../img/checkmark.png'),
-						id: 'save'
-					}
-				]},
+				navigatorButtons: {
+					rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
+				},
 				animated: true,
 				animationType: 'slide-up'
 			});
 		}
 		if (event.id === 'backPress') {
-			if (!this.side)
+			if (!this.side) {
 				this.props.navigator.pop();
-			else
+			} else {
 				this._lightboxClose();
+			}
 		}
 	}
-	getPhotoInformation() {
+
+
+	_getPhotoInformation() {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
 			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
@@ -124,22 +117,17 @@ export default class ViewScreen extends Component {
 			});
 		}, this.state.userkey, this.state.uniqkey);
 		this.db.getTagSpecific((res) => {
-			this.setState({
-				tags: res
-			});
+			this.setState({tags: res});
 		}, this.state.userkey, this.state.uniqkey);
 	}
-	componentDidMount() {
-		this.getPhotoInformation();
-	}
+
 	_getSideOriginal(side) {
-		let close = () => {};
 		this.side = null;
 
 		this.props.navigator.setButtons({
-			leftButtons: [], // see "Adding buttons to the navigator" below for format (optional)
-			rightButtons: [{id: 'close', icon: require('../../img/navicon_close.png')}], // see "Adding buttons to the navigator" below for format (optional)
-			animated: true // does the change have transition animation or does it happen immediately (optional)
+			leftButtons: [],
+			rightButtons: [{id: 'close', icon: require('../../img/navicon_close.png')}],
+			animated: true
 		});
 		if(side === 'left'){
 			this.side = 'imagesbefore';
@@ -154,20 +142,19 @@ export default class ViewScreen extends Component {
 	}
 	_lightboxClose() {
 		this.refs[this.side]._close();
-		this.props.navigator.setTitle({
-			title: this.props.title // the new title of the screen as appears in the nav bar
-		});
+		this.props.navigator.setTitle({ title: this.props.title });
 		this.props.navigator.setButtons({
 			leftButtons: [{id: 'back'}],
-			rightButtons: [{
-				icon: require('../../img/modify.png'),
-				id: 'edit'
-			}],
-			animated: true // does the change have transition animation or does it happen immediately (optional)
+			rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit'}],
+			animated: true
 		});
 		this.side = null;
 	}
 
+
+	componentDidMount() {
+		this._getPhotoInformation();
+	}
 	render() {
 		let album = this.state.album ? this.state.album : '선택안함';
 		let tags = this.state.tags.length === 0 ? '테그 없음' : this.state.tags.map((res)=>{
@@ -280,12 +267,9 @@ const styles = StyleSheet.create({
 	},
 	labeledtextbox: {
 		height: 42,
-
 		margin: 0,
 		marginLeft: 10,
 		marginRight: 10,
-
-
 		fontSize: 16,
 		color: '#000',
 		textAlign: 'left'
