@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		marginTop: 3,
-		marginBottom: 3,
+		marginBottom: 7,
 		marginLeft: 14,
 		marginRight: 14,
 		alignItems: 'flex-start',
