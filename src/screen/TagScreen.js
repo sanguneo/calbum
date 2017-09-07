@@ -80,14 +80,14 @@ const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',
-		paddingHorizontal: 10,
+		padding: 10,
 	},
 	row: {
 		flexDirection: 'row',
-		height: 35,
+		height: 30,
 		paddingHorizontal: 5,
 		marginHorizontal: 2,
-		marginVertical: 5,
+		marginVertical: 2,
 
 		borderWidth: 1,
 		borderColor: '#ccc',
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#aeaeae'
 	},
 	rowContent: {
-		height: 35,
+		height: 30,
 		paddingHorizontal: 0,
 		textAlignVertical: 'center',
-		fontSize: 17,
+		fontSize: 16,
 		color: '#fff',
 	},
 });
