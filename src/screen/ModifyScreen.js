@@ -30,7 +30,7 @@ const imgOpt = {
 
 const inputProps = {
 	keyboardType: 'default',
-	placeholder: '테그',
+	placeholder: '테그입력',
 	autoFocus: false,
 };
 
@@ -67,9 +67,7 @@ export default class ModifyScreen extends Component {
 			recipe: this.props.targetProps.recipe,
 			tags: this.props.targetProps.tags,
 			uniqkey: this.props.targetProps.uniqkey,
-			album: this.props.targetProps.album,
 			comment: this.props.targetProps.comment,
-			albums: [],
 		}
 	}
 	onNavigatorEvent(event) {
@@ -82,15 +80,6 @@ export default class ModifyScreen extends Component {
 	}
 
 
-	_getAlbums() {
-		this.db.getAlbumsByUser(this.state.userkey, (ret) => {
-			let albums = [];
-			ret.forEach((item) => {
-				albums.push({label: item.albumname, value: item.albumname})
-			});
-			this.setState({albums});
-		});
-	}
 	_onChangeTags = (tags) => {
 		this.setState({
 			tags,
@@ -131,7 +120,7 @@ export default class ModifyScreen extends Component {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
 	}
 	_insertDB() {
-		this.db.updatePhoto(this.state.uniqkey, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
+		this.db.updatePhoto(this.state.uniqkey, this.state.title, this.state.recipe, this.state.comment, this.state.userkey)
 	}
 	_insertTag() {
 		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
@@ -174,17 +163,13 @@ export default class ModifyScreen extends Component {
 		);
 	}
 
-	componentWillMount() {
-		this._getAlbums();
-	}
 	componentDidMount() {
-		let int,tf=!1;
-		int = setInterval(() =>{
-			tf&&this.refs.tag.props.value.length+1<=this.refs.tag.state.lines?clearInterval(int):(this.refs.tag.calculateWidth(),tf=!0)
-		},100);
+		// let int,tf=!1;
+		// int = setInterval(() =>{
+		// 	tf&&this.refs.tag.props.value.length+1<=this.refs.tag.state.lines?clearInterval(int):(this.refs.tag.calculateWidth(),tf=!0)
+		// },100);
 	}
 	render() {
-		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
@@ -215,17 +200,10 @@ export default class ModifyScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"앨범"}>
-						<Picker style={[styles.album, pickerColor]} selectedValue={this.state.album} itemStyle={styles.itemStyle}
-								onValueChange={(itemValue, itemIndex) => {this.setState({album: itemValue});}}>
-							<Picker.Item label={'선택안함'} value={''}/>
-							{this.state.albums.map((obj, i) => <Picker.Item key={i} label={obj.label} value={obj.value}/>)}
-						</Picker>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
 					<LabeledInput label={"테그"}>
 						<TagInput
 							tagContainerStyle={styles.tagContainer}
+							tagInputContainerStyle={styles.tagInputContainerStyle}
 							tagTextStyle={styles.tagTextStyle}
 							value={this.state.tags}
 							onChange={this._onChangeTags}
@@ -244,7 +222,7 @@ export default class ModifyScreen extends Component {
 				</View>
 				<View style={styles.formWrapper}>
 					<AutoGrowingTextInput
-						style={[styles.textboxag]}
+						style={styles.textboxag}
 						multiline={true}
 						editable={true}
 						autoCorrect={false}
@@ -274,7 +252,7 @@ export default class ModifyScreen extends Component {
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
-					<Button imgsource={require('../../img/checkmark.png')}  style={{backgroundColor: '#36384C'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button imgsource={require('../../img/checkmark.png')}  style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
 			</ScrollView>
 		);
@@ -309,10 +287,10 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	lblLeft: {
-		color: 'rgba(227,48,45,0.9)',
+		color: '#E3302D',
 	},
 	lblRight: {
-		color: 'rgba(58,142,207,0.8)',
+		color: '#3A8ECF',
 	},
 	formWrapper: {
 		flex: 1,
@@ -354,18 +332,15 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: '#000',
 	},
-	album: {
-		height: 41,
-		marginLeft: 5,
-		marginRight: 5,
-		color: '#000',
-		borderColor: commonStyle.placeholderTextColor,
-		alignItems: 'center',
-	},
 	tagContainer: {
-		height: 42
+		height: 30
 	},
 	tagTextStyle :{
 		fontSize: 16
+	},
+	tagInputContainerStyle: {
+		flexWrap: 'wrap',
+		alignItems: 'flex-start',
+		flexDirection:'row',
 	}
 });

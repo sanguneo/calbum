@@ -3,10 +3,8 @@ import {
     Text,
     View,
     Image,
-    ScrollView,
     TouchableOpacity,
     StyleSheet,
-    Alert
 } from 'react-native';
 
 const RNFS = require('react-native-fs');
@@ -23,7 +21,7 @@ export default class SideMenu extends Component {
 			email: '',
 			uniqkey: ''
         }
-        props.global.setVar('side', this);
+        this.props.global.setVar('side', this);
     }
 	onNavigatorEvent(event) {
 	}
@@ -91,30 +89,6 @@ export default class SideMenu extends Component {
 				animated: true,
 				animationType: 'slide-up',
 			});
-		} else if (screen === 'total') {
-			this._toggleDrawer();
-			this.props.navigator.resetTo({
-				screen: "calbum.TotalScreen",
-				title: "전체보기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-				navigatorStyle: {},
-				navigatorButtons: {
-					leftButtons: [{ id: 'sideMenu'}]
-				},
-				animated: false,
-				animationType: 'slide-up'
-			});
-		} else if (screen === 'album') {
-			this._toggleDrawer();
-			this.props.navigator.push({
-				screen: "calbum.AlbumScreen",
-				title: "앨범등록/삭제",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-				navigatorStyle: {},
-				navigatorButtons: {},
-				animated: true,
-				animationType: 'slide-up'
-			});
 		} else if (screen === 'tag') {
 			this._toggleDrawer();
 			this.props.navigator.push({
@@ -129,12 +103,14 @@ export default class SideMenu extends Component {
 		} else {
 			this._toggleDrawer();
 			this.props.navigator.resetTo({
-				screen: "calbum.SummeryScreen",
-				title: "요약",
-				passProps: {},
+				screen: "calbum.TotalScreen",
+				title: "전체보기",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
-				navigatorButtons: {},
-				animated: true,
+				navigatorButtons: {
+					leftButtons: [{ id: 'sideMenu'}]
+				},
+				animated: false,
 				animationType: 'slide-up'
 			});
 		}
@@ -143,7 +119,6 @@ export default class SideMenu extends Component {
 
 	componentDidMount() {
     	this._initializeUser();
-		this.props.global.getVar('parent')._getPhoto([this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]);
 	}
 	componentWillUnmount() {
 		this.props.dbsvc.closeDB();
@@ -176,13 +151,6 @@ export default class SideMenu extends Component {
                         style={[styles.leftIcon]}
                     />
                     <Text style={styles.sidetext}>전체보기</Text>
-                </TouchableOpacity>
-                <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('album')}}>
-                    <Image
-                        source={require('../../img/book.png')}
-                        style={[styles.leftIcon]}
-                    />
-                    <Text style={styles.sidetext}>앨범보기</Text>
                 </TouchableOpacity>
                 <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('tag')}}>
                     <Image
@@ -238,7 +206,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 10,
         marginTop: 10,
-        // marginLeft: 10,
     },
     profile: {
         width: 200,

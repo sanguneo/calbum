@@ -229,7 +229,7 @@ export default class ProfileScreen extends Component {
 					</LabeledInput>
 				</View>
 				<View style={[styles.formWrapper]}>
-					<Button imgsource={require('../../img/checkmark.png')} style={{backgroundColor: '#A1BBD0'}}  onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button imgsource={require('../../img/checkmark.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
 			</ScrollView>
 		);

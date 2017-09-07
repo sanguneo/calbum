@@ -66,9 +66,7 @@ export default class SubscribeScreen extends Component {
 			recipe: '',
 			tags: [],
 			uniqkey: '',
-			album: '',
 			comment: '',
-			albums: []
 		}
 
 	}
@@ -90,15 +88,6 @@ export default class SubscribeScreen extends Component {
 		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));
 		this.setState({regdate, uniqkey});
 		return uniqkey;
-	}
-	_getAlbums() {
-		this.db.getAlbumsByUser(this.state.userkey, (ret) => {
-			let albums = [];
-			ret.forEach((item) => {
-				albums.push({label: item.albumname, value: item.albumname})
-			});
-			this.setState({albums});
-		});
 	}
 	_changeImage(direct) {
 		if (direct === 'left') {
@@ -135,17 +124,12 @@ export default class SubscribeScreen extends Component {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
 	}
 	_insertDB() {
-		this.db.insertPhoto(this.state.uniqkey, this.state.regdate, this.state.title, this.state.recipe, this.state.album, this.state.comment, this.state.userkey)
+		this.db.insertPhoto(this.state.uniqkey, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.userkey)
 	}
 	_insertTag() {
 		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
 	}
 	_formCheck() {
-		if (this.state.title === '') {
-			Alert.alert('확인', '제목을 입력해주세요.');
-			this.refs.title.focus();
-			return false;
-		}
 		if (this.state.srcLeft.uri === '') {
 			Alert.alert('확인', '왼쪽 이미지를 선택해주세요.');
 			return false;
@@ -173,7 +157,6 @@ export default class SubscribeScreen extends Component {
 					text: '확인',
 					onPress: () => {
 						this._mergeImage();
-						// this._saveSourceImage();
 						this._insertDB();
 						this._insertTag();
 						this.props.global.getVar('parent')._getPhoto();
@@ -188,11 +171,9 @@ export default class SubscribeScreen extends Component {
 
 
 	componentWillMount() {
-		this._getAlbums();
 		this._getUniqkey();
 	}
 	render() {
-		let pickerColor = {color: this.state.album === '' ? commonStyle.placeholderTextColor : '#000'};
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
@@ -218,22 +199,15 @@ export default class SubscribeScreen extends Component {
 							underlineColorAndroid={'transparent'}
 							onChangeText={(title) => this.setState({title})}
 							value={this.state.title}
-							placeholder={'제목'}
+							placeholder={'제목을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"앨범"}>
-						<Picker style={[styles.album, pickerColor]} selectedValue={this.state.album} itemStyle={styles.itemStyle}
-								onValueChange={(itemValue, itemIndex) => {this.setState({album: itemValue});}}>
-							<Picker.Item label={'선택안함'} value={''}/>
-							{this.state.albums.map((obj, i) => <Picker.Item key={i} label={obj.label} value={obj.value}/>)}
-						</Picker>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"테그"}>
+					<LabeledInput label={"테그를 입력해주세요"}>
 						<TagInput
 							tagContainerStyle={styles.tagContainer}
+							tagInputContainerStyle={styles.tagInputContainerStyle}
 							tagTextStyle={styles.tagTextStyle}
 							value={this.state.tags}
 							onChange={this._onChangeTags}
@@ -243,6 +217,7 @@ export default class SubscribeScreen extends Component {
 							inputProps={inputProps}
 							parseOnBlur={true}
 							numberOfLines={99}
+							ref={"tag"}
 						/>
 					</LabeledInput>
 				</View>
@@ -258,7 +233,7 @@ export default class SubscribeScreen extends Component {
 						underlineColorAndroid={'transparent'}
 						onChangeText={(recipe) => this.setState({recipe})}
 						value={this.state.recipe}
-						placeholder={'레시피'}
+						placeholder={'레시피를 입력해주세요'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
 						blurOnSubmit={false}
 					/>
@@ -275,13 +250,13 @@ export default class SubscribeScreen extends Component {
 						underlineColorAndroid={'transparent'}
 						onChangeText={(comment) => this.setState({comment})}
 						value={this.state.comment}
-						placeholder={'코멘트'}
+						placeholder={'코멘트를 입력해주세요'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
 						blurOnSubmit={false}
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
-					<Button imgsource={require('../../img/checkmark.png')}  style={{backgroundColor: '#36384C'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button imgsource={require('../../img/checkmark.png')}  style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
 			</ScrollView>
 		);
@@ -315,10 +290,10 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	lblLeft: {
-		color: 'rgba(227,48,45,0.9)',
+		color: '#E3302D',
 	},
 	lblRight: {
-		color: 'rgba(58,142,207,0.8)',
+		color: '#3A8ECF',
 	},
 	formWrapper: {
 		flex: 1,
@@ -358,18 +333,15 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: '#000',
 	},
-	album: {
-		height: 41,
-		marginLeft: 5,
-		marginRight: 5,
-		color: '#000',
-		borderColor: commonStyle.placeholderTextColor,
-		alignItems: 'center',
-	},
 	tagContainer: {
 		height: 42
 	},
 	tagTextStyle :{
 		fontSize: 16
+	},
+	tagInputContainerStyle: {
+		flexWrap: 'wrap',
+		alignItems: 'flex-start',
+		flexDirection:'row',
 	}
 });

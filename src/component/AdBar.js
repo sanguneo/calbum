@@ -23,8 +23,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column',
 		alignItems: 'center',
-		borderTopWidth: 1,
-		borderTopColor: 'gray',
 		marginRight: -0.5
 	}
 });

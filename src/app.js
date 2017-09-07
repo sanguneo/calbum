@@ -12,7 +12,7 @@ const crypt = new cryptSVC();
 
 Navigation.startSingleScreenApp({
     screen: {
-        screen: 'calbum.SummaryScreen',
+        screen: 'calbum.TotalScreen',
         title: 'hair.pin',
     },
     appStyle: {

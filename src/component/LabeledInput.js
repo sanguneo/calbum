@@ -6,8 +6,7 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
-    Text,
-    Dimensions
+    Text
 } from 'react-native';
 
 export default class LabeledInput extends Component {

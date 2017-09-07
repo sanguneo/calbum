@@ -17,10 +17,6 @@ const { width } = Dimensions.get('window');
 
 type Props = {
 	/**
-	 * A handler to be called when array of tags change
-	 */
-		onChange: (items: Array<any> ) => void,
-	/**
 	 * An array of tags
 	 */
 		value: Array<any>,
@@ -74,9 +70,8 @@ type Event = {
 const DEFAULT_SEPARATORS = [',', ' ', ';', '\n'];
 const DEFAULT_TAG_REGEX = /(.+)/gi
 
-class TagInput extends Component {
+class Tags extends Component {
 	static propTypes = {
-		onChange: PropTypes.func.isRequired,
 		value: PropTypes.array.isRequired,
 		regex: PropTypes.object,
 		tagColor: PropTypes.string,
@@ -149,73 +144,6 @@ class TagInput extends Component {
 		}, 10);
 	}
 
-	componentDidUpdate(prevProps: Props, /*prevState*/) {
-		if (prevProps.value.length != this.props.value.length || !prevProps.value) {
-			this.calculateWidth();
-		}
-	}
-
-	onChange = (event: Event) => {
-		if (!event || !event.nativeEvent)
-			return;
-
-		const text = event.nativeEvent.text;
-		this.setState({ text: text });
-		const lastTyped = text.charAt(text.length - 1);
-
-		const parseWhen = this.props.separators || DEFAULT_SEPARATORS;
-
-		if (parseWhen.indexOf(lastTyped) > -1)
-			this.parseTags();
-	};
-
-	onBlur = (event: Event) => {
-		if (!event || !event.nativeEvent || !this.props.parseOnBlur)
-			return;
-
-		const text = event.nativeEvent.text;
-		this.setState({ text: text });
-		this.parseTags();
-	};
-
-	parseTags = () => {
-		const { text } = this.state;
-		const { value } = this.props;
-
-		const regex = this.props.regex || DEFAULT_TAG_REGEX;
-		const results = text.match(regex);
-
-		if (results && results.length > 0) {
-			this.setState({ text: '' });
-			this.props.onChange([...new Set([...value, ...results])]);
-		}
-	};
-
-	onKeyPress = (event: Event) => {
-		if (this.state.text === '' && event.nativeEvent && event.nativeEvent.key == 'Backspace') {
-			this.pop();
-		}
-	};
-
-	focus = () => {
-		if (this.refs.tagInput)
-			this.refs.tagInput.focus();
-	};
-
-	pop = () => {
-		const tags = _.clone(this.props.value);
-		tags.pop();
-		this.props.onChange(tags);
-		this.focus();
-	};
-
-	removeIndex = (index: number) => {
-		const tags = _.clone(this.props.value);
-		tags.splice(index, 1);
-		this.props.onChange(tags);
-		this.focus();
-	};
-
 	_getLabelValue = (tag) => {
 		const { labelKey } = this.props;
 
@@ -224,7 +152,6 @@ class TagInput extends Component {
 				return tag[labelKey];
 			}
 		}
-
 		return tag;
 	};
 
@@ -235,9 +162,9 @@ class TagInput extends Component {
 				key={index}
 				ref={'tag' + index}
 				style={[styles.tag, { backgroundColor: tagColor }, this.props.tagContainerStyle]}
-				onPress={() => this.removeIndex(index)}>
+				onPress={() => this.props.pressTag(this._getLabelValue(tag))}>
 				<Text style={[styles.tagText, { color: tagTextColor }, this.props.tagTextStyle]}>
-					{'#'+this._getLabelValue(tag)}&nbsp;&times;
+					{'#'+this._getLabelValue(tag)}
 				</Text>
 			</TouchableOpacity>
 		);
@@ -255,28 +182,11 @@ class TagInput extends Component {
 	};
 
 	render() {
-		var { text, inputWidth, lines } = this.state;
-		const { value, inputColor } = this.props;
-
-		const defaultInputProps = {
-			autoCapitalize: 'none',
-			autoCorrect: false,
-			placeholder: 'Start typing',
-			placeholderTextColor: '#bbb',
-			returnKeyType: 'done',
-			keyboardType: 'default',
-			underlineColorAndroid: 'rgba(0,0,0,0)',
-		}
-
-		const inputProps = { ...defaultInputProps, ...this.props.inputProps };
-
-		// const wrapperHeight = (lines - 1) * 50 + 36;
-
-		const width = inputWidth ? inputWidth : 400;
+		var { inputWidth } = this.state;
+		const { value } = this.props;
 
 		return (
 			<TouchableWithoutFeedback
-				onPress={() => this.refs.tagInput.focus()}
 				onLayout={this.measureWrapper}
 				style={[styles.container]}>
 				<View
@@ -290,19 +200,6 @@ class TagInput extends Component {
 					>
 						<View style={[styles.tagInputContainer, {width: inputWidth}, this.props.tagInputContainerStyle]}>
 							{value.map((tag, index) => this._renderTag(tag, index))}
-							<View style={[styles.textInputContainer, { width: width }]}>
-								<TextInput
-									ref="tagInput"
-									blurOnSubmit={false}
-									onKeyPress={this.onKeyPress}
-									value={text}
-									style={[styles.textInput, {color: inputColor,}]}
-									onBlur={this.onBlur}
-									onChange={this.onChange}
-									onSubmitEditing={this.parseTags}
-									{...inputProps}
-								/>
-							</View>
 						</View>
 					</View>
 				</View>
@@ -348,6 +245,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default TagInput;
+export default Tags;
 
 export { DEFAULT_SEPARATORS, DEFAULT_TAG_REGEX }

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
-import Titler from '../component/Titler';
+// import Titler from '../component/Titler';
 import AdBar from '../component/AdBar';
 const RNFS = require('react-native-fs');
 
@@ -28,42 +28,20 @@ export default class TotalScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.props.global.setVar('parent', this);
 		this.state = {
-			rows: [],
-			style:{}
+			rows: []
 		}
-		if (this.props.profile) {
-			this._getPhoto(this.props.profile);
-		}
+		this.props.global.setVar('parent', this);
 	}
 	onNavigatorEvent(event) {
 	}
 
 
-	_goAlbum(albumname) {
-		let aobj = {
-			screen: "calbum.InAlbumScreen",
-			title: '"' + albumname + '" 앨범',
-			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-			navigatorStyle: {},
-			navigatorButtons: navigatorButtons,
-			animated: false,
-			animationType: 'none'
-		}
-		if (albumname === '선택안함') {
-			aobj.title = '앨범 선택안됨';
-		}else {
-			aobj.passProps.albumname = albumname;
-		}
-
-		this.props.navigator.push(aobj);
-	}
 	_goPhoto(title, uniqkey) {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
 			title: title, // title of the screen as appears in the nav bar (optional)
-			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.state.profile},
 			navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 			navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 			animated: true,
@@ -72,40 +50,36 @@ export default class TotalScreen extends Component {
 		});
 	}
 	_getPhoto(profilearg) {
+		let key = Math.random()*100000;
 		let profile = profilearg ? profilearg :  [false];
 		this.props.dbsvc.getPhoto((ret) => {
 			if(ret.length > 0) {
-				let res = [];
-				let curr_an = '_reset_';
-				for (var i = 0; i < ret.length; i++) {
-					if (!ret[i].albumname)
-						ret[i].albumname = '앨범 선택안함';
-					if (curr_an !== ret[i].albumname) {
-						curr_an = ret[i].albumname;
-						res.push(curr_an);
-					}
-					res.push(ret[i]);
-				}
-				let key = Math.random()*100000;
-				this.setState({
-					style: null,
-					rows: res.map((i, idx) => {
-						if (typeof i === 'string') {
-							return <Titler key={idx} onPress={()=>{this._goAlbum(i + '');}}>{i}</Titler>
-						}
-						return <Thumbnail
-							key={idx}
-							style={styles.thumbnail}
-							title={i.title}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden?key=' + key}
-							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
-						/>
-					})
-				});
+					this.setState({
+						rows: ret.map((i, idx) => {
+							return <Thumbnail
+								key={idx}
+								style={styles.thumbnail}
+								title={i.title}
+								regdate={i.reg_date}
+								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + profile[2] + '.jpghidden?key=' + key}
+								onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
+							/>
+						})
+					});
 			}
 		}, profile[0]);
 	}
 
+	componentWillMount() {
+		this.props.global.getUntil('side',(e)=>{
+			this.setState({
+				profile: [e.state.uniqkey, e.state.profile, e.state.userid, e.state.name, e.state.email]
+			});
+			this._getPhoto([e.state.uniqkey, e.state.profile, e.state.userid, e.state.name, e.state.email]);
+		}, (c)=> {
+			return c.state.uniqkey !== ''
+		});
+	}
 
 	render() {
 		if (this.state.rows.length >0) {

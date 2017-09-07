@@ -13,6 +13,8 @@ import Button from '../component/Button';
 import Lightbox from '../component/Lightbox';
 import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
+import AdBar from '../component/AdBar';
+import Tags from '../component/Tags';
 import ImageViewer from 'react-native-image-zoom-viewer';
 const RNFS = require('react-native-fs');
 
@@ -45,9 +47,7 @@ export default class ViewScreen extends Component {
 			userkey: this.props.profile[0],
 			tags: [],
 			uniqkey: this.props.uniqkey,
-			album: '',
 			comment: '',
-			albums: [],
 			lightbox: true,
 			side: '이미지',
 			imageurl: [{ url: ''}]
@@ -79,7 +79,6 @@ export default class ViewScreen extends Component {
 					targetProps : {
 						merged: this.state.merged,
 						title: this.state.title,
-						album: this.state.album,
 						recipe: this.state.recipe,
 						comment: this.state.comment,
 						tags: this.state.tags.map((res)=>{ return res.name;}),
@@ -88,7 +87,7 @@ export default class ViewScreen extends Component {
 				},
 				navigatorStyle: {},
 				navigatorButtons: {
-					rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
+					leftButtons: [{ id: 'sideMenu'}]
 				},
 				animated: true,
 				animationType: 'slide-up'
@@ -103,7 +102,26 @@ export default class ViewScreen extends Component {
 		}
 	}
 
+	_goTag(tagname) {
+		let aobj = {
+			screen: "calbum.InTagScreen",
+			title: '#' + tagname,
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			navigatorStyle: {},
+			navigatorButtons: {
+				rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit' }]
+			},
+			animated: false,
+			animationType: 'none'
+		}
+		if (tagname === '선택안함') {
+			aobj.title = '태그 선택안됨';
+		}else {
+			aobj.passProps.tagname = tagname;
+		}
 
+		this.props.navigator.push(aobj);
+	}
 	_getPhotoInformation() {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
@@ -111,7 +129,6 @@ export default class ViewScreen extends Component {
 			this.setState({
 				merged: {uri: pPath},
 				title: res.title,
-				album: res.albumname,
 				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
 			});
@@ -156,10 +173,15 @@ export default class ViewScreen extends Component {
 		this._getPhotoInformation();
 	}
 	render() {
-		let album = this.state.album ? this.state.album : '선택안함';
-		let tags = this.state.tags.length === 0 ? '테그 없음' : this.state.tags.map((res)=>{
-			return '#' + res.name;
-		}).join(', ');
+		// let tags = this.state.tags.length === 0 ? <Text style={styles.texttagboxag}>{'테그 없음'}</Text> : this.state.tags.map((res, idx, e)=>{
+		// 	let postfix = e.length-1!==idx ? ', ' : '';
+		// 	return (
+		// 		<Text key={idx} style={styles.texttagboxag} onPress={()=>{this._goTag(res.name)}}>
+		// 			{'#' + res.name + postfix}
+		// 		</Text>
+		// 	)
+		// });
+
 		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_left.jpghidden')}]}/> : null;
 		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_right.jpghidden')}]}/> : null;
 		return (
@@ -176,22 +198,33 @@ export default class ViewScreen extends Component {
 						<Text style={{fontSize: 17}}>기본정보</Text>
 					</View>
 					<View style={styles.formWrapper}>
-						<LabeledInput label={"제목"}>
+						{this.state.title !== '' ? <LabeledInput label={"제목"}>
 							<Text style={styles.textboxag}>{this.state.title}</Text>
-						</LabeledInput>
-						<Hr lineColor={commonStyle.hrColor}/>
-						<LabeledInput label={"앨범"}>
-							<Text style={styles.textboxag}>{album}</Text>
-						</LabeledInput>
-						<Hr lineColor={commonStyle.hrColor}/>
+						</LabeledInput> :  null}
+						{this.state.title !== '' ? <Hr lineColor={commonStyle.hrColor}/> :  null}
 						<LabeledInput label={"테그"}>
-							<Text style={styles.textboxag}>{tags}</Text>
+							{/*<Text style={styles.textboxag}>{tags}</Text>*/}
+							{/*<View style={styles.tagbox}>{tags}</View>*/}
+							<Tags
+								tagContainerStyle={styles.tagContainer}
+								tagInputContainerStyle={styles.tagInputContainerStyle}
+								tagTextStyle={styles.tagTextStyle}
+								value={this.state.tags.map((res, idx)=>{return res.name})}
+								pressTag={(e) => {this._goTag(e)}}
+								tagColor={commonStyle.placeholderTextColor}
+								placeholderTextColor={commonStyle.placeholderTextColor}
+								tagTextColor="white"
+								parseOnBlur={true}
+								numberOfLines={99}
+								ref={"tag"}
+							/>
 						</LabeledInput>
 					</View>
 					<View style={[styles.formWrapperDiv, {marginBottom: 30}]}>
-						<Button imgsource={require('../../img/recipe.png')} style={{flex: 0.5, backgroundColor: '#E3BAB3'}} onPress={()=>{this.refs.recipe._open();}} btnname={'레시피 보기'}/>
-						<Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#A1BBD0'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>
+						{this.state.recipe === '' ? null : <Button imgsource={require('../../img/recipe.png')} style={{flex: 0.5, backgroundColor: '#ff412b'}} onPress={()=>{this.refs.recipe._open();}} btnname={'레시피 보기'}/>}
+						{this.state.comment === '' ? null : <Button imgsource={require('../../img/comment.png')} style={{flex: 0.5, backgroundColor: '#3692d9'}} onPress={()=>{this.refs.comment._open();}} btnname={'코멘트 보기'}/>}
 					</View>
+					<AdBar />
 				</ScrollView>
 				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
@@ -265,6 +298,13 @@ const styles = StyleSheet.create({
 		marginTop: 3,
 		marginBottom: 2,
 	},
+	tagbox: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		alignItems: 'flex-start',
+		marginLeft: 20,
+		marginRight: 10,
+	},
 	labeledtextbox: {
 		height: 42,
 		margin: 0,
@@ -283,16 +323,6 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	textboxag: {
-		minHeight: 36,
-		lineHeight: 30,
-		marginLeft: 20,
-		marginRight: 20,
-		fontSize: 16,
-		color: '#000',
-		borderWidth: 1,
-		borderColor: '#000'
-	},
-	textboxag: {
 		minHeight: 40,
 		lineHeight: 30,
 		marginLeft: 20,
@@ -301,13 +331,11 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: '#000',
 	},
-	album: {
-		height: 41,
-		marginLeft: 5,
-		marginRight: 5,
+	texttagboxag: {
+		minHeight: 40,
+		lineHeight: 30,
+		fontSize: 16,
 		color: '#000',
-		borderColor: commonStyle.placeholderTextColor,
-		alignItems: 'center',
 	},
 	imglabel: {
 		position: 'absolute',
@@ -320,11 +348,22 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	lblLeft: {
-		color: 'rgba(227,48,45,0.9)',
+		color: '#E3302D',
 		right: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
 	},
 	lblRight: {
-		color: 'rgba(58,142,207,0.8)',
+		color: '#3A8ECF',
 		left: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+	},
+	tagContainer: {
+		height: 30
+	},
+	tagTextStyle :{
+		fontSize: 16
+	},
+	tagInputContainerStyle: {
+		flexWrap: 'wrap',
+		alignItems: 'flex-start',
+		flexDirection:'row',
 	}
 });

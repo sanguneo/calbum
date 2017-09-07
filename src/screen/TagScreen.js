@@ -32,15 +32,17 @@ export default class TagScreen extends Component {
 	_goTag(tagname) {
 		let aobj = {
 			screen: "calbum.InTagScreen",
-			title: '"' + tagname + '" 태그',
+			title: '#' + tagname,
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
 			navigatorStyle: {},
-			navigatorButtons: navigatorButtons,
+			navigatorButtons: {
+				leftButtons: [{ id: 'sideMenu'}]
+			},
 			animated: false,
 			animationType: 'none'
 		}
 		if (tagname === '선택안함') {
-			aobj.title = '앨범 선택안됨';
+			aobj.title = '태그 선택안됨';
 		}else {
 			aobj.passProps.tagname = tagname;
 		}
@@ -58,7 +60,7 @@ export default class TagScreen extends Component {
 		let taglist = this.state.rows.map((item, idx) => {
 			return (
 				<View  style={styles.row} key={idx}>
-					<TouchableOpacity key={idx} onPress={()=>{this._goTag(item + '');}} >
+					<TouchableOpacity key={idx} onPress={()=>{this._goTag(item);}} >
 						<Text style={styles.rowContent}>{'#' + item}</Text>
 					</TouchableOpacity>
 				</View>
@@ -82,20 +84,22 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: 'row',
-		height: 40,
-		paddingHorizontal: 20,
-		marginHorizontal: 5,
+		height: 35,
+		paddingHorizontal: 5,
+		marginHorizontal: 2,
 		marginVertical: 5,
 
 		borderWidth: 1,
 		borderColor: '#ccc',
 		borderRadius: 5,
+
+		backgroundColor: '#aeaeae'
 	},
 	rowContent: {
-		height: 40,
+		height: 35,
 		paddingHorizontal: 0,
 		textAlignVertical: 'center',
-		fontSize: 18,
-		color: '#000',
+		fontSize: 17,
+		color: '#fff',
 	},
 });
