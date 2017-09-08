@@ -314,11 +314,11 @@ const styles = StyleSheet.create({
 	},
 
 	labeledtextbox: {
-		height: 42,
+		height: 36,
 		margin: 0,
 		marginLeft: 10,
 		marginRight: 10,
-		fontSize: 15,
+		fontSize: 16,
 		color: '#000',
 		textAlign: 'left'
 	},
@@ -334,11 +334,11 @@ const styles = StyleSheet.create({
 		height: 36,
 		marginLeft: 20,
 		marginRight: 20,
-		fontSize: 15,
+		fontSize: 16,
 		color: '#000',
 	},
 	tagContainer: {
-		height: 42
+		height: 30
 	},
 	tagTextStyle :{
 		fontSize: 16

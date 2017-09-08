@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 
 
-		fontSize: 15,
+		fontSize: 16,
 		color: '#000',
 		textAlign: 'left'
 	},
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
 		height: 36,
 		marginLeft: 20,
 		marginRight: 20,
-		fontSize: 15,
+		fontSize: 16,
 		color: '#000',
 	},
 	tagContainer: {

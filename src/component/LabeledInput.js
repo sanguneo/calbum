@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
     label: {
 		flexDirection: 'row',
         flex: 30,
-        fontSize: 15,
+        fontSize: 16,
         textAlign: 'center',
-        marginTop: 9,
+        marginTop: 7,
 		justifyContent: 'center',
 		alignItems: 'center'
 	},

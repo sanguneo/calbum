@@ -318,8 +318,8 @@ const styles = StyleSheet.create({
 	wrapper: {
 		flex: 1,
 		flexDirection: 'row',
-		marginTop: 3,
-		marginBottom: 3,
+		marginTop: 2,
+		marginBottom: 4,
 		marginLeft: 14,
 		marginRight: 14,
 		alignItems: 'flex-start',
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	textInput: {
-		height: 35,
+		height: 29,
 		fontSize: 16,
 		padding: 0,
 
