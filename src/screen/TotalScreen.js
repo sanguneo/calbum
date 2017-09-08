@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
-// import Titler from '../component/Titler';
+import Util from '../service/util_svc';
 import AdBar from '../component/AdBar';
 const RNFS = require('react-native-fs');
 
@@ -51,7 +51,7 @@ export default class TotalScreen extends Component {
 	}
 	_getPhoto(profilearg) {
 		let key = Math.random()*100000;
-		let profile = profilearg ? profilearg :  [false];
+		let profile = profilearg ? profilearg :  (this.state.profile ? this.state.profile :  [false]);
 		this.props.dbsvc.getPhoto((ret) => {
 			if(ret.length > 0) {
 					this.setState({
@@ -62,7 +62,7 @@ export default class TotalScreen extends Component {
 								title={i.title}
 								regdate={i.reg_date}
 								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + profile[2] + '.jpghidden?key=' + key}
-								onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
+								onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
 							/>
 						})
 					});

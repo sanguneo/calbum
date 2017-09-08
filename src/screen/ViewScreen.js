@@ -17,10 +17,11 @@ import AdBar from '../component/AdBar';
 import Tags from '../component/Tags';
 import ImageViewer from 'react-native-image-zoom-viewer';
 const RNFS = require('react-native-fs');
+import Util from '../service/util_svc';
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
-	hrColor: '#000',
+	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 }
 
@@ -74,7 +75,7 @@ export default class ViewScreen extends Component {
 					],
 					parentUpdate : (title) => {
 						this._getPhotoInformation();
-						this.props.navigator.setTitle({title: title})
+						title ? this.props.navigator.setTitle({title: title}) : null;
 					},
 					targetProps : {
 						merged: this.state.merged,
@@ -129,6 +130,7 @@ export default class ViewScreen extends Component {
 			this.setState({
 				merged: {uri: pPath},
 				title: res.title,
+				regdate: res.reg_date,
 				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
 			});
@@ -154,12 +156,10 @@ export default class ViewScreen extends Component {
 			this.props.navigator.setTitle({title: 'After'});
 		}
 		this.refs[this.side]._open();
-
-
 	}
 	_lightboxClose() {
 		this.refs[this.side]._close();
-		this.props.navigator.setTitle({ title: this.props.title });
+		this.props.navigator.setTitle({ title: this.props.title ? this.props.title : Util.dateFormatter(this.props.regdate)});
 		this.props.navigator.setButtons({
 			leftButtons: [{id: 'back'}],
 			rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit'}],
@@ -173,15 +173,6 @@ export default class ViewScreen extends Component {
 		this._getPhotoInformation();
 	}
 	render() {
-		// let tags = this.state.tags.length === 0 ? <Text style={styles.texttagboxag}>{'테그 없음'}</Text> : this.state.tags.map((res, idx, e)=>{
-		// 	let postfix = e.length-1!==idx ? ', ' : '';
-		// 	return (
-		// 		<Text key={idx} style={styles.texttagboxag} onPress={()=>{this._goTag(res.name)}}>
-		// 			{'#' + res.name + postfix}
-		// 		</Text>
-		// 	)
-		// });
-
 		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_left.jpghidden')}]}/> : null;
 		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_right.jpghidden')}]}/> : null;
 		return (
@@ -198,26 +189,27 @@ export default class ViewScreen extends Component {
 						<Text style={{fontSize: 17}}>기본정보</Text>
 					</View>
 					<View style={styles.formWrapper}>
-						{this.state.title !== '' ? <LabeledInput label={"제목"}>
-							<Text style={styles.textboxag}>{this.state.title}</Text>
-						</LabeledInput> :  null}
-						{this.state.title !== '' ? <Hr lineColor={commonStyle.hrColor}/> :  null}
+						<LabeledInput label={"제목"}>
+							<Text style={styles.textboxag}>{this.state.title !== '' ? this.state.title : '제목없음'}</Text>
+						</LabeledInput>
+						<Hr lineColor={commonStyle.hrColor}/>
 						<LabeledInput label={"테그"}>
-							{/*<Text style={styles.textboxag}>{tags}</Text>*/}
-							{/*<View style={styles.tagbox}>{tags}</View>*/}
-							<Tags
-								tagContainerStyle={styles.tagContainer}
-								tagInputContainerStyle={styles.tagInputContainerStyle}
-								tagTextStyle={styles.tagTextStyle}
-								value={this.state.tags.map((res, idx)=>{return res.name})}
-								pressTag={(e) => {this._goTag(e)}}
-								tagColor={commonStyle.placeholderTextColor}
-								placeholderTextColor={commonStyle.placeholderTextColor}
-								tagTextColor="white"
-								parseOnBlur={true}
-								numberOfLines={99}
-								ref={"tag"}
-							/>
+							{this.state.tags.length === 0 ?
+								<Text style={styles.textboxag}>{'테그없음'}</Text> :
+								<Tags
+									tagContainerStyle={styles.tagContainer}
+									tagInputContainerStyle={styles.tagInputContainerStyle}
+									tagTextStyle={styles.tagTextStyle}
+									value={this.state.tags.map((res)=>{return res.name})}
+									pressTag={(e) => {this._goTag(e)}}
+									tagColor={commonStyle.placeholderTextColor}
+									placeholderTextColor={commonStyle.placeholderTextColor}
+									tagTextColor="white"
+									parseOnBlur={true}
+									numberOfLines={99}
+									ref={"tag"}
+								/>
+							}
 						</LabeledInput>
 					</View>
 					<View style={[styles.formWrapperDiv, {marginBottom: 30}]}>
@@ -228,12 +220,12 @@ export default class ViewScreen extends Component {
 				</ScrollView>
 				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
-						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.recipe === '' ? '레시피 없음' : this.state.recipe}</Text>
+						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.recipe === '' ? '레시피없음' : this.state.recipe}</Text>
 					</View>
 				</Lightbox>
 				<Lightbox ref={'comment'} title={'코멘트'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
-						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.comment === '' ? '코멘트 없음' : this.state.comment}</Text>
+						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.comment === '' ? '코멘트없음' : this.state.comment}</Text>
 					</View>
 				</Lightbox>
 				<Lightbox ref={'imagesbefore'} title={'Before'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
@@ -260,8 +252,8 @@ const styles = StyleSheet.create({
 		height: Dimensions.get('window').width + 40,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
-		borderColor: 'lightgray',
-		borderBottomWidth: 1
+		// borderColor: 'lightgray',
+		// borderBottomWidth: 1
 	},
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width  : 800,
@@ -323,7 +315,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	textboxag: {
-		minHeight: 40,
+		minHeight: 30,
 		lineHeight: 30,
 		marginLeft: 20,
 		marginRight: 20,

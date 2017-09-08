@@ -36,7 +36,7 @@ const inputProps = {
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
-	hrColor: '#000',
+	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 }
 export default class SubscribeScreen extends Component {
@@ -199,12 +199,12 @@ export default class SubscribeScreen extends Component {
 							underlineColorAndroid={'transparent'}
 							onChangeText={(title) => this.setState({title})}
 							value={this.state.title}
-							placeholder={'제목을 입력해주세요'}
+							placeholder={'제목'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"테그를 입력해주세요"}>
+					<LabeledInput label={"테그"}>
 						<TagInput
 							tagContainerStyle={styles.tagContainer}
 							tagInputContainerStyle={styles.tagInputContainerStyle}
@@ -214,7 +214,11 @@ export default class SubscribeScreen extends Component {
 							tagColor={commonStyle.placeholderTextColor}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							tagTextColor="white"
-							inputProps={inputProps}
+							inputProps={{
+								keyboardType: 'default',
+								placeholder: '테그',
+								autoFocus: false,
+							}}
 							parseOnBlur={true}
 							numberOfLines={99}
 							ref={"tag"}
@@ -233,7 +237,7 @@ export default class SubscribeScreen extends Component {
 						underlineColorAndroid={'transparent'}
 						onChangeText={(recipe) => this.setState({recipe})}
 						value={this.state.recipe}
-						placeholder={'레시피를 입력해주세요'}
+						placeholder={'레시피'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
 						blurOnSubmit={false}
 					/>
@@ -250,7 +254,7 @@ export default class SubscribeScreen extends Component {
 						underlineColorAndroid={'transparent'}
 						onChangeText={(comment) => this.setState({comment})}
 						value={this.state.comment}
-						placeholder={'코멘트를 입력해주세요'}
+						placeholder={'코멘트'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
 						blurOnSubmit={false}
 					/>
@@ -274,8 +278,8 @@ const styles = StyleSheet.create({
 		height: Dimensions.get('window').width + 30,
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderColor: 'lightgray',
-		borderBottomWidth: 1
+		// borderColor: 'lightgray',
+		// borderBottomWidth: 1
 	},
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,

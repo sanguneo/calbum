@@ -9,7 +9,6 @@ import {
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	Picker,
 } from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
@@ -28,15 +27,9 @@ const imgOpt = {
 	cropping: true
 };
 
-const inputProps = {
-	keyboardType: 'default',
-	placeholder: '테그입력',
-	autoFocus: false,
-};
-
 const commonStyle = {
 	placeholderTextColor: '#bbb',
-	hrColor: '#000',
+	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 }
 export default class ModifyScreen extends Component {
@@ -210,7 +203,11 @@ export default class ModifyScreen extends Component {
 							tagColor={commonStyle.placeholderTextColor}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							tagTextColor="white"
-							inputProps={inputProps}
+							inputProps={{
+								keyboardType: 'default',
+								placeholder: '테그',
+								autoFocus: false,
+							}}
 							parseOnBlur={true}
 							numberOfLines={99}
 							ref={"tag"}
@@ -270,8 +267,8 @@ const styles = StyleSheet.create({
 		height: Dimensions.get('window').width + 30,
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderColor: 'lightgray',
-		borderBottomWidth: 1
+		// borderColor: 'lightgray',
+		// borderBottomWidth: 1
 	},
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,

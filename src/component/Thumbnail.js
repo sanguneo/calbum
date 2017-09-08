@@ -5,30 +5,15 @@ import {
 	StyleSheet,
 	Text,
 } from 'react-native';
-
-const pad = (num, size=2) => {
-	var s = "0000" + num;
-	return s.substr(s.length-size);
-}
+import Util from '../service/util_svc';
 
 export default class Thumbnail extends Component{
 	constructor(props) {
 		super(props);
 	}
 
-	_dateFormatter(timestamp, format) {
-		let date = new Date(parseInt(timestamp));
-		return format
-			.replace('Y',pad(date.getFullYear(),4))
-			.replace('M',pad(date.getMonth()+1))
-			.replace('D',pad(date.getDate()))
-			.replace('h',pad(date.getHours()))
-			.replace('i',pad(date.getMinutes()))
-			.replace('s',pad(date.getSeconds()));
-	}
-
 	render() {
-		let title = this.props.title ? this.props.title : (this.props.regdate ? this._dateFormatter(this.props.regdate, 'Y-M-D h:i') : 'noname');
+		let title = this.props.title ? this.props.title : (this.props.regdate ? Util.dateFormatter(this.props.regdate) : 'noname');
 		return (
 			<TouchableOpacity style={[styles.thumbnail, this.props.style]} onPress={this.props.onPress}>
 				<Image source={{uri:this.props.uri}} style={styles.thumbImage}></Image>

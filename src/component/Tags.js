@@ -223,12 +223,12 @@ const styles = StyleSheet.create({
 	},
 	tagInputContainerScroll: {
 		flex: 1,
+		minHeight: 30,
 	},
 	textInput: {
 		height: 35,
 		fontSize: 16,
 		padding: 0,
-
 	},
 	tag: {
 		minWidth: 20,

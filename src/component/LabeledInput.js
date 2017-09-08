@@ -37,8 +37,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: 'center',
         marginTop: 9,
-    },
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
     Input: {
 		flex: 70,
-    }
+		justifyContent: 'center',
+	}
 });
