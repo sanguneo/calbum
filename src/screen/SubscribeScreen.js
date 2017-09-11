@@ -6,7 +6,6 @@ import Hr from '../component/Hr';
 import Button from '../component/Button';
 import TagInput from '../component/TagInput';
 import LabeledInput from '../component/LabeledInput';
-
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
 

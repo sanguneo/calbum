@@ -6,10 +6,10 @@
 
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
-
 import ImagePicker from 'react-native-image-crop-picker';
 import md5 from '../service/md5';
 
