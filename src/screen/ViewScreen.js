@@ -266,8 +266,6 @@ const styles = StyleSheet.create({
 		height: Dimensions.get('window').width + 40,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
-		// borderColor: 'lightgray',
-		// borderBottomWidth: 1
 	},
 	img: {
 		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width  : 800,
