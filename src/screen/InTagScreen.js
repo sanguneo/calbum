@@ -24,12 +24,12 @@ export default class InTagScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.props.global.setVar('parent', this);
 		this.state = {
 			rows: [],
 			style: {},
 			loading: true
 		};
+        this.props.global.setVar('parent', this);
 		this._getPhoto(this.props.user);
 	}
 

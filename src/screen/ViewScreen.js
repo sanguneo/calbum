@@ -82,9 +82,7 @@ export default class ViewScreen extends Component {
 					}
 				},
 				navigatorStyle: {},
-				navigatorButtons: {
-					leftButtons: [{ id: 'sideMenu'}]
-				},
+				navigatorButtons: {},
 				animated: true,
 				animationType: 'slide-up'
 			});

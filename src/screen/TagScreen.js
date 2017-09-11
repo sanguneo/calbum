@@ -3,11 +3,6 @@ import {ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-nativ
 
 export default class TagScreen extends Component {
 
-	static navigatorButtons = {
-		leftButtons: [{ id: 'sideMenu'}]
-	};
-
-
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -29,9 +24,7 @@ export default class TagScreen extends Component {
 			title: '#' + tagname,
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
 			navigatorStyle: {},
-			navigatorButtons: {
-				leftButtons: [{ id: 'sideMenu'}]
-			},
+			navigatorButtons: {},
 			animated: false,
 			animationType: 'none'
 		};

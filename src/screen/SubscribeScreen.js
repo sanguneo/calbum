@@ -60,9 +60,6 @@ export default class SubscribeScreen extends Component {
 
 	}
 	onNavigatorEvent(event) {
-		if (event.id === 'menu') {
-			this.props.navigator.toggleDrawer({side: 'left', animated: true});
-		}
 		if (event.id === 'save') {
 			this._submit();
 		}

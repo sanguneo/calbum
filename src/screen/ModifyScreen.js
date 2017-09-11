@@ -25,6 +25,7 @@ const commonStyle = {
 export default class ModifyScreen extends Component {
 
 	static navigatorButtons = {
+		leftButtons: [],
 		rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
 	};
 
@@ -41,7 +42,6 @@ export default class ModifyScreen extends Component {
 			success: 'no',
 			userid: props.user[2],
 			userkey: props.user[0],
-			// regdate: new Date().getTime(),
 			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropleft.jpghidden')},
 			uriRight: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropright.jpghidden')},
 			srcLeft: '',
@@ -54,9 +54,6 @@ export default class ModifyScreen extends Component {
 		}
 	}
 	onNavigatorEvent(event) {
-		if (event.id === 'menu') {
-			this.props.navigator.toggleDrawer({side: 'left',animated: true});
-		}
 		if (event.id === 'save') {
 			this._submit();
 		}
