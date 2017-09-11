@@ -1,5 +1,6 @@
 ### 우선 설정
 
+#### 키 생성
 키 생성 : **<JAVA_HOME>/bin** 에서
 
     keytool -genkey -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000

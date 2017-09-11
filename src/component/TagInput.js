@@ -1,16 +1,7 @@
 // @flow
 
-import React, { Component, PropTypes } from 'react';
-import {
-	View,
-	Text,
-	TextInput,
-	StyleSheet,
-	TouchableOpacity,
-	Dimensions,
-	TouchableWithoutFeedback,
-	ScrollView,
-} from 'react-native';
+import React, {Component, PropTypes} from 'react';
+import {Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from 'react-native';
 import _ from 'lodash';
 
 const { width } = Dimensions.get('window');
@@ -72,7 +63,7 @@ type Event = {
 };
 
 const DEFAULT_SEPARATORS = [',', ' ', ';', '\n'];
-const DEFAULT_TAG_REGEX = /(.+)/gi
+const DEFAULT_TAG_REGEX = /(.+)/gi;
 
 class TagInput extends Component {
 	static propTypes = {
@@ -118,29 +109,27 @@ class TagInput extends Component {
 	};
 
 	calculateWidth = () => {
-		// setTimeout(() => {
-			if (!this.refs['tag' + (this.props.value.length - 1)])
-				return;
+		if (!this.refs['tag' + (this.props.value.length - 1)])
+			return;
 
-			this.refs['tag' + (this.props.value.length - 1)].measure((ox, oy, w, /*h, px, py*/) => {
-				const endPosOfTag = w + ox;
-				const margin = 3;
-				const spaceLeft = this.wrapperWidth - endPosOfTag - margin - 10;
+		this.refs['tag' + (this.props.value.length - 1)].measure((ox, oy, w, /*h, px, py*/) => {
+			const endPosOfTag = w + ox;
+			const margin = 3;
+			const spaceLeft = this.wrapperWidth - endPosOfTag - margin - 10;
 
-				const inputWidth = (spaceLeft < 100) ? this.wrapperWidth : spaceLeft - 10;
+			const inputWidth = (spaceLeft < 100) ? this.wrapperWidth : spaceLeft - 10;
 
-				if (spaceLeft < 100) {
-					if (this.state.lines < this.props.numberOfLines) {
-						var lines = this.state.lines + 1;
-						this.setState({ inputWidth, lines });
-					} else {
-						this.setState({ inputWidth }, () => this.scrollToBottom());
-					}
+			if (spaceLeft < 100) {
+				if (this.state.lines < this.props.numberOfLines) {
+					var lines = this.state.lines + 1;
+					this.setState({ inputWidth, lines });
 				} else {
-					this.setState({ inputWidth });
+					this.setState({ inputWidth }, () => this.scrollToBottom());
 				}
-			});
-		// }, 0);
+			} else {
+				this.setState({ inputWidth });
+			}
+		});
 	};
 
 	componentDidMount() {
@@ -266,7 +255,7 @@ class TagInput extends Component {
 			returnKeyType: 'done',
 			keyboardType: 'default',
 			underlineColorAndroid: 'rgba(0,0,0,0)',
-		}
+		};
 
 		const inputProps = { ...defaultInputProps, ...this.props.inputProps };
 
