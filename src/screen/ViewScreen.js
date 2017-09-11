@@ -14,6 +14,7 @@ import Lightbox from '../component/Lightbox';
 import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
 import AdBar from '../component/AdBar';
+import Loading from '../component/Loading';
 import Tags from '../component/Tags';
 import ImageViewer from 'react-native-image-zoom-viewer';
 const RNFS = require('react-native-fs');
@@ -51,7 +52,8 @@ export default class ViewScreen extends Component {
 			comment: '',
 			lightbox: true,
 			side: '이미지',
-			imageurl: [{ url: ''}]
+			imageurl: [{ url: ''}],
+			loading: true
 		}
 	}
 	onNavigatorEvent(event) {
@@ -127,17 +129,28 @@ export default class ViewScreen extends Component {
 		let key = Math.random()*100000;
 		this.db.getPhotoSpecific((res) => {
 			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
-			this.setState({
+			let info = {
 				merged: {uri: pPath},
 				title: res.title,
 				regdate: res.reg_date,
 				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
+			}
+			this.db.getTagSpecific((rest) => {
+				info.tags = rest;
+				this.setState(info);
+				setTimeout(() => {
+					this.setState({
+						loading : false
+					});
+				}, 1000);
+			}, this.state.userkey, this.state.uniqkey);
+		}, this.state.userkey, this.state.uniqkey);
+		setTimeout(() => {
+			this.setState({
+				loading : false
 			});
-		}, this.state.userkey, this.state.uniqkey);
-		this.db.getTagSpecific((res) => {
-			this.setState({tags: res});
-		}, this.state.userkey, this.state.uniqkey);
+		}, 2000);
 	}
 
 	_getSideOriginal(side) {
@@ -218,6 +231,7 @@ export default class ViewScreen extends Component {
 					</View>
 					<AdBar />
 				</ScrollView>
+				<Loading show={this.state.loading} style={{bottom: 0}}/>
 				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.recipe === '' ? '레시피없음' : this.state.recipe}</Text>

@@ -10,6 +10,7 @@ import {
 import Thumbnail from '../component/Thumbnail';
 import Util from '../service/util_svc';
 import AdBar from '../component/AdBar';
+import Loading from "../component/Loading";
 const RNFS = require('react-native-fs');
 
 const owidth = (function() {
@@ -29,7 +30,8 @@ export default class TotalScreen extends Component {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
-			rows: []
+			rows: [],
+			loading: true
 		}
 		this.props.global.setVar('parent', this);
 	}
@@ -64,8 +66,19 @@ export default class TotalScreen extends Component {
 								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + profile[2] + '.jpghidden?key=' + key}
 								onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
 							/>
-						})
+						}),
 					});
+				setTimeout(() => {
+					this.setState({
+						loading : false
+					});
+				}, 1000);
+			} else {
+				setTimeout(() => {
+					this.setState({
+						loading : false
+					});
+				}, 1000);
 			}
 		}, profile[0]);
 	}
@@ -90,11 +103,13 @@ export default class TotalScreen extends Component {
 					</View>
 				</ScrollView>
 				<AdBar/>
+				<Loading show={this.state.loading}/>
 			</View>);
 		} else {
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
 				<AdBar style={{position: 'absolute', width: Dimensions.get('window').width, bottom: 0}}/>
+				<Loading show={this.state.loading}/>
 			</View>);
 		}
 	}

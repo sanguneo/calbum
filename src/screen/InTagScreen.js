@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
+import Util from '../service/util_svc';
 import AdBar from '../component/AdBar';
+import Loading from '../component/Loading';
 const RNFS = require('react-native-fs');
 
 const owidth = (function() {
@@ -30,7 +32,8 @@ export default class InTagScreen extends Component {
 		this.props.global.setVar('parent', this);
 		this.state = {
 			rows: [],
-			style: {}
+			style: {},
+			loading: true
 		}
 		this._getPhoto(this.props.profile);
 	}
@@ -62,11 +65,23 @@ export default class InTagScreen extends Component {
 							key={idx}
 							style={styles.thumbnail}
 							title={i.title}
+							regdate={i.reg_date}
 							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden?key=' + key}
-							onPress={()=> {this._goPhoto(i.title +'', i.unique_key + '');}}
+							onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
 						/>
-					})
+					}),
 				});
+				setTimeout(() => {
+					this.setState({
+						loading : false
+					});
+				}, 1000);
+			} else {
+				setTimeout(() => {
+					this.setState({
+						loading : false
+					});
+				}, 1000);
 			}
 		}, this.props.profile[0], this.props.tagname);
 	}
@@ -81,11 +96,13 @@ export default class InTagScreen extends Component {
 					</View>
 				</ScrollView>
 				<AdBar/>
+				<Loading show={this.state.loading}/>
 			</View>);
 		else
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
 				<AdBar style={{position: 'absolute',width: Dimensions.get('window').width,bottom: 0}}/>
+				<Loading show={this.state.loading}/>
 			</View>);
 	}
 }

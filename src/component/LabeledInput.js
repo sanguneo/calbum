@@ -35,10 +35,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
         flex: 30,
         fontSize: 16,
-        textAlign: 'center',
-        marginTop: 7,
-		justifyContent: 'center',
-		alignItems: 'center'
+		textAlignVertical: 'center',
+		textAlign: 'center',
 	},
     Input: {
 		flex: 70,

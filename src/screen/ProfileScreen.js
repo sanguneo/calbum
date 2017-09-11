@@ -7,15 +7,13 @@
 import React, {Component} from 'react';
 import {
 	StyleSheet,
-	Text,
 	ScrollView,
 	View,
 	Image,
 	Dimensions,
 	TouchableOpacity,
 	Alert,
-	TextInput,
-	BackHandler
+	TextInput
 } from 'react-native';
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
@@ -33,7 +31,7 @@ const imgOpt = {
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
-	hrColor: '#000',
+	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 }
 export default class ProfileScreen extends Component {
@@ -129,7 +127,8 @@ export default class ProfileScreen extends Component {
 					this.global.getVar('side').setState({
 						name: this.state.name,
 						uniqkey: this.state.uniqkey,
-						userid: this.state.userid
+						userid: this.state.userid,
+						email: this.state.email
 					});
 					this.props.navigator.pop();
 				}},
@@ -149,7 +148,7 @@ export default class ProfileScreen extends Component {
 					</TouchableOpacity>
 				</View>
 				<View style={styles.formWrapper}>
-					<LabeledInput label={"아이디"}>
+					<LabeledInput label={"아이디"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -169,7 +168,7 @@ export default class ProfileScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"이메일"}>
+					<LabeledInput label={"이메일"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -184,7 +183,7 @@ export default class ProfileScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"닉네임"}>
+					<LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -198,7 +197,7 @@ export default class ProfileScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"비밀번호"}>
+					<LabeledInput label={"비밀번호"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -213,7 +212,7 @@ export default class ProfileScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"확인"}>
+					<LabeledInput label={"확인"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -243,13 +242,10 @@ const styles = StyleSheet.create({
 	imgView : {
 		flex: 1,
 		flexDirection: 'row',
-
 		height: 202,
 		width: 202,
-
 		marginHorizontal: (Dimensions.get('window').width - 202) / 2,
 		marginVertical: 20,
-
 		borderColor: '#eee',
 		borderWidth: 1
 	},
@@ -259,36 +255,29 @@ const styles = StyleSheet.create({
 	},
 	formWrapper: {
 		flex: 1,
-
 		marginTop: 10,
-		marginLeft:45,
-		marginRight: 45,
+		marginHorizontal: 45,
 		marginBottom: 30,
-
 		borderRadius:5,
 		backgroundColor: '#f5f5f5',
-
 	},
 	labeledtextbox: {
 		height: 42,
-
-		margin: 0,
-		marginLeft: 10,
-		marginRight: 10,
-
-		fontSize: 14,
+		marginHorizontal: 10,
+		fontSize: 15,
 		color: '#000',
-		textAlign: 'left'
+		textAlign: 'left',
+		textAlignVertical: 'center',
 	},
 	textbox: {
 		height: 58,
-
-		marginLeft: 10,
-		marginRight: 10,
+		marginHorizontal: 10,
 		marginBottom: 10,
-
-		fontSize: 14,
+		fontSize: 15,
 		color: '#000',
 
 	},
+	labelStyle: {
+		fontSize:15,
+	}
 });
