@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-	StyleSheet,
-	Text,
-	ScrollView,
-	View,
-	Image,
-	Dimensions,
-	TouchableOpacity
-} from 'react-native';
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import Button from '../component/Button';
 import Lightbox from '../component/Lightbox';
@@ -17,14 +9,15 @@ import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
 import Tags from '../component/Tags';
 import ImageViewer from 'react-native-image-zoom-viewer';
-const RNFS = require('react-native-fs');
 import Util from '../service/util_svc';
+
+const RNFS = require('react-native-fs');
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
-}
+};
 
 export default class ViewScreen extends Component {
 
@@ -45,8 +38,8 @@ export default class ViewScreen extends Component {
 			success: 'no',
 			merged: {uri: null},
 			recipe: '',
-			userid: this.props.profile[2],
-			userkey: this.props.profile[0],
+			userid: this.props.user[2],
+			userkey: this.props.user[0],
 			tags: [],
 			uniqkey: this.props.uniqkey,
 			comment: '',
@@ -68,7 +61,7 @@ export default class ViewScreen extends Component {
 					dbsvc: this.props.dbsvc,
 					crypt: this.props.crypt,
 					global: this.props.global,
-					profile: [
+					user: [
 						this.state.userkey,
 						this.state.profile,
 						this.state.userid,
@@ -109,14 +102,14 @@ export default class ViewScreen extends Component {
 		let aobj = {
 			screen: "calbum.InTagScreen",
 			title: '#' + tagname,
-			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
 			navigatorStyle: {},
 			navigatorButtons: {
 				rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit' }]
 			},
 			animated: false,
 			animationType: 'none'
-		}
+		};
 		if (tagname === '선택안함') {
 			aobj.title = '태그 선택안됨';
 		}else {
@@ -126,7 +119,7 @@ export default class ViewScreen extends Component {
 		this.props.navigator.push(aobj);
 	}
 	_getPhotoInformation() {
-		let key = Math.random()*100000;
+		let key = Math.random();
 		this.db.getPhotoSpecific((res) => {
 			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
 			let info = {
@@ -135,7 +128,7 @@ export default class ViewScreen extends Component {
 				regdate: res.reg_date,
 				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
-			}
+			};
 			this.db.getTagSpecific((rest) => {
 				info.tags = rest;
 				this.setState(info);

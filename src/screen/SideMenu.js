@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-    Text,
-    View,
-    Image,
-    TouchableOpacity,
-    StyleSheet,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
 const RNFS = require('react-native-fs');
 
@@ -20,7 +14,7 @@ export default class SideMenu extends Component {
             userid: '',
 			email: '',
 			uniqkey: ''
-        }
+        };
         this.props.global.setVar('side', this);
     }
 	onNavigatorEvent(event) {
@@ -70,7 +64,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.SubscribeScreen",
 				title: "디자인 작성하기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {
 					rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
@@ -83,7 +77,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.ProfileScreen",
 				title: "프로필",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -94,7 +88,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.TagScreen",
 				title: "태그목록",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -105,7 +99,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.resetTo({
 				screen: "calbum.TotalScreen",
 				title: "전체보기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
 				navigatorButtons: {
 					leftButtons: [{ id: 'sideMenu'}]

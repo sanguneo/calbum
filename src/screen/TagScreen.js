@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-	StyleSheet,
-	Text,
-	View,
-	ScrollView,
-	TouchableOpacity,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
 export default class TagScreen extends Component {
 
@@ -20,8 +14,8 @@ export default class TagScreen extends Component {
 		this.state = {
 			tagname: '',
 			rows: [],
-		}
-		if (this.props.profile) {
+		};
+		if (this.props.user) {
 			this._getTags();
 		}
 	}
@@ -33,14 +27,14 @@ export default class TagScreen extends Component {
 		let aobj = {
 			screen: "calbum.InTagScreen",
 			title: '#' + tagname,
-			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
 			navigatorStyle: {},
 			navigatorButtons: {
 				leftButtons: [{ id: 'sideMenu'}]
 			},
 			animated: false,
 			animationType: 'none'
-		}
+		};
 		if (tagname === '선택안함') {
 			aobj.title = '태그 선택안됨';
 		}else {
@@ -50,7 +44,7 @@ export default class TagScreen extends Component {
 		this.props.navigator.push(aobj);
 	}
 	_getTags() {
-		this.props.dbsvc.getTagGroups(this.props.profile[0], (ret) => {
+		this.props.dbsvc.getTagGroups(this.props.user[0], (ret) => {
 			this.setState({rows: ret.map((item)=>{return item.name})});
 		});
 	}

@@ -1,16 +1,5 @@
 import React, {Component} from 'react';
-import {
-	StyleSheet,
-	Text,
-	ScrollView,
-	View,
-	Image,
-	Dimensions,
-	TouchableOpacity,
-	Alert,
-	TextInput,
-	Picker,
-} from 'react-native';
+import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
@@ -20,6 +9,7 @@ import LabeledInput from '../component/LabeledInput';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
+
 const RNFS = require('react-native-fs');
 
 const imgOpt = {
@@ -38,7 +28,7 @@ const commonStyle = {
 	placeholderTextColor: '#bbb',
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
-}
+};
 export default class SubscribeScreen extends Component {
 	static navigatorButtons = {
 		rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
@@ -50,13 +40,13 @@ export default class SubscribeScreen extends Component {
 
 		this.props.navigator.setStyle({
 			navBarHideOnScroll: true,
-		})
+		});
 		this.crypt = this.props.crypt;
 		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
-			userid: props.profile[2],
-			userkey: props.profile[0],
+			userid: props.user[2],
+			userkey: props.user[0],
 			regdate: new Date().getTime(),
 			uriLeft: require('../../img/pickphoto.png'),
 			uriRight: require('../../img/pickphoto.png'),
@@ -82,7 +72,7 @@ export default class SubscribeScreen extends Component {
 
 	_onChangeTags = (tags) => {
 		this.setState({tags});
-	}
+	};
 	_getUniqkey() {
 		let regdate = new Date().getTime();
 		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));

@@ -5,23 +5,15 @@
  */
 
 import React, {Component} from 'react';
-import {
-	StyleSheet,
-	ScrollView,
-	View,
-	Image,
-	Dimensions,
-	TouchableOpacity,
-	Alert,
-	TextInput
-} from 'react-native';
+import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
 
 import ImagePicker from 'react-native-image-crop-picker';
-const RNFS = require('react-native-fs');
 import md5 from '../service/md5';
+
+const RNFS = require('react-native-fs');
 
 const imgOpt = {
 	width: 400,
@@ -33,7 +25,7 @@ const commonStyle = {
 	placeholderTextColor: '#bbb',
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
-}
+};
 export default class ProfileScreen extends Component {
 
 	constructor(props) {
@@ -43,13 +35,13 @@ export default class ProfileScreen extends Component {
 		this.global = props.global;
 		this.state = {
 			success: 'no',
-			profile: this.props.profile[1],
-			userid: this.props.profile[2],
-			name: this.props.profile[3],
-			email: this.props.profile[4],
+			profile: this.props.user[1],
+			userid: this.props.user[2],
+			name: this.props.user[3],
+			email: this.props.user[4],
 			pass: '',
 			passchk: '',
-			uniqkey: this.props.profile[0]
+			uniqkey: this.props.user[0]
 		}
 	}
 	onNavigatorEvent(event) {
@@ -74,7 +66,7 @@ export default class ProfileScreen extends Component {
 		}).catch(()=>{});
 	}
 	_saveProfileImage() {
-		let key = Math.random()*100000;
+		let key = Math.random();
 		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpghidden';
 		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
 			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});

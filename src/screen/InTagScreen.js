@@ -1,16 +1,11 @@
 import React, {Component} from 'react';
-import {
-	StyleSheet,
-	Text,
-	View,
-	ScrollView,
-	Dimensions
-} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
 import Util from '../service/util_svc';
 import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
+
 const RNFS = require('react-native-fs');
 
 const owidth = (function() {
@@ -34,8 +29,8 @@ export default class InTagScreen extends Component {
 			rows: [],
 			style: {},
 			loading: true
-		}
-		this._getPhoto(this.props.profile);
+		};
+		this._getPhoto(this.props.user);
 	}
 
 	onNavigatorEvent(event) {
@@ -46,7 +41,7 @@ export default class InTagScreen extends Component {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
 			title: title, // title of the screen as appears in the nav bar (optional)
-			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.props.profile},
+			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
 			navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 			navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 			animated: true,
@@ -55,7 +50,7 @@ export default class InTagScreen extends Component {
 		});
 	}
 	_getPhoto() {
-		let key = Math.random()*100000;
+		let key = Math.random();
 		this.props.dbsvc.getPhotoByTag((ret) => {
 			if(ret.length > 0) {
 				this.setState({
@@ -66,7 +61,7 @@ export default class InTagScreen extends Component {
 							style={styles.thumbnail}
 							title={i.title}
 							regdate={i.reg_date}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.profile[2] + '.jpghidden?key=' + key}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.user[2] + '.jpghidden?key=' + key}
 							onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
 						/>
 					}),
@@ -83,7 +78,7 @@ export default class InTagScreen extends Component {
 					});
 				}, 1000);
 			}
-		}, this.props.profile[0], this.props.tagname);
+		}, this.props.user[0], this.props.tagname);
 	}
 
 

@@ -1,16 +1,11 @@
 import React, {Component} from 'react';
-import {
-	StyleSheet,
-	View,
-	Text,
-	ScrollView,
-	Dimensions
-} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import Thumbnail from '../component/Thumbnail';
 import Util from '../service/util_svc';
 import AdBar from '../component/AdBar';
 import Loading from "../component/Loading";
+
 const RNFS = require('react-native-fs');
 
 const owidth = (function() {
@@ -32,7 +27,7 @@ export default class TotalScreen extends Component {
 		this.state = {
 			rows: [],
 			loading: true
-		}
+		};
 		this.props.global.setVar('parent', this);
 	}
 	onNavigatorEvent(event) {
@@ -43,7 +38,7 @@ export default class TotalScreen extends Component {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen", // unique ID registered with Navigation.registerScreen
 			title: title, // title of the screen as appears in the nav bar (optional)
-			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profile: this.state.profile},
+			passProps: {title, uniqkey, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.state.user},
 			navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
 			navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
 			animated: true,
@@ -51,9 +46,9 @@ export default class TotalScreen extends Component {
 			overrideBackPress: true,
 		});
 	}
-	_getPhoto(profilearg) {
-		let key = Math.random()*100000;
-		let profile = profilearg ? profilearg :  (this.state.profile ? this.state.profile :  [false]);
+	_getPhoto(userarg) {
+		let key = Math.random();
+		let user = userarg ? userarg :  (this.state.user ? this.state.user :  [false]);
 		this.props.dbsvc.getPhoto((ret) => {
 			if(ret.length > 0) {
 					this.setState({
@@ -63,7 +58,7 @@ export default class TotalScreen extends Component {
 								style={styles.thumbnail}
 								title={i.title}
 								regdate={i.reg_date}
-								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + profile[2] + '.jpghidden?key=' + key}
+								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + user[2] + '.jpghidden?key=' + key}
 								onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
 							/>
 						}),
@@ -80,13 +75,13 @@ export default class TotalScreen extends Component {
 					});
 				}, 1000);
 			}
-		}, profile[0]);
+		}, user[0]);
 	}
 
 	componentWillMount() {
 		this.props.global.getUntil('side',(e)=>{
 			this.setState({
-				profile: [e.state.uniqkey, e.state.profile, e.state.userid, e.state.name, e.state.email]
+				user: [e.state.uniqkey, e.state.profile, e.state.userid, e.state.name, e.state.email]
 			});
 			this._getPhoto([e.state.uniqkey, e.state.profile, e.state.userid, e.state.name, e.state.email]);
 		}, (c)=> {
