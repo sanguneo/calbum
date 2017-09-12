@@ -50,7 +50,7 @@ export default class InTagScreen extends Component {
 		});
 	}
 	_getPhoto() {
-		let key = Math.random();
+		let key = Math.random()*10000;
 		this.props.dbsvc.getPhotoByTag((ret) => {
 			if(ret.length > 0) {
 				this.setState({
@@ -70,13 +70,13 @@ export default class InTagScreen extends Component {
 					this.setState({
 						loading : false
 					});
-				}, 1000);
+				}, 100);
 			} else {
 				setTimeout(() => {
 					this.setState({
 						loading : false
 					});
-				}, 1000);
+				}, 500);
 			}
 		}, this.props.user[0], this.props.tagname);
 	}

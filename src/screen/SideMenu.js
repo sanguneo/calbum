@@ -35,7 +35,7 @@ export default class SideMenu extends Component {
 				this.props.navigator.push({
 					screen: "calbum.ProfileScreen",
 					title: "프로필 생성하기",
-					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, profile: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 					navigatorStyle: {navBarHidden: false},
 					navigatorButtons: {},
 					backButtonHidden: true,

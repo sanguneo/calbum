@@ -73,11 +73,11 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         bitmapOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//
         input = getReactApplicationContext().getContentResolver().openInputStream(uri);
         Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-        if (onlyBoundsOptions.outHeight < 300) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, 150, 300, true);
-        }
         input.close();
-        return bitmap;
+        //if (onlyBoundsOptions.outHeight < 300 || onlyBoundsOptions.outWidth < 150) {
+        //    return Bitmap.createScaledBitmap(bitmap, 150, 300, true);
+        //}
+        return Bitmap.createScaledBitmap(bitmap, 200, 400, true);
     }
 
     private Bitmap resizeBitmap(Bitmap src, int max) {

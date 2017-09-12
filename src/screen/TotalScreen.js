@@ -47,7 +47,7 @@ export default class TotalScreen extends Component {
 		});
 	}
 	_getPhoto(userarg) {
-		let key = Math.random();
+		let key = Math.random()*10000;
 		let user = userarg ? userarg :  (this.state.user ? this.state.user :  [false]);
 		this.props.dbsvc.getPhoto((ret) => {
 			if(ret.length > 0) {
@@ -67,13 +67,13 @@ export default class TotalScreen extends Component {
 					this.setState({
 						loading : false
 					});
-				}, 1000);
+				}, 100);
 			} else {
 				setTimeout(() => {
 					this.setState({
 						loading : false
 					});
-				}, 1000);
+				}, 500);
 			}
 		}, user[0]);
 	}

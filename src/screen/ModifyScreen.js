@@ -106,11 +106,6 @@ export default class ModifyScreen extends Component {
 		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
 	}
 	_formCheck() {
-		if (this.state.title === '') {
-			Alert.alert('확인', '제목을 입력해주세요.');
-			this.refs.title.focus();
-			return false;
-		}
 		if (this.state.uriLeft.uri === '') {
 			Alert.alert('확인', '선택한 왼쪽 이미지에 오류가 있습니다.\n다시 선택해주세요.');
 			return false;

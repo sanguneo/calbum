@@ -35,13 +35,13 @@ export default class ProfileScreen extends Component {
 		this.global = props.global;
 		this.state = {
 			success: 'no',
-			profile: this.props.user[1],
-			userid: this.props.user[2],
-			name: this.props.user[3],
-			email: this.props.user[4],
+			profile: props.user[1],
+			userid: props.user[2],
+			name: props.user[3],
+			email: props.user[4],
 			pass: '',
 			passchk: '',
-			uniqkey: this.props.user[0]
+			uniqkey: props.user[0]
 		}
 	}
 	onNavigatorEvent(event) {
@@ -63,10 +63,10 @@ export default class ProfileScreen extends Component {
 	_changeImage() {
 		ImagePicker.openPicker(imgOpt).then(profile => {
 			this.setState({profile: {uri: profile.path}});
-		}).catch(()=>{});
+		}).catch((e)=>{console.error(e)});
 	}
 	_saveProfileImage() {
-		let key = Math.random();
+		let key = Math.random()*10000;
 		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.uniqkey + '.jpghidden';
 		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
 			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});

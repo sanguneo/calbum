@@ -117,7 +117,7 @@ export default class ViewScreen extends Component {
 		this.props.navigator.push(aobj);
 	}
 	_getPhotoInformation() {
-		let key = Math.random();
+		let key = Math.random()*10000;
 		this.db.getPhotoSpecific((res) => {
 			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
 			let info = {
@@ -134,14 +134,14 @@ export default class ViewScreen extends Component {
 					this.setState({
 						loading : false
 					});
-				}, 1000);
+				}, 200);
 			}, this.state.userkey, this.state.uniqkey);
 		}, this.state.userkey, this.state.uniqkey);
 		setTimeout(() => {
 			this.setState({
 				loading : false
 			});
-		}, 2000);
+		}, 500);
 	}
 
 	_getSideOriginal(side) {
