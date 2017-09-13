@@ -30,7 +30,7 @@ const commonStyle = {
 };
 export default class SubscribeScreen extends Component {
 	static navigatorButtons = {
-		rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
+		rightButtons: [{ icon: require('../../img/save.png'),id: 'save'}]
 	};
 
 	constructor(props) {
@@ -246,7 +246,7 @@ export default class SubscribeScreen extends Component {
 					/>
 				</View>
 				<View style={[styles.formWrapper, {marginTop: 20,marginBottom: 30}]}>
-					<Button imgsource={require('../../img/checkmark.png')}  style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button imgsource={require('../../img/save.png')}  style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
 			</ScrollView>
 		);

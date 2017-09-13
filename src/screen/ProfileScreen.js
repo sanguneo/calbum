@@ -160,6 +160,20 @@ export default class ProfileScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
+					<LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
+						<TextInput
+							style={styles.labeledtextbox}
+							editable={true}
+							autoCorrect={false}
+							underlineColorAndroid={'transparent'}
+							ref={'r_name'}
+							onChangeText={(name) => this.setState({name})}
+							value={this.state.name}
+							placeholder={'닉네임을 입력해주세요'}
+							placeholderTextColor={commonStyle.placeholderTextColor}
+						/>
+					</LabeledInput>
+					<Hr lineColor={commonStyle.hrColor}/>
 					<LabeledInput label={"이메일"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
@@ -172,20 +186,6 @@ export default class ProfileScreen extends Component {
 							placeholder={'이메일을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							keyboardType={'email-address'}
-						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_name'}
-							onChangeText={(name) => this.setState({name})}
-							value={this.state.name}
-							placeholder={'닉네임을 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
@@ -220,7 +220,7 @@ export default class ProfileScreen extends Component {
 					</LabeledInput>
 				</View>
 				<View style={[styles.formWrapper]}>
-					<Button imgsource={require('../../img/checkmark.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
 			</ScrollView>
 		);

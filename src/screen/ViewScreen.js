@@ -22,7 +22,7 @@ const commonStyle = {
 export default class ViewScreen extends Component {
 
 	static navigatorButtons = {
-		rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit' }]
+		rightButtons: [{ icon: require('../../img/cut.png'), id: 'edit' }]
 	};
 
 
@@ -103,7 +103,7 @@ export default class ViewScreen extends Component {
 			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
 			navigatorStyle: {},
 			navigatorButtons: {
-				rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit' }]
+				rightButtons: [{ icon: require('../../img/cut.png'), id: 'edit' }]
 			},
 			animated: false,
 			animationType: 'none'
@@ -149,7 +149,7 @@ export default class ViewScreen extends Component {
 
 		this.props.navigator.setButtons({
 			leftButtons: [],
-			rightButtons: [{id: 'close', icon: require('../../img/navicon_close.png')}],
+			rightButtons: [{id: 'close', icon: require('../../img/close.png')}],
 			animated: true
 		});
 		if(side === 'left'){
@@ -166,7 +166,7 @@ export default class ViewScreen extends Component {
 		this.props.navigator.setTitle({ title: this.props.title ? this.props.title : Util.dateFormatter(this.props.regdate)});
 		this.props.navigator.setButtons({
 			leftButtons: [{id: 'back'}],
-			rightButtons: [{ icon: require('../../img/modify.png'), id: 'edit'}],
+			rightButtons: [{ icon: require('../../img/cut.png'), id: 'edit'}],
 			animated: true
 		});
 		this.side = null;

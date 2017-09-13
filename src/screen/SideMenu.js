@@ -66,9 +66,7 @@ export default class SideMenu extends Component {
 				title: "디자인 작성하기",
 				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
 				navigatorStyle: {},
-				navigatorButtons: {
-					rightButtons: [{ icon: require('../../img/checkmark.png'),id: 'save'}]
-				},
+				navigatorButtons: {},
 				animated: true,
 				animationType: 'slide-up'
 			});
@@ -134,7 +132,7 @@ export default class SideMenu extends Component {
                 </TouchableOpacity>
 				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('subscribe')}}>
 					<Image
-						source={require('../../img/quill.png')}
+						source={require('../../img/subscribe.png')}
 						style={[styles.leftIcon]}
 					/>
 					<Text style={styles.sidetext}>작성하기</Text>
@@ -148,13 +146,13 @@ export default class SideMenu extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('tag')}}>
                     <Image
-                        source={require('../../img/price-tags.png')}
+                        source={require('../../img/tags.png')}
                         style={[styles.leftIcon]}
                     />
                     <Text style={styles.sidetext}>태그보기</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[{position: 'absolute', bottom: 10, left: 0},styles.sideBtn]} onPress={() => {this._toggleDrawer()}}>
-                    <Image source={require('../../img/navicon_add.png')} style={[styles.leftIcon, styles.rotate45]} />
+                    <Image source={require('../../img/close.png')} style={[styles.leftIcon]} />
                     <Text style={styles.sidetext}>닫기</Text>
                 </TouchableOpacity>
             </View>

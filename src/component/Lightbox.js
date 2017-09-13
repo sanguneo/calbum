@@ -3,15 +3,7 @@
  */
 
 import React, {Component, PropTypes} from 'react';
-import {
-    StyleSheet,
-    View,
-	TouchableOpacity,
-    Image,
-    Text,
-    Animated,
-    Dimensions
-} from 'react-native';
+import {Animated, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 export default class Lightbox extends Component {
 	static propTypes = {
@@ -29,8 +21,8 @@ export default class Lightbox extends Component {
 		children: PropTypes.element.isRequired,
 	};
 
-	state = {height: 0}
-	collapsedStyle = {}
+	state = {height: 0};
+	collapsedStyle = {};
 
 	_propclose() {
 		if (this.props.close) {
@@ -71,7 +63,7 @@ export default class Lightbox extends Component {
         animatedStyle[this.props.stylekey] = this.animatedValue;
         const top = !this.props.hideTop ? [<Text key={'title'} style={[styles.title, {color: this.props.color}]}>{this.props.title}</Text>,
 			<TouchableOpacity key={'icon'} style={[styles.closeBtn]} onPress={() => {this._close();this._propclose();}}>
-				<Image source={require('../../img/navicon_add.png')} style={[styles.close,{tintColor: this.props.color}]} />
+				<Image source={require('../../img/add.png')} style={[styles.close,{tintColor: this.props.color}]} />
 			</TouchableOpacity>] : null;
 		const collapsedStyle = {};
 		if (this.props.hideTop) {
