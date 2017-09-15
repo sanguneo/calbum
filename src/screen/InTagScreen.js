@@ -8,10 +8,15 @@ import Util from '../service/util_svc';
 
 const RNFS = require('react-native-fs');
 
+const{width,height,deviceWidth,deviceHeight, scale}=function(){
+	let i=Dimensions.get("window"),e=i.scale;
+	return{width:i.width,height:i.height,deviceWidth:i.width*e,deviceHeight:i.height*e,scale: e}
+}();
 const owidth = (function() {
-	let w = Dimensions.get('window').width;
-	let p = Math.round(w / 150);
-	return Math.round(w/p) - 8;
+	let devW = (1440 > deviceWidth > 1080) ? 1440 : deviceWidth;
+	let scaledThumbSize = 150 * scale;
+	let quantityInline = Math.ceil(devW / scaledThumbSize);
+	return Math.round(devW / quantityInline / scale) - 8 - (quantityInline - Math.round(devW / scaledThumbSize));
 })();
 
 export default class InTagScreen extends Component {
@@ -96,7 +101,7 @@ export default class InTagScreen extends Component {
 		else
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
-				<AdBar style={{position: 'absolute',width: Dimensions.get('window').width,bottom: 0}}/>
+				<AdBar style={{position: 'absolute',width: width,bottom: 0}}/>
 				<Loading show={this.state.loading}/>
 			</View>);
 	}
@@ -104,12 +109,12 @@ export default class InTagScreen extends Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height,
+		width: width,
+		height: height,
 	},
 	scrollview: {
-		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height - 260,
+		width: width,
+		height: height - 260,
 	},
 	container: {
 		flexWrap: 'wrap',
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	text: {
-		width: Dimensions.get('window').width,
+		width: width,
 		height: 40,
 		textAlign: 'center',
 		textAlignVertical: 'center'

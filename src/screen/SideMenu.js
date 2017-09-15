@@ -81,6 +81,17 @@ export default class SideMenu extends Component {
 				animated: true,
 				animationType: 'slide-up',
 			});
+		} else if (screen === 'notice') {
+			this._toggleDrawer();
+			this.props.navigator.push({
+				screen: "calbum.NoticeScreen",
+				title: "공지사항",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				navigatorStyle: {},
+				navigatorButtons: {},
+				animated: true,
+				animationType: 'slide-up',
+			});
 		} else if (screen === 'tag') {
 			this._toggleDrawer();
 			this.props.navigator.push({
@@ -151,6 +162,13 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>태그보기</Text>
                 </TouchableOpacity>
+				<TouchableOpacity  style={[{position: 'absolute', bottom: 60, left: 0},styles.sideBtn]} onPress={() => {this._openScreen('notice')}}>
+					<Image
+						source={require('../../img/notice.png')}
+						style={[styles.leftIcon]}
+					/>
+					<Text style={styles.sidetext}>공지사항</Text>
+				</TouchableOpacity>
                 <TouchableOpacity style={[{position: 'absolute', bottom: 10, left: 0},styles.sideBtn]} onPress={() => {this._toggleDrawer()}}>
                     <Image source={require('../../img/close.png')} style={[styles.leftIcon]} />
                     <Text style={styles.sidetext}>닫기</Text>

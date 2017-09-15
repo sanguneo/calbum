@@ -15,6 +15,8 @@ import md5 from '../service/md5';
 
 const RNFS = require('react-native-fs');
 
+const {width, height} = Dimensions.get('window');
+
 const imgOpt = {
 	width: 400,
 	height: 400,
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		height: 202,
 		width: 202,
-		marginHorizontal: (Dimensions.get('window').width - 202) / 2,
+		marginHorizontal: (width - 202) / 2,
 		marginVertical: 20,
 		borderColor: '#eee',
 		borderWidth: 1

@@ -11,6 +11,8 @@ import Image2merge from '../../native_modules/image2merge'
 
 const RNFS = require('react-native-fs');
 
+const {width, height} = Dimensions.get('window');
+
 const imgOpt = {
 	width: 400,
 	height: 800,
@@ -175,7 +177,7 @@ export default class ModifyScreen extends Component {
 						/>
 					</LabeledInput>
 					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"테그"}>
+					<LabeledInput label={"태그"}>
 						<TagInput
 							tagContainerStyle={styles.tagContainer}
 							tagInputContainerStyle={styles.tagInputContainerStyle}
@@ -187,7 +189,7 @@ export default class ModifyScreen extends Component {
 							tagTextColor="white"
 							inputProps={{
 								keyboardType: 'default',
-								placeholder: '테그',
+								placeholder: '태그',
 								autoFocus: false,
 							}}
 							parseOnBlur={true}
@@ -245,19 +247,19 @@ const styles = StyleSheet.create({
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',
-		width: Dimensions.get('window').width ,
-		height: Dimensions.get('window').width + 30,
+		width: width ,
+		height: width + 30,
 		justifyContent: 'center',
 		alignItems: 'center',
 		// borderColor: 'lightgray',
 		// borderBottomWidth: 1
 	},
 	img: {
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
-		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
+		width: width < 800 ? width / 2 : 400,
+		height: width < 800 ? width : 800,
 	},
 	imglabel: {
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		width: width < 800 ? width / 2 : 400,
 		height: 44,
 		marginTop: 4,
 		fontSize: 20,
@@ -290,7 +292,6 @@ const styles = StyleSheet.create({
 		margin: 0,
 		marginLeft: 10,
 		marginRight: 10,
-
 
 		fontSize: 16,
 		color: '#000',

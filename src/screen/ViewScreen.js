@@ -13,6 +13,8 @@ import Util from '../service/util_svc';
 
 const RNFS = require('react-native-fs');
 
+const {width, height} = Dimensions.get('window');
+
 const commonStyle = {
 	placeholderTextColor: '#bbb',
 	hrColor: '#878787',
@@ -197,9 +199,9 @@ export default class ViewScreen extends Component {
 							<Text style={styles.textboxag}>{this.state.title !== '' ? this.state.title : '제목없음'}</Text>
 						</LabeledInput>
 						<Hr lineColor={commonStyle.hrColor}/>
-						<LabeledInput label={"테그"}>
+						<LabeledInput label={"태그"}>
 							{this.state.tags.length === 0 ?
-								<Text style={styles.textboxag}>{'테그없음'}</Text> :
+								<Text style={styles.textboxag}>{'태그없음'}</Text> :
 								<Tags
 									tagContainerStyle={styles.tagContainer}
 									tagInputContainerStyle={styles.tagInputContainerStyle}
@@ -224,22 +226,22 @@ export default class ViewScreen extends Component {
 				</ScrollView>
 				<Loading show={this.state.loading} style={{bottom: 0}}/>
 				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
-					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
+					<View style={{width: width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.recipe === '' ? '레시피없음' : this.state.recipe}</Text>
 					</View>
 				</Lightbox>
 				<Lightbox ref={'comment'} title={'코멘트'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
-					<View style={{width: Dimensions.get('window').width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
+					<View style={{width: width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.comment === '' ? '코멘트없음' : this.state.comment}</Text>
 					</View>
 				</Lightbox>
 				<Lightbox ref={'imagesbefore'} title={'Before'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
-					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
+					<View style={{width: width,height: height}}>
 						{imgBefore}
 					</View>
 				</Lightbox>
 				<Lightbox ref={'imagesafter'} title={'After'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#000'} color={'#fff'} collapsedStyle={{paddingTop:0}} collapsed={true} hideTop={true} close={()=>{this._lightboxClose()}}>
-					<View style={{width: Dimensions.get('window').width,height: Dimensions.get('window').height}}>
+					<View style={{width: width,height: height}}>
 						{imgAfter}
 					</View>
 				</Lightbox>
@@ -253,20 +255,20 @@ const styles = StyleSheet.create({
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',
-		width: Dimensions.get('window').width ,
-		height: Dimensions.get('window').width + 40,
+		width: width ,
+		height: width + 40,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 	},
 	img: {
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width  : 800,
-		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
+		width: width < 800 ? width  : 800,
+		height: width < 800 ? width : 800,
 	},
 	oimg: {
 		position: 'absolute',
 		backgroundColor: 'rgba(255,255,255,0.05)',
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width /2  : 400,
-		height: Dimensions.get('window').width < 800 ? Dimensions.get('window').width : 800,
+		width: width < 800 ? width /2  : 400,
+		height: width < 800 ? width : 800,
 	},
 	leftImg: {
 		left:0
@@ -335,7 +337,7 @@ const styles = StyleSheet.create({
 	imglabel: {
 		position: 'absolute',
 		bottom: -15,
-		width: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		width: width < 800 ? width / 2 : 400,
 		height: 50,
 		fontSize: 20,
 		fontWeight: 'bold',
@@ -344,11 +346,11 @@ const styles = StyleSheet.create({
 	},
 	lblLeft: {
 		color: '#E3302D',
-		right: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		right: width < 800 ? width / 2 : 400,
 	},
 	lblRight: {
 		color: '#3A8ECF',
-		left: Dimensions.get('window').width < 800 ? Dimensions.get('window').width / 2 : 400,
+		left: width < 800 ? width / 2 : 400,
 	},
 	tagContainer: {
 		height: 30

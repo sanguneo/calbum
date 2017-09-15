@@ -5,6 +5,8 @@
 import React, {Component, PropTypes} from 'react';
 import {Animated, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
+const {width, height} = Dimensions.get('window');
+
 export default class Lightbox extends Component {
 	static propTypes = {
 		fromValue: PropTypes.number.isRequired,
@@ -31,7 +33,7 @@ export default class Lightbox extends Component {
 	}
 	_open() {
 		setTimeout(() => {
-			this.setState({ height: Dimensions.get('window').height});
+			this.setState({ height});
 		}, 50);
 		Animated.timing(this.animatedValue, {
 			toValue: this.props.toValue,
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left:0,
-        width: Dimensions.get('window').width,
+        width: width,
 		backgroundColor: 'rgba(0,0,0,0.8)',
         alignItems: 'center',
 		justifyContent: 'center',

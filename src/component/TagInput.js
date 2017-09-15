@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	textInput: {
-		height: 29,
+		height: 36,
 		fontSize: 16,
 		padding: 0,
 
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginTop: 2,
 		marginRight: 3,
-		padding: 4,
+		padding: 8,
 		height: 28,
 		borderRadius: 2,
 	},
