@@ -42,16 +42,16 @@ export default class ModifyScreen extends Component {
 		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
-			userid: props.user[2],
-			userkey: props.user[0],
-			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropleft.jpghidden')},
-			uriRight: {uri: this.props.targetProps.merged.uri.replace('.jpghidden', '_cropright.jpghidden')},
+			email: props.user.email,
+			signhash: props.user.signhash,
+			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.calb', '_cropleft.calb')},
+			uriRight: {uri: this.props.targetProps.merged.uri.replace('.calb', '_cropright.calb')},
 			srcLeft: '',
 			srcRight: '',
 			title: this.props.targetProps.title,
 			recipe: this.props.targetProps.recipe,
 			tags: this.props.targetProps.tags,
-			uniqkey: this.props.targetProps.uniqkey,
+			photohash: this.props.targetProps.photohash,
 			comment: this.props.targetProps.comment,
 		}
 	}
@@ -73,11 +73,11 @@ export default class ModifyScreen extends Component {
 				this.setState({uriLeft: {uri: result.path}, srcLeft: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_cropleft.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropleft.calb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_left.calb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 			}).catch(e => {
 				console.log(e);
@@ -87,11 +87,11 @@ export default class ModifyScreen extends Component {
 				this.setState({uriRight: {uri: result.path }, srcRight: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_cropright.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropright.calb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid+ '_right.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email+ '_right.calb'
 				).then(() => {}).catch((e) => {console.error('error right', e)});
 			}).catch(e => {
 				console.log(e);
@@ -99,13 +99,13 @@ export default class ModifyScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.state.email, () => {});
 	}
 	_insertDB() {
-		this.db.updatePhoto(this.state.uniqkey, this.state.title, this.state.recipe, this.state.comment, this.state.userkey)
+		this.db.updatePhoto(this.state.photohash, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
 	}
 	_insertTag() {
-		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
+		this.db.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
 	}
 	_formCheck() {
 		if (this.state.uriLeft.uri === '') {

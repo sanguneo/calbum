@@ -10,6 +10,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var PropTypes = require('prop-types');
+_react.PropTypes = PropTypes;
+
 var _reactNative = require('react-native');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

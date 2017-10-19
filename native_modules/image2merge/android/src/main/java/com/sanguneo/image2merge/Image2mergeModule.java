@@ -98,7 +98,7 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
                 directory.mkdir();
             }
             OutputStream fOutputStream = null;
-            file = new File(directory, name + ".jpghidden");
+            file = new File(directory, name + ".calb");
             fOutputStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOutputStream);
             fOutputStream.flush();
@@ -156,8 +156,8 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
         };
         Bitmap original = _mergeMultiple(bitmaps);
         Bitmap thumbnail = resizeBitmap(original, 300);
-        Bitmap watermarked = _watermarker(original, idString);
-        String originalUri = saveBitmapToJpg(watermarked, "_original_", uniqkey+"_"+idString);
+        //Bitmap watermarked = _watermarker(original, idString);
+        String originalUri = saveBitmapToJpg(original, "_original_", uniqkey+"_"+idString);
         saveBitmapToJpg(thumbnail, "_thumb_", uniqkey+"_"+idString);
         String merged = originalUri.replaceAll("_original_", "_type_");
         return merged;

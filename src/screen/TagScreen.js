@@ -37,7 +37,7 @@ export default class TagScreen extends Component {
 		this.props.navigator.push(aobj);
 	}
 	_getTags() {
-		this.props.dbsvc.getTagGroups(this.props.user[0], (ret) => {
+		this.props.dbsvc.getTagGroups(this.props.user.signhash, (ret) => {
 			this.setState({rows: ret.map((item)=>{return item.name})});
 		});
 	}

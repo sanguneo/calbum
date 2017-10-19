@@ -2,7 +2,8 @@
  * Created by 나상권 on 2017-05-18.
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {Animated, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 const {width, height} = Dimensions.get('window');

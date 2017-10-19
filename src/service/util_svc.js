@@ -1,7 +1,8 @@
 /**
  * Created by 나상권 on 2017-05-19.
  */
-
+const uuidv4 = require('uuid/v4');
+const uuidv5 = require('uuid/v5');
 export default {
 	dateFormatter : function(timestamp, format='Y-M-D h:i') {
 		let date = new Date(parseInt(timestamp));
@@ -13,8 +14,11 @@ export default {
 			.replace('i',this.pad(date.getMinutes()))
 			.replace('s',this.pad(date.getSeconds()));
 	},
-	pad: function(num, size=2){
+	pad: function(num, size=2) {
 		var s = "0000" + num;
 		return s.substr(s.length-size);
+	},
+	uuid: function(arg) {
+		return uuidv5(arg !== undefined && arg !== null ? arg : new Date().getTime().toString(), uuidv4());
 	}
 }

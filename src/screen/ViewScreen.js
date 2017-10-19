@@ -40,10 +40,10 @@ export default class ViewScreen extends Component {
 			success: 'no',
 			merged: {uri: null},
 			recipe: '',
-			userid: this.props.user[2],
-			userkey: this.props.user[0],
+			email: this.props.user.email,
+			signhash: this.props.user.signhash,
 			tags: [],
-			uniqkey: this.props.uniqkey,
+			photohash: this.props.photohash,
 			comment: '',
 			lightbox: true,
 			side: '이미지',
@@ -64,11 +64,10 @@ export default class ViewScreen extends Component {
 					crypt: this.props.crypt,
 					global: this.props.global,
 					user: [
-						this.state.userkey,
+						this.state.signhash,
 						this.state.profile,
-						this.state.userid,
-						this.state.name,
-						this.state.email
+						this.state.email,
+						this.state.name
 					],
 					parentUpdate : (title) => {
 						this._getPhotoInformation();
@@ -80,7 +79,7 @@ export default class ViewScreen extends Component {
 						recipe: this.state.recipe,
 						comment: this.state.comment,
 						tags: this.state.tags.map((res)=>{ return res.name;}),
-						uniqkey: this.props.uniqkey,
+						photohash: this.props.photohash,
 					}
 				},
 				navigatorStyle: {},
@@ -121,7 +120,7 @@ export default class ViewScreen extends Component {
 	_getPhotoInformation() {
 		let key = Math.random()*10000;
 		this.db.getPhotoSpecific((res) => {
-			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.userid + '.jpghidden?key=' + key;
+			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.email + '.calb?key=' + key;
 			let info = {
 				merged: {uri: pPath},
 				title: res.title,
@@ -137,8 +136,8 @@ export default class ViewScreen extends Component {
 						loading : false
 					});
 				}, 200);
-			}, this.state.userkey, this.state.uniqkey);
-		}, this.state.userkey, this.state.uniqkey);
+			}, this.state.signhash, this.state.photohash);
+		}, this.state.signhash, this.state.photohash);
 		setTimeout(() => {
 			this.setState({
 				loading : false
@@ -179,17 +178,29 @@ export default class ViewScreen extends Component {
 		this._getPhotoInformation();
 	}
 	render() {
-		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_left.jpghidden')}]}/> : null;
-		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.jpghidden', '_right.jpghidden')}]}/> : null;
+		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_left.calb')}]}/> : null;
+		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_right.calb')}]}/> : null;
+		let cropBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_cropleft.calb')}]}/> : null;
+		let cropAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_cropright.calb')}]}/> : null;
 		return (
 			<View>
 				<ScrollView style={styles.container}>
+					{/*<View style={styles.imgView}>*/}
+						{/*<Image source={this.state.merged} style={styles.img}/>*/}
+						{/*<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>*/}
+						{/*<Text style={[styles.imglabel, styles.lblRight]}>After</Text>*/}
+						{/*<TouchableOpacity style={[styles.oimg, styles.leftImg]} onPress={()=> {this._getSideOriginal('left')}}></TouchableOpacity>*/}
+						{/*<TouchableOpacity style={[styles.oimg, styles.rightImg]} onPress={()=> {this._getSideOriginal('right')}}></TouchableOpacity>*/}
+					{/*</View>*/}
 					<View style={styles.imgView}>
-						<Image source={this.state.merged} style={styles.img}/>
-						<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
-						<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
-						<TouchableOpacity style={[styles.oimg, styles.leftImg]} onPress={()=> {this._getSideOriginal('left')}}></TouchableOpacity>
-						<TouchableOpacity style={[styles.oimg, styles.rightImg]} onPress={()=> {this._getSideOriginal('right')}}></TouchableOpacity>
+						<TouchableOpacity onPress={() => {this._getSideOriginal('left')}}>
+							<Image source={cropBefore} style={[styles.img, {borderRightWidth: 0}]}/>
+							<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => {this._getSideOriginal('right')}}>
+							<Image source={cropAfter} style={[styles.img, {borderLeftWidth: 0}]}/>
+							<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
+						</TouchableOpacity>
 					</View>
 					<View style={[styles.bgView,{marginTop: 15}]}>
 						<Text style={{fontSize: 17}}>기본정보</Text>

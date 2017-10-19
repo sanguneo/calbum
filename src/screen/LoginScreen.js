@@ -5,22 +5,17 @@
  */
 
 import React, {Component} from 'react';
-import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, AsyncStorage, Dimensions, Image, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
-import ImagePicker from 'react-native-image-crop-picker';
+import axios from 'axios';
 
 const RNFS = require('react-native-fs');
 
 const {width, height} = Dimensions.get('window');
 
-const imgOpt = {
-	width: 400,
-	height: 400,
-	cropping: true
-};
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
@@ -35,12 +30,11 @@ export default class ProfileScreen extends Component {
 		this.crypt = props.crypt;
 		this.global = props.global;
 		this.state = {
-			success: 'no',
 			profile: props.user.profile,
+			success: 'no',
+			name: props.user.name == '계정을 등록하세요' ? '' : props.user.name,
 			email: props.user.email,
-			name: props.user.name === '계정을 등록하세요' ? '' : props.user.name,
 			pass: '',
-			passchk: '',
 			signhash: props.user.signhash
 		}
 	}
@@ -60,78 +54,101 @@ export default class ProfileScreen extends Component {
 	}
 
 
-	_changeImage() {
-		ImagePicker.openPicker(imgOpt).then(profile => {
-			this.setState({profile: {uri: profile.path}});
-		}).catch((e)=>{console.error(e)});
-	}
-	_saveProfileImage() {
-		let key = Math.random()*10000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.signhash + '.calb';
-		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
-		}).catch((e) => {console.error('error', e)});
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
-	}
 	_formCheck() {
-		if (!this.state.profile.uri) {
-			Alert.alert('확인', '이미지를 선택해주세요.');
-			return false;
-		} else if (!this.state.name && this.state.name.length >= 4) {
-			Alert.alert('확인', '닉네임을 입력해주세요.');
-			this.refs['r_name'].focus();
-			return false;
-		} else if (!this.state.email) {
+		if (!this.state.email) {
 			Alert.alert('확인', '이메일을 입력해주세요.');
-			this.refs['r_eml'].focus();
-			return false;
-		} else if (!(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/.test(this.state.email))) {
-			Alert.alert('확인', '이메일을 형식에 맞게 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
 		} else if (this.state.pass.length < 8) {
 			Alert.alert('확인', '패스워드는 8자 이상이어야합니다.');
 			this.refs['r_pass'].focus();
 			return false;
-		} else if (this.state.pass !== this.state.passchk) {
-			Alert.alert('확인', '패스워드 확인문자가 일치하지않습니다.');
-			this.refs['r_chk'].focus();
-			return false;
 		}
 		return true;
 	}
-	_submit() {
+	_login() {
 		if (!this._formCheck()) return;
-		Alert.alert(
-			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
-			[
-				{text: '확인', onPress: () => {
-					this._saveProfileImage();
+		axios.post('http://calbum.sanguneo.com/user/login',
+			{
+				email: this.state.email,
+				password: this.state.pass
+			},
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				}
+			}
+		).then((response) => {
+			if (response.data.message == 'success') {
+				AsyncStorage.setItem('token', response.data.token);
+				AsyncStorage.setItem('_id', response.data._id);
+				AsyncStorage.setItem('email', response.data.email);
+				AsyncStorage.setItem('signhash', response.data.signhash);
+				AsyncStorage.setItem('name', response.data.nickname);
+				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.calb';
+				let key = Math.random()*10000;
+				RNFS.downloadFile({fromUrl:'http://calbum.sanguneo.com/upload/profiles/' + response.data.signhash, toFile: pPath}).promise.then(res => {
 					this.global.getVar('side').setState({
-						name: this.state.name,
-						signhash: this.state.signhash,
-						email: this.state.email
+						profile: {uri: 'file://' + pPath + '?key=' + key}
 					});
-					this.props.navigator.pop();
-				}},
-				{text: '취소'},
-			],
-			{ cancelable: true }
-		);
+				}).catch((e) => {console.error('error', e)});
+				this.global.getVar('side').setState({
+					name: response.data.nickname,
+					signhash: response.data.signhash,
+					email: response.data.email
+				});
+				this.props.navigator.pop();
+			}else if(response.data.message == 'emailexist'){
+				Alert.alert('사용중인 이메일 입니다.');
+			}else {
+				Alert.alert('회원가입에 오류가 발생했습니다.');
+			}
+		}).catch((response) => {
+			console.log(response);
+		});
+	}
+	_logout() {
+		Alert.alert('로그아웃 되었습니다.');
+		AsyncStorage.clear();
+		this.global.getVar('side').setState({
+			profile: require('../../img/profile.png'),
+			name: '',
+			signhash: '',
+			email: ''
+		});
+		this.setState({
+			profile: require('../../img/profile.png'),
+			name: '',
+			signhash: '',
+			email: ''
+		});
+	}
+	_signup() {
+		let user = {signhash : '', profile: this.state.profile, email: '', name: ''};
+		this.props.navigator.push({
+			screen: "calbum.SignupScreen",
+			title: "회원가입",
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, user},
+			navigatorStyle: {navBarHidden: false},
+			navigatorButtons: {},
+			backButtonHidden: true,
+			overrideBackPress: true,
+			animated: true,
+			animationType: 'fade'
+		});
 	}
 
 
 	render() {
+		let notloggedin = !this.state.signhash || this.state.signhash === '';
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
-					<TouchableOpacity onPress={() => {this._changeImage()}}>
-						<Image source={this.state.profile} style={styles.img} />
-					</TouchableOpacity>
+					<Image source={this.state.profile} style={styles.img} />
 				</View>
 				<View style={styles.formWrapper}>
-
-					<LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
+					{!notloggedin ? <LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -143,8 +160,8 @@ export default class ProfileScreen extends Component {
 							placeholder={'닉네임을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
+					</LabeledInput>: null}
+					{!notloggedin ? <Hr lineColor={commonStyle.hrColor}/>: null}
 					<LabeledInput label={"이메일"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
@@ -159,8 +176,8 @@ export default class ProfileScreen extends Component {
 							keyboardType={'email-address'}
 						/>
 					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"비밀번호"} labelStyle={styles.labelStyle}>
+					{ notloggedin ? <Hr lineColor={commonStyle.hrColor}/> : null}
+					{ notloggedin ? <LabeledInput label={"비밀번호"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -173,25 +190,18 @@ export default class ProfileScreen extends Component {
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							secureTextEntry={true}
 						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"확인"} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_chk'}
-							onChangeText={(passchk) => this.setState({passchk})}
-							value={this.state.passchk}
-							placeholder={'비밀번호를 다시 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-							secureTextEntry={true}
-						/>
-					</LabeledInput>
+					</LabeledInput> : null}
 				</View>
-				<View style={[styles.formWrapper]}>
-					<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
+				{ notloggedin ?
+					<View style={[styles.formWrapper, {marginBottom: 0}]}>
+						<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._login();}} btnname={'로그인'}/>
+					</View> :
+					<View style={[styles.formWrapper, {marginBottom: 0}]}>
+						<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#d9663c'}} onPress={()=>{this._logout();}} btnname={'로그아웃'}/>
+					</View>
+				}
+				<View style={[styles.formWrapper, {marginBottom: 0}]}>
+					<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#bd6592'}} onPress={()=>{this._signup();}} btnname={'회원가입'}/>
 				</View>
 			</ScrollView>
 		);
@@ -208,6 +218,7 @@ const styles = StyleSheet.create({
 		height: 202,
 		width: 202,
 		marginHorizontal: (width - 202) / 2,
+		marginTop: 30,
 		marginVertical: 20,
 		borderColor: '#eee',
 		borderWidth: 1

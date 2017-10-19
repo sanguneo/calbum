@@ -1,17 +1,8 @@
 // @flow
 
-import React, { Component, PropTypes } from 'react';
-import {
-	View,
-	Text,
-	TextInput,
-	StyleSheet,
-	TouchableOpacity,
-	Dimensions,
-	TouchableWithoutFeedback,
-	ScrollView,
-} from 'react-native';
-import _ from 'lodash';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {Dimensions, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View,} from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -68,7 +59,7 @@ type Event = {
 };
 
 const DEFAULT_SEPARATORS = [',', ' ', ';', '\n'];
-const DEFAULT_TAG_REGEX = /(.+)/gi
+const DEFAULT_TAG_REGEX = /(.+)/gi;
 
 class Tags extends Component {
 	static propTypes = {

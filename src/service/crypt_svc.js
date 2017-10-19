@@ -11,7 +11,7 @@ export default class crypt {
         let pad = (num, size=2) => {
             var s = "0000" + num;
             return s.substr(s.length-size);
-        }
+        };
         if (type === 'd')
             return pad(date.getFullYear(),4)+pad(date.getMonth())+pad(date.getDate());
         else if (type === 't')
@@ -42,4 +42,18 @@ export default class crypt {
         }
         return ret;
     }
+    getAntCode(input=new Date().getTime()) {
+		return input.toString().replace(/(.)\1*/g, (seq, key) => key + seq.length.toString());
+	}
+	getDeAntCode(input) {
+    	let ret = [];
+    	for(let idx=0;idx<=input.length;idx+=2){
+    		let cnt=0;
+    		while(cnt<input[idx+1]) {
+    			ret.push(input[idx]);
+    			cnt++;
+			}
+		}
+    	return ret.join('');
+	}
 }

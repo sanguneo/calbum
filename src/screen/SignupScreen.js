@@ -11,6 +11,7 @@ import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
 import ImagePicker from 'react-native-image-crop-picker';
+import axios from 'axios';
 
 const RNFS = require('react-native-fs');
 
@@ -27,7 +28,7 @@ const commonStyle = {
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 };
-export default class ProfileScreen extends Component {
+export default class SignupScreen extends Component {
 
 	constructor(props) {
 		super(props);
@@ -65,14 +66,6 @@ export default class ProfileScreen extends Component {
 			this.setState({profile: {uri: profile.path}});
 		}).catch((e)=>{console.error(e)});
 	}
-	_saveProfileImage() {
-		let key = Math.random()*10000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.signhash + '.calb';
-		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
-		}).catch((e) => {console.error('error', e)});
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
-	}
 	_formCheck() {
 		if (!this.state.profile.uri) {
 			Alert.alert('확인', '이미지를 선택해주세요.');
@@ -102,22 +95,25 @@ export default class ProfileScreen extends Component {
 	}
 	_submit() {
 		if (!this._formCheck()) return;
-		Alert.alert(
-			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
-			[
-				{text: '확인', onPress: () => {
-					this._saveProfileImage();
-					this.global.getVar('side').setState({
-						name: this.state.name,
-						signhash: this.state.signhash,
-						email: this.state.email
-					});
-					this.props.navigator.pop();
-				}},
-				{text: '취소'},
-			],
-			{ cancelable: true }
-		);
+		let formdata = new FormData();
+		formdata.append('profile', {uri: this.state.profile.uri, type: 'image/jpeg', name: this.state.email + '.calb'});
+		formdata.append('nickname', this.state.name);
+		formdata.append('email', this.state.email);
+		formdata.append('password', this.state.pass);
+		axios.post('http://calbum.sanguneo.com/user/signup',
+			formdata, { headers: { Accept: 'application/json', 'Content-Type': 'multipart/form-data', } }
+		).then((response) => {
+			if (response.data.message == 'success') {
+				RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error(e)});
+				this.props.navigator.pop();
+			}else if(response.data.message == 'emailexist'){
+				Alert.alert('사용중인 이메일 입니다.');
+			}else {
+				Alert.alert('회원가입에 오류가 발생했습니다.');
+			}
+		}).catch(() => {
+			Alert.alert('회원가입에 오류가 발생했습니다.');
+		});
 	}
 
 
@@ -130,7 +126,6 @@ export default class ProfileScreen extends Component {
 					</TouchableOpacity>
 				</View>
 				<View style={styles.formWrapper}>
-
 					<LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}

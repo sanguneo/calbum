@@ -46,8 +46,8 @@ export default class SubscribeScreen extends Component {
 		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
-			userid: props.user[2],
-			userkey: props.user[0],
+			email: props.user.email,
+			signhash: props.user.signhash,
 			regdate: new Date().getTime(),
 			uriLeft: require('../../img/pickphoto.png'),
 			uriRight: require('../../img/pickphoto.png'),
@@ -56,7 +56,7 @@ export default class SubscribeScreen extends Component {
 			title: '',
 			recipe: '',
 			tags: [],
-			uniqkey: '',
+			photohash: '',
 			comment: '',
 		}
 
@@ -71,11 +71,11 @@ export default class SubscribeScreen extends Component {
 	_onChangeTags = (tags) => {
 		this.setState({tags});
 	};
-	_getUniqkey() {
+	_getPhotohash() {
 		let regdate = new Date().getTime();
-		let uniqkey = this.crypt.getCryptedCode(regdate + this.crypt.getCharCodeSerial(this.state.userkey, 1));
-		this.setState({regdate, uniqkey});
-		return uniqkey;
+		let photohash = this.crypt.getAntCode(regdate);
+		this.setState({regdate, photohash});
+		return photohash;
 	}
 	_changeImage(direct) {
 		if (direct === 'left') {
@@ -83,11 +83,11 @@ export default class SubscribeScreen extends Component {
 				this.setState({uriLeft: {uri: result.path}, srcLeft: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_cropleft.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropleft.calb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_left.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_left.calb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 			}).catch(e => {
 				console.log(e);
@@ -97,11 +97,11 @@ export default class SubscribeScreen extends Component {
 				this.setState({uriRight: {uri: result.path }, srcRight: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid + '_cropright.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropright.calb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.uniqkey+'_' + this.state.userid+ '_right.jpghidden'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email+ '_right.calb'
 				).then(() => {}).catch((e) => {console.error('error right', e)});
 			}).catch(e => {
 				console.log(e);
@@ -109,13 +109,13 @@ export default class SubscribeScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.uniqkey, this.state.userid, () => {});
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.state.email, () => {});
 	}
 	_insertDB() {
-		this.db.insertPhoto(this.state.uniqkey, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.userkey)
+		this.db.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
 	}
 	_insertTag() {
-		this.db.insertTag(this.state.tags, this.state.uniqkey, this.state.userkey)
+		this.db.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
 	}
 	_formCheck() {
 		if (this.state.srcLeft.uri === '') {
@@ -159,7 +159,7 @@ export default class SubscribeScreen extends Component {
 
 
 	componentWillMount() {
-		this._getUniqkey();
+		this._getPhotohash();
 	}
 	render() {
 		return (

@@ -2,13 +2,10 @@
  * Created by 나상권 on 2017-05-18.
  */
 
-import React, {Component, PropTypes} from 'react';
-import {
-    StyleSheet,
-    Animated,
-	Easing,
-    Dimensions
-} from 'react-native';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {Animated, Dimensions, Easing, StyleSheet} from 'react-native';
+
 const { width } = Dimensions.get('window');
 
 export default class Loading extends Component {

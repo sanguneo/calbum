@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 const RNFS = require('react-native-fs');
 
@@ -10,42 +10,17 @@ export default class SideMenu extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
         this.state = {
             profile: require('../../img/profile.png'),
-            name: '',
-            userid: '',
+            name: '계정을 등록하세요',
 			email: '',
-			uniqkey: ''
+			signhash: '',
+			userdata: '',
+			token: ''
         };
         this.props.global.setVar('side', this);
     }
 	onNavigatorEvent(event) {
 	}
 
-	_initializeUser() {
-		this.props.dbsvc.getUSER((ret) =>{
-			if (ret.length > 0) {
-				let row = ret[0];
-				this.setState({
-					profile: {uri: 'file://'+RNFS.DocumentDirectoryPath + '/_profiles_/' + row.unique_key + '.jpghidden'},
-					userid: row.user_id,
-					name: row.name,
-					email: row.email,
-					uniqkey: row.unique_key
-				});
-			} else {
-				this.props.navigator.push({
-					screen: "calbum.ProfileScreen",
-					title: "프로필 생성하기",
-					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
-					navigatorStyle: {navBarHidden: false},
-					navigatorButtons: {},
-					backButtonHidden: true,
-					overrideBackPress: true,
-					animated: true,
-					animationType: 'fade'
-				});
-			}
-		});
-	}
 	_toggleDrawer() {
 		this.props.navigator.toggleDrawer({
 			to: 'closed',
@@ -53,18 +28,48 @@ export default class SideMenu extends Component {
 			animated: true
 		});
 	}
+	_validateUserData () {
+		AsyncStorage.getItem('token').then((token) => {
+			if (typeof token === 'undefined' || token === null) {
+				this._toggleDrawer();
+				this.props.navigator.push({
+					screen: "calbum.LoginScreen",
+					title: "로그인",
+					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, user: {signhash : '', profile: this.state.profile, email: '', name: ''}},
+					navigatorStyle: {navBarHidden: false},
+					navigatorButtons: {},
+					backButtonHidden: true,
+					overrideBackPress: true,
+					animated: true,
+					animationType: 'fade'
+				});
+			} else {
+
+				AsyncStorage.multiGet(['token','_id','name','email','signhash'], (err, stores) => {
+					let obj = {};
+					stores.forEach((store)=>{
+						obj[store[0]] = store[1];
+					});
+					let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.calb';
+					let key = Math.random()*10000;
+					obj.profile= {uri: 'file://' + pPath + '?key=' + key};
+					this.setState(obj);
+				});
+			}
+		}).done();
+	}
 	_openScreen(screen) {
-		let userinfo = {
-			name: this.state.name,
-			userid: this.state.userid,
-			uniqkey: this.state.uniqkey,
-		};
+		if (screen !== 'profile' && this.state.email == null) {
+			this._validateUserData();
+			return;
+		}
+		let user = {signhash : this.state.signhash, profile: this.state.profile, email: this.state.email, name: this.state.name};
 		if (screen === 'subscribe') {
 			this._toggleDrawer();
 			this.props.navigator.push({
 				screen: "calbum.SubscribeScreen",
 				title: "디자인 작성하기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -73,9 +78,9 @@ export default class SideMenu extends Component {
 		} else if (screen === 'profile') {
 			this._toggleDrawer();
 			this.props.navigator.push({
-				screen: "calbum.ProfileScreen",
-				title: "프로필",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				screen: "calbum.LoginScreen",
+				title: "로그인",
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, user},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -83,21 +88,21 @@ export default class SideMenu extends Component {
 			});
 		} else if (screen === 'notice') {
 			this._toggleDrawer();
-			this.props.navigator.push({
+			/*this.props.navigator.push({
 				screen: "calbum.NoticeScreen",
 				title: "공지사항",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
 				animationType: 'slide-up',
-			});
+			});*/
 		} else if (screen === 'tag') {
 			this._toggleDrawer();
 			this.props.navigator.push({
 				screen: "calbum.TagScreen",
 				title: "태그목록",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -108,7 +113,7 @@ export default class SideMenu extends Component {
 			this.props.navigator.resetTo({
 				screen: "calbum.TotalScreen",
 				title: "전체보기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: [this.state.uniqkey, this.state.profile, this.state.userid, this.state.name, this.state.email]},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
 				navigatorStyle: {},
 				navigatorButtons: {
 					leftButtons: [{ id: 'sideMenu'}]
@@ -120,8 +125,8 @@ export default class SideMenu extends Component {
 	}
 
 
-	componentDidMount() {
-    	this._initializeUser();
+	componentWillMount() {
+		this._validateUserData();
 	}
 	componentWillUnmount() {
 		this.props.dbsvc.closeDB();
@@ -162,7 +167,7 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>태그보기</Text>
                 </TouchableOpacity>
-				<TouchableOpacity  style={[{position: 'absolute', bottom: 60, left: 0},styles.sideBtn]} onPress={() => {this._openScreen('notice')}}>
+				<TouchableOpacity  style={[{position: 'absolute', bottom: 60, left: 0},styles.sideBtn]} onPress={() => {AsyncStorage.clear();}}>
 					<Image
 						source={require('../../img/notice.png')}
 						style={[styles.leftIcon]}

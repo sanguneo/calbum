@@ -1,6 +1,7 @@
 import {Navigation} from 'react-native-navigation';
 
-import ProfileScreen from './ProfileScreen';
+import LoginScreen from './LoginScreen';
+import SignupScreen from './SignupScreen';
 import SubscribeScreen from './SubscribeScreen';
 import ModifyScreen from './ModifyScreen';
 import TotalScreen from './TotalScreen';
@@ -10,7 +11,8 @@ import ViewScreen from './ViewScreen';
 import SideMenu from './SideMenu';
 
 export function registerScreens() {
-	Navigation.registerComponent('calbum.ProfileScreen', () => ProfileScreen);
+	Navigation.registerComponent('calbum.LoginScreen', () => LoginScreen);
+	Navigation.registerComponent('calbum.SignupScreen', () => SignupScreen);
 	Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen);
 	Navigation.registerComponent('calbum.ModifyScreen', () => ModifyScreen);
 	Navigation.registerComponent('calbum.TotalScreen', () => TotalScreen);
