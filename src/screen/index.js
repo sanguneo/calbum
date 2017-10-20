@@ -10,14 +10,14 @@ import TagScreen from './TagScreen';
 import ViewScreen from './ViewScreen';
 import SideMenu from './SideMenu';
 
-export function registerScreens() {
-	Navigation.registerComponent('calbum.LoginScreen', () => LoginScreen);
-	Navigation.registerComponent('calbum.SignupScreen', () => SignupScreen);
-	Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen);
-	Navigation.registerComponent('calbum.ModifyScreen', () => ModifyScreen);
-	Navigation.registerComponent('calbum.TotalScreen', () => TotalScreen);
-	Navigation.registerComponent('calbum.InTagScreen', () => InTagScreen);
-	Navigation.registerComponent('calbum.TagScreen', () => TagScreen);
-	Navigation.registerComponent('calbum.ViewScreen', () => ViewScreen);
-    Navigation.registerComponent('calbum.SideMenu', () => SideMenu);
+export function registerScreens(store, provider) {
+	Navigation.registerComponent('calbum.LoginScreen', () => LoginScreen, store, provider);
+	Navigation.registerComponent('calbum.SignupScreen', () => SignupScreen, store, provider);
+	Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen, store, provider);
+	Navigation.registerComponent('calbum.ModifyScreen', () => ModifyScreen, store, provider);
+	Navigation.registerComponent('calbum.TotalScreen', () => TotalScreen, store, provider);
+	Navigation.registerComponent('calbum.InTagScreen', () => InTagScreen, store, provider);
+	Navigation.registerComponent('calbum.TagScreen', () => TagScreen, store, provider);
+	Navigation.registerComponent('calbum.ViewScreen', () => ViewScreen, store, provider);
+    Navigation.registerComponent('calbum.SideMenu', () => SideMenu, store, provider);
 }

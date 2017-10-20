@@ -36,7 +36,6 @@ export default class SignupScreen extends Component {
 		this.crypt = props.crypt;
 		this.global = props.global;
 		this.state = {
-			success: 'no',
 			profile: props.user.profile,
 			email: props.user.email,
 			name: props.user.name === '계정을 등록하세요' ? '' : props.user.name,

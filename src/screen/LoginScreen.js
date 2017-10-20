@@ -6,6 +6,10 @@
 
 import React, {Component} from 'react';
 import {Alert, AsyncStorage, Dimensions, Image, ScrollView, StyleSheet, TextInput, View} from 'react-native';
+import {connect} from 'react-redux';
+
+import * as appActions from "../reducer/app/actions";
+import * as userActions from "../reducer/user/actions";
 
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
@@ -22,7 +26,7 @@ const commonStyle = {
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 };
-export default class ProfileScreen extends Component {
+class LoginScreen extends Component {
 
 	constructor(props) {
 		super(props);
@@ -30,9 +34,9 @@ export default class ProfileScreen extends Component {
 		this.crypt = props.crypt;
 		this.global = props.global;
 		this.state = {
-			profile: props.user.profile,
+			profile: props.user.profile == undefined || props.user.profile == '' ? require('../../img/profile.png') : props.user.profile,
 			success: 'no',
-			name: props.user.name == '계정을 등록하세요' ? '' : props.user.name,
+			name: props.user.name == undefined || props.user.name == '계정을 등록하세요' ? '' : props.user.name,
 			email: props.user.email,
 			pass: '',
 			signhash: props.user.signhash
@@ -69,54 +73,53 @@ export default class ProfileScreen extends Component {
 	_login() {
 		if (!this._formCheck()) return;
 		axios.post('http://calbum.sanguneo.com/user/login',
-			{
-				email: this.state.email,
-				password: this.state.pass
-			},
-			{
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				}
-			}
+			{ email: this.state.email, password: this.state.pass },
+			{ headers: { Accept: 'application/json', 'Content-Type': 'application/json' } }
 		).then((response) => {
-			if (response.data.message == 'success') {
-				AsyncStorage.setItem('token', response.data.token);
-				AsyncStorage.setItem('_id', response.data._id);
-				AsyncStorage.setItem('email', response.data.email);
-				AsyncStorage.setItem('signhash', response.data.signhash);
-				AsyncStorage.setItem('name', response.data.nickname);
-				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.calb';
+			if (response.data.message === 'success') {
 				let key = Math.random()*10000;
-				RNFS.downloadFile({fromUrl:'http://calbum.sanguneo.com/upload/profiles/' + response.data.signhash, toFile: pPath}).promise.then(res => {
-					this.global.getVar('side').setState({
-						profile: {uri: 'file://' + pPath + '?key=' + key}
-					});
-				}).catch((e) => {console.error('error', e)});
-				this.global.getVar('side').setState({
-					name: response.data.nickname,
+				let userinfo = {
+					token: response.data.token,
+					_id: response.data._id,
+					email: response.data.email,
 					signhash: response.data.signhash,
-					email: response.data.email
-				});
-				this.props.navigator.pop();
-			}else if(response.data.message == 'emailexist'){
+					name: response.data.nickname
+				};
+				AsyncStorage.setItem('token', userinfo.token);
+				AsyncStorage.setItem('_id', userinfo._id);
+				AsyncStorage.setItem('email', userinfo.email);
+				AsyncStorage.setItem('signhash', userinfo.signhash);
+				AsyncStorage.setItem('name', userinfo.name);
+				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + userinfo.signhash + '.calb';
+				RNFS.downloadFile({fromUrl:'http://calbum.sanguneo.com/upload/profiles/' + userinfo.signhash, toFile: pPath}).promise.then((res) => {
+					userinfo.profile = {uri: 'file://' + pPath + '?key=' + key};
+					this.props.dispatch(userActions.setUser(userinfo));
+					this.props.dispatch(appActions.login());
+					if (!this.props.profileInitial) {
+						this.global.getVar('side').setState(userinfo);
+					}
+					this.props.navigator.pop();
+				}).catch((e) => {console.error('error', e)});
+			} else if(response.data.message === 'emailexist'){
 				Alert.alert('사용중인 이메일 입니다.');
-			}else {
+			} else {
 				Alert.alert('회원가입에 오류가 발생했습니다.');
 			}
-		}).catch((response) => {
-			console.log(response);
+		}).catch((error) => {
+			console.error(error);
 		});
 	}
 	_logout() {
 		Alert.alert('로그아웃 되었습니다.');
 		AsyncStorage.clear();
-		this.global.getVar('side').setState({
-			profile: require('../../img/profile.png'),
-			name: '',
-			signhash: '',
-			email: ''
-		});
+		if (!this.props.profileInitial) {
+			this.global.getVar('side').setState({
+				profile: require('../../img/profile.png'),
+				name: '',
+				signhash: '',
+				email: ''
+			});
+		}
 		this.setState({
 			profile: require('../../img/profile.png'),
 			name: '',
@@ -255,3 +258,6 @@ const styles = StyleSheet.create({
 		fontSize:15,
 	}
 });
+
+
+export default connect()(LoginScreen);

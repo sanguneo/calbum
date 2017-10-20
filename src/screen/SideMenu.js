@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
 
 const RNFS = require('react-native-fs');
 
-export default class SideMenu extends Component {
+class SideMenu extends Component {
 
     constructor(props) {
         super(props);
@@ -16,7 +17,7 @@ export default class SideMenu extends Component {
 			userdata: '',
 			token: ''
         };
-        this.props.global.setVar('side', this);
+        // this.props.global.setVar('side', this);
     }
 	onNavigatorEvent(event) {
 	}
@@ -35,7 +36,7 @@ export default class SideMenu extends Component {
 				this.props.navigator.push({
 					screen: "calbum.LoginScreen",
 					title: "로그인",
-					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, user: {signhash : '', profile: this.state.profile, email: '', name: ''}},
+					passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: true, user: {signhash : '', profile: this.props.user.profile, email: '', name: ''}},
 					navigatorStyle: {navBarHidden: false},
 					navigatorButtons: {},
 					backButtonHidden: true,
@@ -43,27 +44,15 @@ export default class SideMenu extends Component {
 					animated: true,
 					animationType: 'fade'
 				});
-			} else {
-
-				AsyncStorage.multiGet(['token','_id','name','email','signhash'], (err, stores) => {
-					let obj = {};
-					stores.forEach((store)=>{
-						obj[store[0]] = store[1];
-					});
-					let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.calb';
-					let key = Math.random()*10000;
-					obj.profile= {uri: 'file://' + pPath + '?key=' + key};
-					this.setState(obj);
-				});
 			}
 		}).done();
 	}
 	_openScreen(screen) {
-		if (screen !== 'profile' && this.state.email == null) {
+		if (screen !== 'profile' && this.props.user.email == null) {
 			this._validateUserData();
 			return;
 		}
-		let user = {signhash : this.state.signhash, profile: this.state.profile, email: this.state.email, name: this.state.name};
+		let user = {signhash : this.props.user.signhash, profile: this.props.user.profile, email: this.props.user.email, name: this.props.user.name};
 		if (screen === 'subscribe') {
 			this._toggleDrawer();
 			this.props.navigator.push({
@@ -132,8 +121,8 @@ export default class SideMenu extends Component {
 		this.props.dbsvc.closeDB();
 	}
     render() {
-		let profile = this.state.profile;
-		if(this.state.profile.uri){
+		let profile = this.props.user.profile;
+		if(this.props.user.profile.uri){
 			var key=1e5*Math.random();
 			profile.uri=profile.uri.split("?key=")[0]+"?key="+key
 		}
@@ -144,7 +133,7 @@ export default class SideMenu extends Component {
                         source={profile}
                         style={styles.stretch}
                     />
-                    <Text style={styles.name}>{this.state.name}</Text>
+                    <Text style={styles.name}>{this.props.user.name}</Text>
                 </TouchableOpacity>
 				<TouchableOpacity  style={styles.sideBtn} onPress={() => {this._openScreen('subscribe')}}>
 					<Image
@@ -167,7 +156,9 @@ export default class SideMenu extends Component {
                     />
                     <Text style={styles.sidetext}>태그보기</Text>
                 </TouchableOpacity>
-				<TouchableOpacity  style={[{position: 'absolute', bottom: 60, left: 0},styles.sideBtn]} onPress={() => {AsyncStorage.clear();}}>
+				<TouchableOpacity  style={[{position: 'absolute', bottom: 60, left: 0},styles.sideBtn]} onPress={() => {
+					console.log(this.props.user)
+				}}>
 					<Image
 						source={require('../../img/notice.png')}
 						style={[styles.leftIcon]}
@@ -257,3 +248,11 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '45deg'}]
     }
 });
+
+function mapStateToProps(state) {
+	return {
+		user: state.user
+	};
+}
+
+export default connect(mapStateToProps)(SideMenu);
