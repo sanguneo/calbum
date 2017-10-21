@@ -30,7 +30,7 @@ class LoginScreen extends Component {
 
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.crypt = props.crypt;
 		this.global = props.global;
 		this.state = {
@@ -95,9 +95,6 @@ class LoginScreen extends Component {
 					userinfo.profile = {uri: 'file://' + pPath + '?key=' + key};
 					this.props.dispatch(userActions.setUser(userinfo));
 					this.props.dispatch(appActions.login());
-					if (!this.props.profileInitial) {
-						this.global.getVar('side').setState(userinfo);
-					}
 					this.props.navigator.pop();
 				}).catch((e) => {console.error('error', e)});
 			} else if(response.data.message === 'emailexist'){
@@ -113,19 +110,13 @@ class LoginScreen extends Component {
 		Alert.alert('로그아웃 되었습니다.');
 		AsyncStorage.clear();
 		if (!this.props.profileInitial) {
-			this.global.getVar('side').setState({
+			this.props.dispatch(userActions.setUser({
 				profile: require('../../img/profile.png'),
 				name: '',
 				signhash: '',
 				email: ''
-			});
+			}));
 		}
-		this.setState({
-			profile: require('../../img/profile.png'),
-			name: '',
-			signhash: '',
-			email: ''
-		});
 	}
 	_signup() {
 		let user = {signhash : '', profile: this.state.profile, email: '', name: ''};
@@ -144,7 +135,7 @@ class LoginScreen extends Component {
 
 
 	render() {
-		let notloggedin = !this.state.signhash || this.state.signhash === '';
+		let notloggedin = !this.props.user.signhash || this.props.user.signhash === '';
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
@@ -259,5 +250,12 @@ const styles = StyleSheet.create({
 	}
 });
 
+function mapStateToProps(state) {
+	return {
+		user: state.user
+	};
+}
 
-export default connect()(LoginScreen);
+export default connect(mapStateToProps)(LoginScreen);
+
+

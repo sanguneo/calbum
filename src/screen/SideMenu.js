@@ -9,15 +9,6 @@ class SideMenu extends Component {
     constructor(props) {
         super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-        this.state = {
-            profile: require('../../img/profile.png'),
-            name: '계정을 등록하세요',
-			email: '',
-			signhash: '',
-			userdata: '',
-			token: ''
-        };
-        // this.props.global.setVar('side', this);
     }
 	onNavigatorEvent(event) {
 	}
@@ -58,7 +49,7 @@ class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.SubscribeScreen",
 				title: "디자인 작성하기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -69,7 +60,7 @@ class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.LoginScreen",
 				title: "로그인",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false, user},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, profileCreate: false},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -80,7 +71,7 @@ class SideMenu extends Component {
 			/*this.props.navigator.push({
 				screen: "calbum.NoticeScreen",
 				title: "공지사항",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -91,7 +82,7 @@ class SideMenu extends Component {
 			this.props.navigator.push({
 				screen: "calbum.TagScreen",
 				title: "태그목록",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -102,7 +93,7 @@ class SideMenu extends Component {
 			this.props.navigator.resetTo({
 				screen: "calbum.TotalScreen",
 				title: "전체보기",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global},
 				navigatorStyle: {},
 				navigatorButtons: {
 					leftButtons: [{ id: 'sideMenu'}]

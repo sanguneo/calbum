@@ -44,13 +44,13 @@ export default class InTagScreen extends Component {
 
 	_goPhoto(title, photohash) {
 		this.props.navigator.push({
-			screen: "calbum.ViewScreen", // unique ID registered with Navigation.SignupScreen
-			title: title, // title of the screen as appears in the nav bar (optional)
+			screen: "calbum.ViewScreen",
+			title: title,
 			passProps: {title, photohash, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
-			navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-			navigatorButtons: {}, // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+			navigatorStyle: {},
+			navigatorButtons: {},
 			animated: true,
-			animationType: 'fade', // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+			animationType: 'fade',
 			overrideBackPress: true,
 		});
 	}
@@ -66,8 +66,8 @@ export default class InTagScreen extends Component {
 							style={styles.thumbnail}
 							title={i.title}
 							regdate={i.reg_date}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + this.props.user.email + '.calb?key=' + key}
-							onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
+							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.calb?key=' + key}
+							onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');}}
 						/>
 					}),
 				});

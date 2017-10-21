@@ -63,8 +63,8 @@ export default class TotalScreen extends Component {
 								style={styles.thumbnail}
 								title={i.title}
 								regdate={i.reg_date}
-								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.unique_key + '_' + user.email + '.calb?key=' + key}
-								onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.unique_key + '');}}
+								uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + user.email + '.calb?key=' + key}
+								onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');}}
 							/>
 						}),
 					});
