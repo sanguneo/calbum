@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {connect} from 'react-redux';
+
+import * as appActions from "../reducer/app/actions";
+import * as userActions from "../reducer/user/actions";
 
 import Thumbnail from '../component/Thumbnail';
 import AdBar from '../component/AdBar';
@@ -19,7 +23,7 @@ const owidth = (function() {
 	return Math.round(devW / quantityInline / scale) - 8 - (quantityInline - Math.round(devW / scaledThumbSize));
 })();
 
-export default class TotalScreen extends Component {
+class TotalScreen extends Component {
 
 	static navigatorButtons = {
 		leftButtons: [{ id: 'sideMenu'}]
@@ -150,3 +154,11 @@ const styles = StyleSheet.create({
 		borderWidth: 1
 	}
 });
+
+function mapStateToProps(state) {
+	return {
+		user: state.user
+	};
+}
+
+export default connect(mapStateToProps)(TotalScreen);

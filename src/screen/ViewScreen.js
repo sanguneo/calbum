@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+
+import * as appActions from "../reducer/app/actions";
+import * as userActions from "../reducer/user/actions";
 
 import Button from '../component/Button';
 import Lightbox from '../component/Lightbox';
@@ -21,7 +25,7 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 };
 
-export default class ViewScreen extends Component {
+class ViewScreen extends Component {
 
 	static navigatorButtons = {
 		rightButtons: [{ icon: require('../../img/cut.png'), id: 'edit' }]
@@ -375,3 +379,11 @@ const styles = StyleSheet.create({
 		flexDirection:'row',
 	}
 });
+
+function mapStateToProps(state) {
+	return {
+		user: state.user
+	};
+}
+
+export default connect(mapStateToProps)(ViewScreen);

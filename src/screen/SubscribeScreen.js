@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import {connect} from 'react-redux';
+
+import * as appActions from "../reducer/app/actions";
+import * as userActions from "../reducer/user/actions";
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
@@ -30,7 +34,7 @@ const commonStyle = {
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 };
-export default class SubscribeScreen extends Component {
+class SubscribeScreen extends Component {
 	static navigatorButtons = {
 		rightButtons: [{ icon: require('../../img/save.png'),id: 'save'}]
 	};
@@ -337,3 +341,11 @@ const styles = StyleSheet.create({
 		flexDirection:'row',
 	}
 });
+
+function mapStateToProps(state) {
+	return {
+		user: state.user
+	};
+}
+
+export default connect(mapStateToProps)(SubscribeScreen);

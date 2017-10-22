@@ -16,7 +16,7 @@ export default function user(state = initialState, action = {}) {
 			if (action.user.name || action.user.name !== '') userinfo.name = action.user.name;
 			if (action.user.email || action.user.email !== '') userinfo.email = action.user.email;
 			if (action.user.signhash || action.user.signhash !== '') userinfo.signhash = action.user.signhash;
-			return state.merge(userinfo);
+			return Object.assign({}, state, userinfo);
 		default:
 			return state;
 	}

@@ -10,9 +10,7 @@ export default class TagScreen extends Component {
 			tagname: '',
 			rows: [],
 		};
-		if (this.props.user) {
-			this._getTags();
-		}
+		
 	}
 	onNavigatorEvent(event) {
 	}
@@ -40,6 +38,12 @@ export default class TagScreen extends Component {
 		this.props.dbsvc.getTagGroups(this.props.user.signhash, (ret) => {
 			this.setState({rows: ret.map((item)=>{return item.name})});
 		});
+	}
+	
+	componentWillMount() {
+		if (this.props.user) {
+			this._getTags();
+		}
 	}
 
 

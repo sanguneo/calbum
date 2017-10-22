@@ -8,7 +8,7 @@ const initialState = Immutable({
 export default function app(state = initialState, action = {}) {
 	switch (action.type) {
 		case types.ROOT_CHANGED:
-			return state.merge({
+			return Object.assign({}, state, {
 				root: action.root
 			});
 		default:
