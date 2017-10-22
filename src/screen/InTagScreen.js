@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {connect} from 'react-redux';
+import * as appActions from "../reducer/app/actions";
 
 import Thumbnail from '../component/Thumbnail';
 import AdBar from '../component/AdBar';
@@ -19,7 +21,7 @@ const owidth = (function() {
 	return Math.round(devW / quantityInline / scale) - 8 - (quantityInline - Math.round(devW / scaledThumbSize));
 })();
 
-export default class InTagScreen extends Component {
+class InTagScreen extends Component {
 
 	static navigatorButtons = {
 		leftButtons: [{ id: 'sideMenu'}]
@@ -31,8 +33,7 @@ export default class InTagScreen extends Component {
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
 			rows: [],
-			style: {},
-			loading: true
+			style: {}
 		};
         this.props.global.setVar('parent', this);
 		this._getPhoto(this.props.user);
@@ -72,15 +73,15 @@ export default class InTagScreen extends Component {
 					}),
 				});
 				setTimeout(() => {
-					this.setState({
-						loading : false
-					});
+					setTimeout(() => {
+						this.props.dispatch(appActions.loaded());
+					}, 200);
 				}, 100);
 			} else {
 				setTimeout(() => {
-					this.setState({
-						loading : false
-					});
+					setTimeout(() => {
+						this.props.dispatch(appActions.loaded());
+					}, 200);
 				}, 500);
 			}
 		}, this.props.user.signhash, this.props.tagname);
@@ -96,13 +97,13 @@ export default class InTagScreen extends Component {
 					</View>
 				</ScrollView>
 				<AdBar/>
-				<Loading show={this.state.loading}/>
+				<Loading show={this.props.app.loading}/>
 			</View>);
 		else
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
 				<AdBar style={{position: 'absolute',width: width,bottom: 0}}/>
-				<Loading show={this.state.loading}/>
+				<Loading show={this.props.app.loading}/>
 			</View>);
 	}
 }
@@ -142,3 +143,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1
 	}
 });
+
+function mapStateToProps(state) {
+	return {
+		app: state.app,
+		user: state.user
+	};
+}
+
+export default connect(mapStateToProps)(InTagScreen);

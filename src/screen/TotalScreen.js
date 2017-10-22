@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
-
 import * as appActions from "../reducer/app/actions";
-import * as userActions from "../reducer/user/actions";
 
 import Thumbnail from '../component/Thumbnail';
 import AdBar from '../component/AdBar';
@@ -34,8 +32,7 @@ class TotalScreen extends Component {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
-			rows: [],
-			loading: true
+			rows: []
 		};
 		this.props.global.setVar('parent', this);
 	}
@@ -73,15 +70,15 @@ class TotalScreen extends Component {
 						}),
 					});
 				setTimeout(() => {
-					this.setState({
-						loading : false
-					});
+					setTimeout(() => {
+						this.props.dispatch(appActions.loaded());
+					}, 200);
 				}, 100);
 			} else {
 				setTimeout(() => {
-					this.setState({
-						loading : false
-					});
+					setTimeout(() => {
+						this.props.dispatch(appActions.loaded());
+					}, 200);
 				}, 500);
 			}
 		}, user.signhash);
@@ -107,13 +104,13 @@ class TotalScreen extends Component {
 					</View>
 				</ScrollView>
 				<AdBar global={this.props.global}/>
-				<Loading show={this.state.loading}/>
+				<Loading show={this.props.app.loading}/>
 			</View>);
 		} else {
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
 				<AdBar style={{position: 'absolute', width: width, bottom: 0}}/>
-				<Loading show={this.state.loading}/>
+				<Loading show={this.props.app.loading}/>
 			</View>);
 		}
 	}
@@ -157,6 +154,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 	return {
+		app: state.app,
 		user: state.user
 	};
 }

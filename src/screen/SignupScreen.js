@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 
@@ -33,12 +27,10 @@ export default class SignupScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.crypt = props.crypt;
-		this.global = props.global;
 		this.state = {
 			profile: props.user.profile,
 			email: props.user.email,
-			name: props.user.name === '계정을 등록하세요' ? '' : props.user.name,
+			name: props.user.name,
 			pass: '',
 			passchk: '',
 			signhash: props.user.signhash
@@ -70,7 +62,7 @@ export default class SignupScreen extends Component {
 			Alert.alert('확인', '이미지를 선택해주세요.');
 			return false;
 		} else if (!this.state.name && this.state.name.length >= 4) {
-			Alert.alert('확인', '닉네임을 입력해주세요.');
+			Alert.alert('확인', '이름을 입력해주세요.');
 			this.refs['r_name'].focus();
 			return false;
 		} else if (!this.state.email) {
@@ -125,7 +117,7 @@ export default class SignupScreen extends Component {
 					</TouchableOpacity>
 				</View>
 				<View style={styles.formWrapper}>
-					<LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
+					<LabeledInput label={"이름"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -134,7 +126,7 @@ export default class SignupScreen extends Component {
 							ref={'r_name'}
 							onChangeText={(name) => this.setState({name})}
 							value={this.state.name}
-							placeholder={'닉네임을 입력해주세요'}
+							placeholder={'이름을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>

@@ -19,6 +19,6 @@ export default {
 		return s.substr(s.length-size);
 	},
 	uuid: function(arg) {
-		return uuidv5(arg !== undefined && arg !== null ? arg : new Date().getTime().toString(), uuidv4());
+		return uuidv5(arg !== undefined && arg !== null ? arg : Date.now().toString(), uuidv4());
 	}
 }

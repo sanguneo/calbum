@@ -42,7 +42,7 @@ export default class crypt {
         }
         return ret;
     }
-    getAntCode(input=new Date().getTime()) {
+    getAntCode(input=Date.now()) {
 		return input.toString().replace(/(.)\1*/g, (seq, key) => key + seq.length.toString());
 	}
 	getDeAntCode(input) {

@@ -34,9 +34,8 @@ class LoginScreen extends Component {
 		this.crypt = props.crypt;
 		this.global = props.global;
 		this.state = {
-			profile: props.user.profile == undefined || props.user.profile == '' ? require('../../img/profile.png') : props.user.profile,
-			success: 'no',
-			name: props.user.name == undefined || props.user.name == '계정을 등록하세요' ? '' : props.user.name,
+			profile: props.user.profile,
+			name: props.user.name,
 			email: props.user.email,
 			pass: '',
 			signhash: props.user.signhash
@@ -142,7 +141,7 @@ class LoginScreen extends Component {
 					<Image source={this.state.profile} style={styles.img} />
 				</View>
 				<View style={styles.formWrapper}>
-					{!notloggedin ? <LabeledInput label={"닉네임"} labelStyle={styles.labelStyle}>
+					{!notloggedin ? <LabeledInput label={"이름"} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
@@ -151,7 +150,7 @@ class LoginScreen extends Component {
 							ref={'r_name'}
 							onChangeText={(name) => this.setState({name})}
 							value={this.state.name}
-							placeholder={'닉네임을 입력해주세요'}
+							placeholder={'이름을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>: null}

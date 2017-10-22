@@ -13,3 +13,9 @@ export function login() {
 		dispatch(changeAppRoot('after-login'));
 	};
 }
+export function loading() {
+	return {type: types.LOADING};
+}
+export function loaded() {
+	return {type: types.LOADED};
+}

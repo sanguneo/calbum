@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 import {connect} from 'react-redux';
 
-import * as appActions from "../reducer/app/actions";
-import * as userActions from "../reducer/user/actions";
-
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
@@ -41,18 +38,15 @@ class SubscribeScreen extends Component {
 
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
-		this.props.navigator.setStyle({
+		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		props.navigator.setStyle({
 			navBarHideOnScroll: true,
 		});
-		this.crypt = this.props.crypt;
-		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
 			email: props.user.email,
 			signhash: props.user.signhash,
-			regdate: new Date().getTime(),
+			regdate: '',
 			uriLeft: require('../../img/pickphoto.png'),
 			uriRight: require('../../img/pickphoto.png'),
 			srcLeft: '',
@@ -76,8 +70,8 @@ class SubscribeScreen extends Component {
 		this.setState({tags});
 	};
 	_getPhotohash() {
-		let regdate = new Date().getTime();
-		let photohash = this.crypt.getAntCode(regdate);
+		let regdate = Date.now();
+		let photohash = this.props.crypt.getAntCode(regdate);
 		this.setState({regdate, photohash});
 		return photohash;
 	}
@@ -116,10 +110,10 @@ class SubscribeScreen extends Component {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.state.email, () => {});
 	}
 	_insertDB() {
-		this.db.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
+		this.props.db.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
 	}
 	_insertTag() {
-		this.db.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
+		this.props.db.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
 	}
 	_formCheck() {
 		if (this.state.srcLeft.uri === '') {

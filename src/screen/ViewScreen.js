@@ -3,7 +3,6 @@ import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View}
 import {connect} from 'react-redux';
 
 import * as appActions from "../reducer/app/actions";
-import * as userActions from "../reducer/user/actions";
 
 import Button from '../component/Button';
 import Lightbox from '../component/Lightbox';
@@ -83,7 +82,7 @@ class ViewScreen extends Component {
 						recipe: this.state.recipe,
 						comment: this.state.comment,
 						tags: this.state.tags.map((res)=>{ return res.name;}),
-						photohash: this.props.photohash,
+						photohash: this.state.photohash,
 					}
 				},
 				navigatorStyle: {},
@@ -124,7 +123,7 @@ class ViewScreen extends Component {
 	_getPhotoInformation() {
 		let key = Math.random()*10000;
 		this.db.getPhotoSpecific((res) => {
-			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.unique_key + '_' + this.state.email + '.calb?key=' + key;
+			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.photohash + '_' + this.state.email + '.calb?key=' + key;
 			let info = {
 				merged: {uri: pPath},
 				title: res.title,
@@ -136,16 +135,14 @@ class ViewScreen extends Component {
 				info.tags = rest;
 				this.setState(info);
 				setTimeout(() => {
-					this.setState({
-						loading : false
-					});
+					this.props.dispatch(appActions.loaded());
 				}, 200);
 			}, this.state.signhash, this.state.photohash);
 		}, this.state.signhash, this.state.photohash);
 		setTimeout(() => {
-			this.setState({
-				loading : false
-			});
+			setTimeout(() => {
+				this.props.dispatch(appActions.loaded());
+			}, 200);
 		}, 500);
 	}
 
@@ -239,7 +236,7 @@ class ViewScreen extends Component {
 					</View>
 					<AdBar />
 				</ScrollView>
-				<Loading show={this.state.loading} style={{bottom: 0}}/>
+				<Loading show={this.props.app.loading} style={{bottom: 0}}/>
 				<Lightbox ref={'recipe'} title={'레시피'} duration={500} fromValue={0} toValue={1} stylekey={'opacity'} bgColor={'#fff'} color={'#000'}>
 					<View style={{width: width - 80, paddingHorizontal: 10, paddingBottom: 10}}>
 						<Text style={{lineHeight: 20,fontSize: 16}}>{this.state.recipe === '' ? '레시피없음' : this.state.recipe}</Text>
@@ -382,6 +379,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 	return {
+		app: state.app,
 		user: state.user
 	};
 }
