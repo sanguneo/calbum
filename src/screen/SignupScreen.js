@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+
+import * as appActions from "../reducer/app/actions";
 
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
+import Loading from "../component/Loading";
 import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 
@@ -22,7 +26,7 @@ const commonStyle = {
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 };
-export default class SignupScreen extends Component {
+class SignupScreen extends Component {
 
 	constructor(props) {
 		super(props);
@@ -91,15 +95,19 @@ export default class SignupScreen extends Component {
 		formdata.append('nickname', this.state.name);
 		formdata.append('email', this.state.email);
 		formdata.append('password', this.state.pass);
+		this.props.dispatch(appActions.loading());
 		axios.post('http://calbum.sanguneo.com/user/signup',
 			formdata, { headers: { Accept: 'application/json', 'Content-Type': 'multipart/form-data', } }
 		).then((response) => {
 			if (response.data.message == 'success') {
 				RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error(e)});
+				this.props.dispatch(appActions.loaded());
 				this.props.navigator.pop();
 			}else if(response.data.message == 'emailexist'){
+				this.props.dispatch(appActions.loaded());
 				Alert.alert('사용중인 이메일 입니다.');
 			}else {
+				this.props.dispatch(appActions.loaded());
 				Alert.alert('회원가입에 오류가 발생했습니다.');
 			}
 		}).catch(() => {
@@ -179,6 +187,7 @@ export default class SignupScreen extends Component {
 				<View style={[styles.formWrapper]}>
 					<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
 				</View>
+				<Loading show={this.props.app.loading} style={{width, height}}/>
 			</ScrollView>
 		);
 	}
@@ -230,3 +239,11 @@ const styles = StyleSheet.create({
 		fontSize:15,
 	}
 });
+
+function mapStateToProps(state) {
+	return {
+		app: state.app
+	};
+}
+
+export default connect(mapStateToProps)(SignupScreen);

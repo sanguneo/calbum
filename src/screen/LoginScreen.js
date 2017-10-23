@@ -14,6 +14,7 @@ import * as userActions from "../reducer/user/actions";
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
+import Loading from "../component/Loading";
 import axios from 'axios';
 
 const RNFS = require('react-native-fs');
@@ -74,6 +75,7 @@ class LoginScreen extends Component {
 	}
 	_login() {
 		if (!this._formCheck()) return;
+		this.props.dispatch(appActions.loading());
 		axios.post('http://calbum.sanguneo.com/user/login',
 			{ email: this.state.email, password: this.state.pass },
 			{ headers: { Accept: 'application/json', 'Content-Type': 'application/json' } }
@@ -98,6 +100,7 @@ class LoginScreen extends Component {
 					userinfo.profile = {uri: 'file://' + pPath + '?key=' + key};
 					this.props.dispatch(userActions.setUser(userinfo));
 					this.props.dispatch(appActions.login());
+					this.props.dispatch(appActions.loaded());
 					this.props.navigator.pop();
 				}).catch((e) => {console.error('error', e)});
 			} else if(response.data.message === 'emailexist'){
@@ -207,7 +210,7 @@ class LoginScreen extends Component {
 						<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#bd6592'}} onPress={()=>{this._signup();}} btnname={'회원가입'}/>
 					</View> : null
 				}
-
+				<Loading show={this.props.app.loading} style={{width, height}}/>
 			</ScrollView>
 		);
 	}
@@ -215,7 +218,7 @@ class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
 	},
 	imgView : {
 		flex: 1,
@@ -263,7 +266,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 	return {
-		user: state.user
+		user: state.user,
+		app: state.app
 	};
 }
 
