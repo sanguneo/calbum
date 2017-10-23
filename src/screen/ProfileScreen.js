@@ -63,7 +63,7 @@ export default class ProfileScreen extends Component {
 	_changeImage() {
 		ImagePicker.openPicker(imgOpt).then(profile => {
 			this.setState({profile: {uri: profile.path}});
-		}).catch((e)=>{console.error(e)});
+		}).catch((e)=>{console.log(e)});
 	}
 	_saveProfileImage() {
 		let key = Math.random()*10000;

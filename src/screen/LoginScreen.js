@@ -33,13 +33,16 @@ class LoginScreen extends Component {
 		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.crypt = props.crypt;
 		this.global = props.global;
-		this.state = {
-			profile: props.user.profile,
-			name: props.user.name,
-			email: props.user.email,
-			pass: '',
-			signhash: props.user.signhash
-		}
+		if(!props.profileCreate)
+			this.state = {
+				profile: props.user.profile,
+				name: props.user.name,
+				email: props.user.email,
+				pass: '',
+				signhash: props.user.signhash
+			};
+		else
+			this.state = {signhash : '', profile: require('../../img/profile.png'), email: '', name: ''}
 	}
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {
@@ -84,6 +87,7 @@ class LoginScreen extends Component {
 					signhash: response.data.signhash,
 					name: response.data.nickname
 				};
+				this.setState(userinfo);
 				AsyncStorage.setItem('token', userinfo.token);
 				AsyncStorage.setItem('_id', userinfo._id);
 				AsyncStorage.setItem('email', userinfo.email);
@@ -106,16 +110,21 @@ class LoginScreen extends Component {
 		});
 	}
 	_logout() {
-		Alert.alert('로그아웃 되었습니다.');
 		AsyncStorage.clear();
-		if (!this.props.profileInitial) {
-			this.props.dispatch(userActions.setUser({
-				profile: require('../../img/profile.png'),
-				name: '',
-				signhash: '',
-				email: ''
-			}));
-		}
+		this.props.dispatch(userActions.setUser({signhash : '', profile: require('../../img/profile.png'), email: '', name: ''}));
+		Alert.alert(
+			'', '로그아웃 되었습니다.',
+			[
+				{
+					text: '확인',
+					onPress: () => {
+						this.props.dispatch(appActions.logout());
+					}
+				},
+				{text: '취소'},
+			],
+			{cancelable: true}
+		);
 	}
 	_signup() {
 		let user = {signhash : '', profile: this.state.profile, email: '', name: ''};
@@ -134,7 +143,7 @@ class LoginScreen extends Component {
 
 
 	render() {
-		let notloggedin = !this.props.user.signhash || this.props.user.signhash === '';
+		let notloggedin = !this.state.signhash || this.state.signhash === '';
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
@@ -193,9 +202,12 @@ class LoginScreen extends Component {
 						<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#d9663c'}} onPress={()=>{this._logout();}} btnname={'로그아웃'}/>
 					</View>
 				}
-				<View style={[styles.formWrapper, {marginBottom: 0}]}>
-					<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#bd6592'}} onPress={()=>{this._signup();}} btnname={'회원가입'}/>
-				</View>
+				{ notloggedin ?
+					<View style={[styles.formWrapper, {marginBottom: 0}]}>
+						<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#bd6592'}} onPress={()=>{this._signup();}} btnname={'회원가입'}/>
+					</View> : null
+				}
+
 			</ScrollView>
 		);
 	}

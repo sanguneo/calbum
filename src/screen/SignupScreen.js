@@ -28,12 +28,12 @@ export default class SignupScreen extends Component {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
-			profile: props.user.profile,
-			email: props.user.email,
-			name: props.user.name,
+			signhash : '',
+			profile: require('../../img/profile.png'),
+			email: '',
+			name: '',
 			pass: '',
 			passchk: '',
-			signhash: props.user.signhash
 		}
 	}
 	onNavigatorEvent(event) {
@@ -47,7 +47,7 @@ export default class SignupScreen extends Component {
 			this._submit();
 		}
 		if (event.id === 'backPress') {
-			console.log('back');
+			this.props.navigator.pop();
 		}
 	}
 
@@ -55,7 +55,7 @@ export default class SignupScreen extends Component {
 	_changeImage() {
 		ImagePicker.openPicker(imgOpt).then(profile => {
 			this.setState({profile: {uri: profile.path}});
-		}).catch((e)=>{console.error(e)});
+		}).catch((e)=>{console.log(e)});
 	}
 	_formCheck() {
 		if (!this.state.profile.uri) {

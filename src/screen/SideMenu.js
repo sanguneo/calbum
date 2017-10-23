@@ -113,7 +113,7 @@ class SideMenu extends Component {
 	}
     render() {
 		let profile = this.props.user.profile;
-		if(this.props.user.profile.uri){
+		if(profile.uri){
 			var key=1e5*Math.random();
 			profile.uri=profile.uri.split("?key=")[0]+"?key="+key
 		}

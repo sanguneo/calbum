@@ -96,7 +96,7 @@ export default class App {
 					},
 					appStyle,
 					drawer: {},
-					passProps: {...passProps, profileInitial: true,profileCreate : true, user: {signhash : '', profile: '', email: '', name: ''}},
+					passProps: {...passProps, profileInitial: true, profileCreate : true},
 					animationType: 'fade',
 				});
 				return;
