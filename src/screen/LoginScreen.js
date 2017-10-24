@@ -32,18 +32,18 @@ class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
 		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.crypt = props.crypt;
-		this.global = props.global;
-		if(!props.profileCreate)
-			this.state = {
-				profile: props.user.profile,
-				name: props.user.name,
-				email: props.user.email,
-				pass: '',
-				signhash: props.user.signhash
-			};
-		else
-			this.state = {signhash : '', profile: require('../../img/profile.png'), email: '', name: ''}
+		this.state = !props.profileCreate ? {
+			profile: props.user.profile,
+			name: props.user.name,
+			email: props.user.email,
+			pass: '',
+			signhash: props.user.signhash
+		} : {
+			signhash: '',
+			profile: require('../../img/profile.png'),
+			email: '',
+			name: ''
+		}
 	}
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {

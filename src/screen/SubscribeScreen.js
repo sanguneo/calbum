@@ -110,10 +110,10 @@ class SubscribeScreen extends Component {
 		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.state.email, () => {});
 	}
 	_insertDB() {
-		this.props.db.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
+		this.props.dbsvc.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
 	}
 	_insertTag() {
-		this.props.db.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
+		this.props.dbsvc.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
 	}
 	_formCheck() {
 		if (this.state.srcLeft.uri === '') {

@@ -32,8 +32,7 @@ class InTagScreen extends Component {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
-			rows: [],
-			style: {}
+			rows: []
 		};
         this.props.global.setVar('parent', this);
 		this._getPhoto(this.props.user);
@@ -56,55 +55,50 @@ class InTagScreen extends Component {
 		});
 	}
 	_getPhoto() {
-		let key = Math.random()*10000;
-		this.props.dbsvc.getPhotoByTag((ret) => {
-			if(ret.length > 0) {
-				this.setState({
-					style: null,
-					rows: ret.map((i, idx) => {
-						return <Thumbnail
-							key={idx}
-							style={styles.thumbnail}
-							title={i.title}
-							regdate={i.reg_date}
-							uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.calb?key=' + key}
-							onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');}}
-						/>
-					}),
-				});
-				setTimeout(() => {
-					setTimeout(() => {
-						this.props.dispatch(appActions.loaded());
-					}, 200);
-				}, 100);
-			} else {
-				setTimeout(() => {
-					setTimeout(() => {
-						this.props.dispatch(appActions.loaded());
-					}, 200);
-				}, 500);
-			}
+		this.props.dbsvc.getPhotoByTag((rows) => {
+			if(rows.length > 0)
+				this.setState({ rows });
 		}, this.props.user.signhash, this.props.tagname);
 	}
 
-
+	componentWillMount() {
+		this.props.dispatch(appActions.loading());
+		this._getPhoto();
+	}
+	componentDidMount() {
+		this.props.dispatch(appActions.loaded());
+	}
 	render() {
-		if (this.state.rows.length >0)
+		if (this.state.rows.length >0) {
+			let key = Math.random() * 10000;
+			let thumbs = this.state.rows.map((i, idx) =>
+				<Thumbnail
+					key={idx}
+					style={styles.thumbnail}
+					title={i.title}
+					regdate={i.reg_date}
+					uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.calb?key=' + key}
+					onPress={() => {
+						this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');
+					}}
+				/>
+			);
 			return (<View style={styles.wrapper}>
 				<ScrollView style={styles.scrollview}>
 					<View style={styles.container}>
-						{this.state.rows}
+						{thumbs}
 					</View>
 				</ScrollView>
 				<AdBar/>
 				<Loading show={this.props.app.loading}/>
 			</View>);
-		else
+		} else {
 			return (<View style={[styles.container, styles.nodatastyle]}>
 				<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
-				<AdBar style={{position: 'absolute',width: width,bottom: 0}}/>
+				<AdBar style={{position: 'absolute', width: width, bottom: 0}}/>
 				<Loading show={this.props.app.loading}/>
 			</View>);
+		}
 	}
 }
 
