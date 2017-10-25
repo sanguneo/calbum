@@ -100,16 +100,7 @@ class TotalScreen extends Component {
 					style={styles.thumbnail}
 					title={i.title}
 					regdate={i.reg_date}
-					uri={
-						'file://' +
-						RNFS.DocumentDirectoryPath +
-						'/_thumb_/' +
-						i.photohash +
-						'_' +
-						this.props.user.email +
-						'.scalb?key=' +
-						key
-					}
+					uri={ 'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.scalb?key=' + key}
 					onPress={() => {
 						this._goPhoto(
 							i.title ? i.title : Util.dateFormatter(i.reg_date),

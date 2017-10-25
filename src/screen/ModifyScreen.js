@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
+import * as appActions from '../reducer/app/actions';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
@@ -166,7 +167,7 @@ class ModifyScreen extends Component {
 						this._insertDB();
 						this._insertTag();
 						this.props.parentUpdate(this.state.title);
-						this.props.global.getVar('parent')._getPhoto();
+						this.props.dispatch(appActions.changing());
 						this.props.navigator.pop();
 					}
 				},

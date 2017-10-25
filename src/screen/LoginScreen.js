@@ -70,54 +70,60 @@ class LoginScreen extends Component {
 	_login() {
 		if (!this._formCheck()) return;
 		this.props.dispatch(appActions.loading());
-		axios
-			.post(
-				'http://calbum.sanguneo.com/user/login',
-				{email: this.state.email, password: this.state.pass},
-				{
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json'
-					}
+		axios.post(
+			'http://calbum.sanguneo.com/user/login',
+			{email: this.state.email, password: this.state.pass},
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
 				}
-			)
-			.then(response => {
-				if (response.data.message === 'success') {
-					let key = Math.random() * 10000;
-					let userinfo = {
-						token: response.data.token,
-						_id: response.data._id,
-						email: response.data.email,
-						signhash: response.data.signhash,
-						name: response.data.nickname
-					};
-					this.setState(userinfo);
-					AsyncStorage.setItem('token', userinfo.token);
-					AsyncStorage.setItem('_id', userinfo._id);
-					AsyncStorage.setItem('email', userinfo.email);
-					AsyncStorage.setItem('signhash', userinfo.signhash);
-					AsyncStorage.setItem('name', userinfo.name);
-					let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + userinfo.signhash + '.scalb';
-					RNFS.downloadFile({
-						fromUrl: 'http://calbum.sanguneo.com/upload/profiles/' + userinfo.signhash,
-						toFile: pPath
-					}).promise.then(res => {
-						userinfo.profile = {uri: 'file://' + pPath + '?key=' + key};
+			}
+		).then(response => {
+			if (response.data.message === 'success') {
+				let key = Math.random() * 10000;
+				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.scalb';
+				let userinfo = {
+					token: response.data.token,
+					_id: response.data._id,
+					email: response.data.email,
+					signhash: response.data.signhash,
+					name: response.data.nickname,
+					profile: {uri: 'file://' + pPath + '?key=' + key}
+				};
+				AsyncStorage.multiSet(Object.entries(userinfo).filter((e) => e[0] !== 'profile'));
+				RNFS.exists(pPath).then((res) => {
+					if (res) {
+						this.setState(userinfo);
 						this.props.dispatch(userActions.setUser(userinfo));
 						this.props.dispatch(appActions.login());
 						this.props.dispatch(appActions.loaded());
 						this.props.navigator.pop();
-					}).catch(e => {
-						console.error('error', e);
-					});
-				} else if (response.data.message === 'emailexist') {
-					Alert.alert('사용중인 이메일 입니다.');
-				} else {
-					Alert.alert('회원가입에 오류가 발생했습니다.');
-				}
-			}).catch(error => {
-				console.error(error);
-			});
+					} else {
+						RNFS.downloadFile({
+							fromUrl: 'http://calbum.sanguneo.com/upload/profiles/' + userinfo.signhash,
+							toFile: pPath
+						}).promise.then((res) => {
+							this.setState(userinfo);
+							this.props.dispatch(userActions.setUser(userinfo));
+							this.props.dispatch(appActions.loaded());
+							this.props.dispatch(appActions.login());
+							this.props.navigator.pop();
+						}).catch(e => {
+							console.error('error', e);
+						});
+					}
+				}).catch((err) => {
+					console.error(err);
+				})
+			} else if (response.data.message === 'emailexist') {
+				Alert.alert('사용중인 이메일 입니다.');
+			} else {
+				Alert.alert('회원가입에 오류가 발생했습니다.');
+			}
+		}).catch(error => {
+			console.error(error);
+		});
 	}
 	_logout() {
 		AsyncStorage.clear();
@@ -263,9 +269,6 @@ class LoginScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		// flex: 1,
-	},
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',

@@ -190,17 +190,17 @@ class SideMenu extends Component {
 					/>
 					<Text style={styles.sidetext}>태그보기</Text>
 				</TouchableOpacity>
-				<TouchableOpacity
-					style={[{position: 'absolute', bottom: 60, left: 0}, styles.sideBtn]}
-					onPress={() => {
-						console.log(this.props.user);
-					}}>
-					<Image
-						source={require('../../img/notice.png')}
-						style={[styles.leftIcon]}
-					/>
-					<Text style={styles.sidetext}>공지사항</Text>
-				</TouchableOpacity>
+				{/*<TouchableOpacity*/}
+					{/*style={[{position: 'absolute', bottom: 60, left: 0}, styles.sideBtn]}*/}
+					{/*onPress={() => {*/}
+						{/*console.log(this.props.user);*/}
+					{/*}}>*/}
+					{/*<Image*/}
+						{/*source={require('../../img/notice.png')}*/}
+						{/*style={[styles.leftIcon]}*/}
+					{/*/>*/}
+					{/*<Text style={styles.sidetext}>공지사항</Text>*/}
+				{/*</TouchableOpacity>*/}
 				<TouchableOpacity
 					style={[{position: 'absolute', bottom: 10, left: 0}, styles.sideBtn]}
 					onPress={() => {
