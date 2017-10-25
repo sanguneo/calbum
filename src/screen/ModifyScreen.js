@@ -38,29 +38,27 @@ class ModifyScreen extends Component {
 
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.props.navigator.setStyle({
+		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		props.navigator.setStyle({
 			navBarHideOnScroll: true
 		});
-		this.crypt = this.props.crypt;
-		this.db = this.props.dbsvc;
 		this.state = {
 			success: 'no',
 			email: props.user.email,
 			signhash: props.user.signhash,
 			uriLeft: {
-				uri: this.props.targetProps.merged.uri.replace('.scalb', '_cropleft.scalb')
+				uri: props.targetProps.merged.uri.replace('.scalb', '_cropleft.scalb')
 			},
 			uriRight: {
-				uri: this.props.targetProps.merged.uri.replace('.scalb', '_cropright.scalb')
+				uri: props.targetProps.merged.uri.replace('.scalb', '_cropright.scalb')
 			},
 			srcLeft: '',
 			srcRight: '',
-			title: this.props.targetProps.title,
-			recipe: this.props.targetProps.recipe,
-			tags: this.props.targetProps.tags,
-			photohash: this.props.targetProps.photohash,
-			comment: this.props.targetProps.comment
+			title: props.targetProps.title,
+			recipe: props.targetProps.recipe,
+			tags: props.targetProps.tags,
+			photohash: props.targetProps.photohash,
+			comment: props.targetProps.comment
 		};
 	}
 	onNavigatorEvent(event) {
@@ -128,7 +126,7 @@ class ModifyScreen extends Component {
 		);
 	}
 	_insertDB() {
-		this.db.updatePhoto(
+		this.props.dbsvc.updatePhoto(
 			this.state.photohash,
 			this.state.title,
 			this.state.recipe,
@@ -137,7 +135,7 @@ class ModifyScreen extends Component {
 		);
 	}
 	_insertTag() {
-		this.db.insertTag(
+		this.props.dbsvc.insertTag(
 			this.state.tags,
 			this.state.photohash,
 			this.props.user.signhash

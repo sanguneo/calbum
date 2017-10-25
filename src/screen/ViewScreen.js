@@ -33,11 +33,10 @@ class ViewScreen extends Component {
 
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-		this.props.navigator.setStyle({
+		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		props.navigator.setStyle({
 			navBarHideOnScroll: true
 		});
-		this.crypt = props.crypt;
 		this.state = {
 			success: 'no',
 			title: '',

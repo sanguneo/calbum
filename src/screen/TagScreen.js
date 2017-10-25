@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 class TagScreen extends Component {
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
 			tagname: '',
 			rows: []

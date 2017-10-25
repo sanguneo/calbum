@@ -41,13 +41,13 @@ class InTagScreen extends Component {
 
 	constructor(props) {
 		super(props);
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
 			rows: []
 		};
 		this.watch = setInterval(() => {
-			if (this.props.app.changing) {
-				this.props.dispatch(appActions.changed());
+			if (props.app.changing) {
+				props.dispatch(appActions.changed());
 				this._getPhoto();
 			}
 		}, 20);

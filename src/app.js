@@ -29,19 +29,20 @@ registerScreens(store, Provider);
 export default class App {
 	constructor() {
 		RNFS.readDir(RNFS.DocumentDirectoryPath)
-			.then(result => {
-				let resarr = [];
-				result.forEach(e => resarr.push(e.path));
-				if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_original_') < 0) {
-					RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_original_');
-				}
-				if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_profiles_') < 0) {
-					RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_profiles_');
-				}
-			})
-			.catch(err => {
-				console.error(err.message, err.code);
-			});
+		.then(result => {
+			let resarr = [];
+			result.forEach(e => resarr.push(e.path));
+			if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_original_') < 0) {
+				RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_original_');
+			}
+			if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_profiles_') < 0) {
+				RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_profiles_');
+			}
+		})
+		.catch(err => {
+			console.error(err.message, err.code);
+		});
+
 		store.subscribe(this.onStoreUpdate.bind(this));
 
 		AsyncStorage.getItem('token').then(token => {
