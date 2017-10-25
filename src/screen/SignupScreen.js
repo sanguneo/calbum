@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
@@ -91,7 +93,7 @@ class SignupScreen extends Component {
 	_submit() {
 		if (!this._formCheck()) return;
 		let formdata = new FormData();
-		formdata.append('profile', {uri: this.state.profile.uri, type: 'image/jpeg', name: this.state.email + '.calb'});
+		formdata.append('profile', {uri: this.state.profile.uri, type: 'image/jpeg', name: this.state.email + '.scalb'});
 		formdata.append('nickname', this.state.name);
 		formdata.append('email', this.state.email);
 		formdata.append('password', this.state.pass);

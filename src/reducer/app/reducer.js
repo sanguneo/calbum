@@ -3,7 +3,8 @@ import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
 	root: undefined, // 'login' / 'after-login'
-	loading: undefined // true, false
+	loading: undefined, // true, false
+	changing: undefined // true, false
 });
 
 export default function app(state = initialState, action = {}) {
@@ -19,6 +20,14 @@ export default function app(state = initialState, action = {}) {
 		case types.LOADED:
 			return Object.assign({}, state, {
 				loading: false
+			});
+		case types.CHANGING:
+			return Object.assign({}, state, {
+				changing: true
+			});
+		case types.CHANGED:
+			return Object.assign({}, state, {
+				changing: false
 			});
 		default:
 			return state;

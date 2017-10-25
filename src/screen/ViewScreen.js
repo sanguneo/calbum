@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
@@ -30,7 +32,6 @@ class ViewScreen extends Component {
 		rightButtons: [{ icon: require('../../img/cut.png'), id: 'edit' }]
 	};
 
-
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -38,20 +39,19 @@ class ViewScreen extends Component {
 			navBarHideOnScroll: true,
 		});
 		this.crypt = props.crypt;
-		this.db = props.dbsvc;
 		this.state = {
 			success: 'no',
-			merged: {uri: null},
+			title: '',
+			merged: {uri: ''},
 			recipe: '',
-			email: this.props.user.email,
-			signhash: this.props.user.signhash,
+			email: props.user.email,
+			signhash: props.user.signhash,
 			tags: [],
-			photohash: this.props.photohash,
+			photohash: props.photohash,
 			comment: '',
 			lightbox: true,
 			side: '이미지',
 			imageurl: [{ url: ''}],
-			loading: true
 		}
 	}
 	onNavigatorEvent(event) {
@@ -66,15 +66,10 @@ class ViewScreen extends Component {
 					dbsvc: this.props.dbsvc,
 					crypt: this.props.crypt,
 					global: this.props.global,
-					user: [
-						this.state.signhash,
-						this.state.profile,
-						this.state.email,
-						this.state.name
-					],
 					parentUpdate : (title) => {
 						this._getPhotoInformation();
-						title ? this.props.navigator.setTitle({title: title}) : null;
+						title ? this.props.navigator.setTitle({title}) : null;
+						this.props.updateList();
 					},
 					targetProps : {
 						merged: this.state.merged,
@@ -83,6 +78,7 @@ class ViewScreen extends Component {
 						comment: this.state.comment,
 						tags: this.state.tags.map((res)=>{ return res.name;}),
 						photohash: this.state.photohash,
+						regdate: this.state.regdate
 					}
 				},
 				navigatorStyle: {},
@@ -104,7 +100,7 @@ class ViewScreen extends Component {
 		let aobj = {
 			screen: "calbum.InTagScreen",
 			title: '#' + tagname,
-			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.props.user},
+			passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global},
 			navigatorStyle: {},
 			navigatorButtons: {
 				rightButtons: [{ icon: require('../../img/cut.png'), id: 'edit' }]
@@ -121,9 +117,10 @@ class ViewScreen extends Component {
 		this.props.navigator.push(aobj);
 	}
 	_getPhotoInformation() {
+		this.props.dispatch(appActions.loading());
 		let key = Math.random()*10000;
-		this.db.getPhotoSpecific((res) => {
-			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.photohash + '_' + this.state.email + '.calb?key=' + key;
+		this.props.dbsvc.getPhotoSpecific((res) => {
+			let pPath = 'file://'+ RNFS.DocumentDirectoryPath + '/_original_/' + res.photohash + '_' + this.props.user.email + '.scalb?key=' + key;
 			let info = {
 				merged: {uri: pPath},
 				title: res.title,
@@ -131,24 +128,17 @@ class ViewScreen extends Component {
 				recipe: res.recipe.replace('\\n', '\n'),
 				comment: res.comment.replace('\\n', '\n'),
 			};
-			this.db.getTagSpecific((rest) => {
+			this.props.dbsvc.getTagSpecific((rest) => {
 				info.tags = rest;
 				this.setState(info);
-				setTimeout(() => {
-					this.props.dispatch(appActions.loaded());
-				}, 200);
-			}, this.state.signhash, this.state.photohash);
-		}, this.state.signhash, this.state.photohash);
-		setTimeout(() => {
-			setTimeout(() => {
+				this.props.navigator.setTitle({ title: this.props.title ? this.props.title : Util.dateFormatter(this.props.regdate)});
 				this.props.dispatch(appActions.loaded());
-			}, 200);
-		}, 500);
+			}, this.props.user.signhash, this.state.photohash);
+		}, this.props.user.signhash, this.state.photohash);
 	}
 
 	_getSideOriginal(side) {
 		this.side = null;
-
 		this.props.navigator.setButtons({
 			leftButtons: [],
 			rightButtons: [{id: 'close', icon: require('../../img/close.png')}],
@@ -174,15 +164,14 @@ class ViewScreen extends Component {
 		this.side = null;
 	}
 
-
-	componentDidMount() {
+	componentWillMount() {
 		this._getPhotoInformation();
 	}
 	render() {
-		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_left.calb')}]}/> : null;
-		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_right.calb')}]}/> : null;
-		let cropBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_cropleft.calb')}]}/> : null;
-		let cropAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.calb', '_cropright.calb')}]}/> : null;
+		let imgBefore = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.scalb', '_left.scalb')}]}/> : null;
+		let imgAfter = this.state.merged.uri ? <ImageViewer imageUrls={[{url: this.state.merged.uri.replace('.scalb', '_right.scalb')}]}/> : null;
+		let cropBefore = this.state.merged.uri ? {uri : this.state.merged.uri.replace('.scalb', '_cropleft.scalb')} : require('../../img/pickphoto.png');
+		let cropAfter = this.state.merged.uri ? {uri : this.state.merged.uri.replace('.scalb', '_cropright.scalb')} : require('../../img/pickphoto.png');
 		return (
 			<View>
 				<ScrollView style={styles.container}>
@@ -193,14 +182,14 @@ class ViewScreen extends Component {
 						{/*<TouchableOpacity style={[styles.oimg, styles.leftImg]} onPress={()=> {this._getSideOriginal('left')}}></TouchableOpacity>*/}
 						{/*<TouchableOpacity style={[styles.oimg, styles.rightImg]} onPress={()=> {this._getSideOriginal('right')}}></TouchableOpacity>*/}
 					{/*</View>*/}
-					<View style={styles.imgView}>
-						<TouchableOpacity onPress={() => {this._getSideOriginal('left')}}>
-							<Image source={cropBefore} style={[styles.img, {borderRightWidth: 0}]}/>
-							<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
+					<View style={styles2.imgView}>
+						<TouchableOpacity onPress={() => {this._changeImage('left')}}>
+							<Image source={cropBefore} style={[styles2.img, {borderRightWidth: 0}]}/>
+							<Text style={[styles2.imglabel, styles2.lblLeft]}>Before</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => {this._getSideOriginal('right')}}>
-							<Image source={cropAfter} style={[styles.img, {borderLeftWidth: 0}]}/>
-							<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
+						<TouchableOpacity onPress={() => {this._changeImage('right')}}>
+							<Image source={cropAfter} style={[styles2.img, {borderLeftWidth: 0}]}/>
+							<Text style={[styles2.imglabel, styles2.lblRight]}>After</Text>
 						</TouchableOpacity>
 					</View>
 					<View style={[styles.bgView,{marginTop: 15}]}>
@@ -271,16 +260,19 @@ const styles = StyleSheet.create({
 		height: width + 40,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
+		backgroundColor: 'rgba(0,0,0,0.5)'
 	},
 	img: {
 		width: width < 800 ? width  : 800,
 		height: width < 800 ? width : 800,
 	},
 	oimg: {
-		position: 'absolute',
-		backgroundColor: 'rgba(255,255,255,0.05)',
 		width: width < 800 ? width /2  : 400,
 		height: width < 800 ? width : 800,
+	},
+	oimg2: {
+		position: 'absolute',
+		backgroundColor: 'rgba(255,255,255,0.05)',
 	},
 	leftImg: {
 		left:0
@@ -363,6 +355,89 @@ const styles = StyleSheet.create({
 	lblRight: {
 		color: '#3A8ECF',
 		left: width < 800 ? width / 2 : 400,
+	},
+	tagContainer: {
+		height: 30
+	},
+	tagTextStyle :{
+		fontSize: 16
+	},
+	tagInputContainerStyle: {
+		flexWrap: 'wrap',
+		alignItems: 'flex-start',
+		flexDirection:'row',
+	}
+});
+
+const styles2 = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	imgView: {
+		flex: 1,
+		flexDirection: 'row',
+		width: width ,
+		height: width + 30,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	img: {
+		width: width < 800 ? width / 2 : 400,
+		height: width < 800 ? width : 800,
+	},
+	imglabel: {
+		width: width < 800 ? width / 2 : 400,
+		height: 44,
+		marginTop: 4,
+		fontSize: 20,
+		fontWeight: 'bold',
+		textAlign: 'center',
+		color: 'white',
+	},
+	lblLeft: {
+		color: '#E3302D',
+	},
+	lblRight: {
+		color: '#3A8ECF',
+	},
+	formWrapper: {
+		flex: 1,
+		margin: 10,
+		borderRadius:5,
+		backgroundColor: commonStyle.backgroundColor
+	},
+	bgView: {
+		backgroundColor: 'white',
+		marginLeft: 20,
+		marginRight: 20,
+		marginTop: 3,
+		marginBottom: 2,
+	},
+	labeledtextbox: {
+		height: 42,
+
+		margin: 0,
+		marginLeft: 10,
+		marginRight: 10,
+
+		fontSize: 16,
+		color: '#000',
+		textAlign: 'left'
+	},
+	textbox: {
+		height: 58,
+		marginLeft: 10,
+		marginRight: 10,
+		fontSize: 14,
+		color: '#000',
+		marginBottom: 10,
+	},
+	textboxag: {
+		height: 36,
+		marginLeft: 20,
+		marginRight: 20,
+		fontSize: 16,
+		color: '#000',
 	},
 	tagContainer: {
 		height: 30

@@ -1,6 +1,8 @@
 /**
  * Created by 나상권 on 2017-05-25.
  */
+'use strict';
+
 let gvar = {};
 export function setVar(key, tvar) {
 	gvar[key] = tvar;

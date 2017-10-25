@@ -1,6 +1,9 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 import {connect} from 'react-redux';
+import * as appActions from "../reducer/app/actions";
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
@@ -81,11 +84,11 @@ class SubscribeScreen extends Component {
 				this.setState({uriLeft: {uri: result.path}, srcLeft: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropleft.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email + '_cropleft.scalb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_left.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email + '_left.scalb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 			}).catch(e => {
 				console.log(e);
@@ -95,11 +98,11 @@ class SubscribeScreen extends Component {
 				this.setState({uriRight: {uri: result.path }, srcRight: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropright.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email + '_cropright.scalb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email+ '_right.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email+ '_right.scalb'
 				).then(() => {}).catch((e) => {console.error('error right', e)});
 			}).catch(e => {
 				console.log(e);
@@ -107,13 +110,13 @@ class SubscribeScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.state.email, () => {});
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.props.user.email, () => {});
 	}
 	_insertDB() {
-		this.props.dbsvc.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
+		this.props.dbsvc.insertPhoto(this.state.photohash, this.state.regdate, this.state.title, this.state.recipe, this.state.comment, this.props.user.signhash)
 	}
 	_insertTag() {
-		this.props.dbsvc.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
+		this.props.dbsvc.insertTag(this.state.tags, this.state.photohash, this.props.user.signhash)
 	}
 	_formCheck() {
 		if (this.state.srcLeft.uri === '') {
@@ -145,7 +148,7 @@ class SubscribeScreen extends Component {
 						this._mergeImage();
 						this._insertDB();
 						this._insertTag();
-						this.props.global.getVar('parent')._getPhoto();
+						this.props.dispatch(appActions.changing());
 						this.props.navigator.pop();
 					}
 				},

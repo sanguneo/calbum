@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
@@ -34,8 +36,12 @@ class InTagScreen extends Component {
 		this.state = {
 			rows: []
 		};
-        this.props.global.setVar('parent', this);
-		this._getPhoto(this.props.user);
+		this.watch = setInterval(() => {
+			if (this.props.app.changing) {
+				this.props.dispatch(appActions.changed());
+				this._getPhoto();
+			}
+		},20);
 	}
 
 	onNavigatorEvent(event) {
@@ -55,18 +61,22 @@ class InTagScreen extends Component {
 		});
 	}
 	_getPhoto() {
+		this.props.dispatch(appActions.loading());
 		this.props.dbsvc.getPhotoByTag((rows) => {
 			if(rows.length > 0)
-				this.setState({ rows });
+				this.setState({ rows }, () => {
+					this.props.dispatch(appActions.loaded());
+				});
+			else
+				this.props.dispatch(appActions.loaded());
 		}, this.props.user.signhash, this.props.tagname);
 	}
 
 	componentWillMount() {
-		this.props.dispatch(appActions.loading());
 		this._getPhoto();
 	}
-	componentDidMount() {
-		this.props.dispatch(appActions.loaded());
+	componentWillUnmount() {
+		clearInterval(this.watch);
 	}
 	render() {
 		if (this.state.rows.length >0) {
@@ -77,7 +87,7 @@ class InTagScreen extends Component {
 					style={styles.thumbnail}
 					title={i.title}
 					regdate={i.reg_date}
-					uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.calb?key=' + key}
+					uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.scalb?key=' + key}
 					onPress={() => {
 						this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');
 					}}

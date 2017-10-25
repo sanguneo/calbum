@@ -98,7 +98,7 @@ class Image2mergeModule extends ReactContextBaseJavaModule {
                 directory.mkdir();
             }
             OutputStream fOutputStream = null;
-            file = new File(directory, name + ".calb");
+            file = new File(directory, name + ".scalb");
             fOutputStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOutputStream);
             fOutputStream.flush();

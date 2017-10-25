@@ -1,6 +1,7 @@
 /**
  * Created by 나상권 on 2017-05-19.
  */
+'use strict';
 
 export default class crypt {
     passphase = 'TheLORDismyshepherdIshallnotbeinwant';

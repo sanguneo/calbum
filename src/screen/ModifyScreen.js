@@ -1,5 +1,8 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import {connect} from 'react-redux';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
@@ -8,6 +11,8 @@ import TagInput from '../component/TagInput';
 import LabeledInput from '../component/LabeledInput';
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge'
+
+import Util from '../service/util_svc';
 
 const RNFS = require('react-native-fs');
 
@@ -24,7 +29,7 @@ const commonStyle = {
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 };
-export default class ModifyScreen extends Component {
+class ModifyScreen extends Component {
 
 	static navigatorButtons = {
 		leftButtons: [],
@@ -44,8 +49,8 @@ export default class ModifyScreen extends Component {
 			success: 'no',
 			email: props.user.email,
 			signhash: props.user.signhash,
-			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.calb', '_cropleft.calb')},
-			uriRight: {uri: this.props.targetProps.merged.uri.replace('.calb', '_cropright.calb')},
+			uriLeft: {uri: this.props.targetProps.merged.uri.replace('.scalb', '_cropleft.scalb')},
+			uriRight: {uri: this.props.targetProps.merged.uri.replace('.scalb', '_cropright.scalb')},
 			srcLeft: '',
 			srcRight: '',
 			title: this.props.targetProps.title,
@@ -73,11 +78,11 @@ export default class ModifyScreen extends Component {
 				this.setState({uriLeft: {uri: result.path}, srcLeft: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropleft.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email + '_cropleft.scalb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_left.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email + '_left.scalb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 			}).catch(e => {
 				console.log(e);
@@ -87,11 +92,11 @@ export default class ModifyScreen extends Component {
 				this.setState({uriRight: {uri: result.path }, srcRight: result.src});
 				RNFS.copyFile(
 					result.path.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email + '_cropright.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email + '_cropright.scalb'
 				).then(() => {}).catch((e) => {console.error('error left', e)});
 				RNFS.copyFile(
 					result.src.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.state.email+ '_right.calb'
+					RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash+'_' + this.props.user.email+ '_right.scalb'
 				).then(() => {}).catch((e) => {console.error('error right', e)});
 			}).catch(e => {
 				console.log(e);
@@ -99,13 +104,13 @@ export default class ModifyScreen extends Component {
 		}
 	}
 	_mergeImage() {
-		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.state.email, () => {});
+		Image2merge.image2merge([this.state.uriLeft.uri, this.state.uriRight.uri], this.state.photohash, this.props.user.email, () => {});
 	}
 	_insertDB() {
-		this.db.updatePhoto(this.state.photohash, this.state.title, this.state.recipe, this.state.comment, this.state.signhash)
+		this.db.updatePhoto(this.state.photohash, this.state.title, this.state.recipe, this.state.comment, this.props.user.signhash)
 	}
 	_insertTag() {
-		this.db.insertTag(this.state.tags, this.state.photohash, this.state.signhash)
+		this.db.insertTag(this.state.tags, this.state.photohash, this.props.user.signhash)
 	}
 	_formCheck() {
 		if (this.state.uriLeft.uri === '') {
@@ -140,12 +145,10 @@ export default class ModifyScreen extends Component {
 		);
 	}
 
-	componentDidMount() {
-		// let int,tf=!1;
-		// int = setInterval(() =>{
-		// 	tf&&this.refs.tag.props.value.length+1<=this.refs.tag.state.lines?clearInterval(int):(this.refs.tag.calculateWidth(),tf=!0)
-		// },100);
+	componentWillMount() {
+		this.props.navigator.setTitle({ title: this.props.targetProps.title ? this.props.targetProps.title : Util.dateFormatter(this.props.targetProps.regdate)});
 	}
+
 	render() {
 		return (
 			<ScrollView style={styles.container}>
@@ -251,8 +254,6 @@ const styles = StyleSheet.create({
 		height: width + 30,
 		justifyContent: 'center',
 		alignItems: 'center',
-		// borderColor: 'lightgray',
-		// borderBottomWidth: 1
 	},
 	img: {
 		width: width < 800 ? width / 2 : 400,
@@ -324,3 +325,12 @@ const styles = StyleSheet.create({
 		flexDirection:'row',
 	}
 });
+
+function mapStateToProps(state) {
+	return {
+		app: state.app,
+		user: state.user
+	};
+}
+
+export default connect(mapStateToProps)(ModifyScreen);

@@ -1,6 +1,8 @@
 /**
  * Created by 나상권 on 2017-05-19.
  */
+'use strict';
+
 const uuidv4 = require('uuid/v4');
 const uuidv5 = require('uuid/v5');
 export default {

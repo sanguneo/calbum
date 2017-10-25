@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
@@ -108,9 +110,7 @@ class SideMenu extends Component {
 	componentWillMount() {
 		this._validateUserData();
 	}
-	componentWillUnmount() {
-		this.props.dbsvc.closeDB();
-	}
+
     render() {
 		let profile = this.props.user.profile;
 		if(profile.uri){

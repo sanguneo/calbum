@@ -35,7 +35,12 @@ class TotalScreen extends Component {
 		this.state = {
 			rows: []
 		};
-		this.props.global.setVar('parent', this);
+		this.watch = setInterval(() => {
+			if (this.props.app.changing) {
+				this.props.dispatch(appActions.changed());
+				this._getPhoto();
+			}
+		},20);
 	}
 	onNavigatorEvent(event) {
 	}
@@ -44,8 +49,7 @@ class TotalScreen extends Component {
 	_goPhoto(title, photohash) {
 		this.props.navigator.push({
 			screen: "calbum.ViewScreen",
-			title: title,
-			passProps: {title, photohash, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, user: this.state.user},
+			passProps: {title, photohash, dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global, updateList: ()=>this._getPhoto()},
 			navigatorStyle: {},
 			navigatorButtons: {},
 			animated: true,
@@ -54,19 +58,24 @@ class TotalScreen extends Component {
 		});
 	}
 	_getPhoto() {
+		this.props.dispatch(appActions.loading());
 		this.props.dbsvc.getPhoto((rows) => {
 			if(rows.length > 0)
-				this.setState({ rows });
+				this.setState({ rows }, ()=>{
+					this.props.dispatch(appActions.loaded());
+				});
+			else
+				this.props.dispatch(appActions.loaded());
 		}, this.props.user.signhash);
 	}
 
 	componentWillMount() {
-		this.props.dispatch(appActions.loading());
 		this._getPhoto();
 	}
-	componentDidMount() {
-		this.props.dispatch(appActions.loaded());
+	componentWillUnmount() {
+		clearInterval(this.watch);
 	}
+
 	render() {
 		if (this.state.rows.length >0) {
 			let key = Math.random()*10000;
@@ -76,7 +85,7 @@ class TotalScreen extends Component {
 					style={styles.thumbnail}
 					title={i.title}
 					regdate={i.reg_date}
-					uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.calb?key=' + key}
+					uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.scalb?key=' + key}
 					onPress={()=> {this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');}}
 				/>
 			);

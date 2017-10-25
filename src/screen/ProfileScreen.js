@@ -1,8 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+'use strict';
 
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
@@ -67,7 +63,7 @@ export default class ProfileScreen extends Component {
 	}
 	_saveProfileImage() {
 		let key = Math.random()*10000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.signhash + '.calb';
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.signhash + '.scalb';
 		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
 			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
 		}).catch((e) => {console.error('error', e)});

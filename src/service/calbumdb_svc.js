@@ -1,6 +1,7 @@
 /**
  * Created by 나상권 on 2017-05-19.
  */
+'use strict';
 
 const SQLite = require('react-native-sqlite-storage');
 
@@ -28,7 +29,7 @@ export default class dbSVC {
 	insertPhoto(photohash, regdate, title, recipe, comment, signhash) {
 		let query = "INSERT INTO `ca_photo`(`photohash`,`reg_date`,`title`,`recipe`,`comment`,`signhash`) " +
 			"VALUES ('" + photohash + "','" + regdate + "','" + title + "','" + recipe.replace('\n', '\\n') + "','" + comment.replace('\n', '\\n') + "','" + signhash + "');";
-		this.executeQuery(query,console.log);
+		this.executeQuery(query);
 	}
 	insertTag(i_tags, photohash, signhash) {
 		let tagquery = "DELETE FROM `ca_tag` WHERE `photohash`='"+photohash+"' AND `signhash`='"+signhash+"';";

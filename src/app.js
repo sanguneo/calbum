@@ -40,7 +40,6 @@ export default class App {
 		}).catch((err) => {
 			console.error(err.message, err.code);
 		});
-
 		store.subscribe(this.onStoreUpdate.bind(this));
 
 		AsyncStorage.getItem('token').then((token) => {
@@ -50,7 +49,7 @@ export default class App {
 				AsyncStorage.multiGet(['token', '_id', 'name', 'email', 'signhash'], (err, stores) => {
 					let obj = {};
 					stores.forEach((store) => { obj[store[0]] = store[1]; });
-					let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.calb';
+					let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.scalb';
 					let key = Math.random() * 10000;
 					obj.profile = {uri: 'file://' + pPath + '?key=' + key};
 					store.dispatch(userActions.setUser(obj));

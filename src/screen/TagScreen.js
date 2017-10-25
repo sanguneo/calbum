@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
@@ -28,7 +30,7 @@ export default class TagScreen extends Component {
 		};
 		if (tagname === '선택안함') {
 			aobj.title = '태그 선택안됨';
-		}else {
+		} else {
 			aobj.passProps.tagname = tagname;
 		}
 
@@ -48,15 +50,13 @@ export default class TagScreen extends Component {
 
 
 	render() {
-		let taglist = this.state.rows.map((item, idx) => {
-			return (
+		let taglist = this.state.rows.map((item, idx) => (
 				<View  style={styles.row} key={idx}>
 					<TouchableOpacity key={idx} onPress={()=>{this._goTag(item);}} >
 						<Text style={styles.rowContent}>{'#' + item}</Text>
 					</TouchableOpacity>
 				</View>
-			);
-		});
+			));
 		return (
 			<ScrollView>
 				<View style={styles.container}>

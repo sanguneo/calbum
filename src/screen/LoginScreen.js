@@ -1,8 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+'use strict';
 
 import React, {Component} from 'react';
 import {Alert, AsyncStorage, Dimensions, Image, ScrollView, StyleSheet, TextInput, View} from 'react-native';
@@ -95,7 +91,7 @@ class LoginScreen extends Component {
 				AsyncStorage.setItem('email', userinfo.email);
 				AsyncStorage.setItem('signhash', userinfo.signhash);
 				AsyncStorage.setItem('name', userinfo.name);
-				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + userinfo.signhash + '.calb';
+				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + userinfo.signhash + '.scalb';
 				RNFS.downloadFile({fromUrl:'http://calbum.sanguneo.com/upload/profiles/' + userinfo.signhash, toFile: pPath}).promise.then((res) => {
 					userinfo.profile = {uri: 'file://' + pPath + '?key=' + key};
 					this.props.dispatch(userActions.setUser(userinfo));
