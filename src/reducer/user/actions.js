@@ -1,3 +1,5 @@
+'use strict';
+
 import * as types from './actionTypes';
 
 export function setUser(user) {

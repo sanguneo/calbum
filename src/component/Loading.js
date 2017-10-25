@@ -1,12 +1,13 @@
 /**
  * Created by 나상권 on 2017-05-18.
  */
+'use strict';
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Animated, Dimensions, Easing, StyleSheet} from 'react-native';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 export default class Loading extends Component {
 	static propTypes = {
@@ -14,7 +15,7 @@ export default class Loading extends Component {
 		show: PropTypes.bool
 	};
 	state = {
-		spinValue:  new Animated.Value(0),
+		spinValue: new Animated.Value(0)
 	};
 	_circleAnimation() {
 		Animated.loop(
@@ -29,36 +30,44 @@ export default class Loading extends Component {
 	componentWillMount() {
 		this._circleAnimation();
 	}
-    render() {
+	render() {
 		let spin = this.state.spinValue.interpolate({
 			inputRange: [0, 1],
 			outputRange: ['0deg', '360deg']
 		});
-		const bgColor = this.props.bgColor? this.props.bgColor : 'rgba(255,255,255,0.95)';
-        return (
-        	this.props.show ?
-				(<Animated.View style={[styles.container, {backgroundColor:bgColor}, this.props.style]}>
-					<Animated.Image source={require('../../img/eclipse.png')} style={[styles.loading, {transform: [{rotate: spin}]}]} />
-            	</Animated.View>) : null
-        );
-    }
+		const bgColor = this.props.bgColor
+			? this.props.bgColor
+			: 'rgba(255,255,255,0.95)';
+		return this.props.show ? (
+			<Animated.View
+				style={[
+					styles.container,
+					{backgroundColor: bgColor},
+					this.props.style
+				]}>
+				<Animated.Image
+					source={require('../../img/eclipse.png')}
+					style={[styles.loading, {transform: [{rotate: spin}]}]}
+				/>
+			</Animated.View>
+		) : null;
+	}
 }
 
-
 const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
+	container: {
+		position: 'absolute',
 		width: width,
 		top: 0,
 		bottom: 80,
 		alignItems: 'center',
 		alignContent: 'center',
-		justifyContent: 'center',
-    },
+		justifyContent: 'center'
+	},
 	loading: {
 		position: 'relative',
-    	width: 200,
+		width: 200,
 		height: 200,
-		marginBottom: 40,
+		marginBottom: 40
 	}
 });

@@ -1,10 +1,12 @@
+'use strict';
+
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
 
 import Hr from './Hr';
 
-export default class Titler extends Component{
+export default class Titler extends Component {
 	static propTypes = {
 		onPress: PropTypes.func.isRequired,
 		children: PropTypes.node.isRequired
@@ -15,16 +17,26 @@ export default class Titler extends Component{
 	}
 	render() {
 		return (
-			<TouchableOpacity style={styles.container} onPress={()=>{this.props.onPress();}}>
-				<Hr lineColor={'#000'} lineWidth={2} text={this.props.children} textStyle={{fontSize: 17}} containerHeight={23}/>
+			<TouchableOpacity
+				style={styles.container}
+				onPress={() => {
+					this.props.onPress();
+				}}>
+				<Hr
+					lineColor={'#000'}
+					lineWidth={2}
+					text={this.props.children}
+					textStyle={{fontSize: 17}}
+					containerHeight={23}
+				/>
 			</TouchableOpacity>
 		);
 	}
-};
+}
 
 const styles = StyleSheet.create({
 	container: {
 		width: Dimensions.get('window').width,
 		marginVertical: 10
-	},
+	}
 });

@@ -5,5 +5,5 @@
 'use strict';
 
 export default {
-	bottomBanner : 'ca-app-pub-4210320191405594/9907619462',
-}
+	bottomBanner: 'ca-app-pub-4210320191405594/9907619462'
+};

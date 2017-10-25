@@ -12,17 +12,16 @@ export function getVar(key) {
 }
 export function getUntil(key, callback, checker) {
 	let check = checker ? checker : () => true;
-	if(gvar.hasOwnProperty(key)){
-		if (check(gvar[key])){
+	if (gvar.hasOwnProperty(key)) {
+		if (check(gvar[key])) {
 			callback(gvar[key]);
-		}else {
-			setTimeout(()=>{
+		} else {
+			setTimeout(() => {
 				getUntil(key, callback, check);
 			}, 10);
 		}
-	}
-	else {
-		setTimeout(()=>{
+	} else {
+		setTimeout(() => {
 			getUntil(key, callback, check);
 		}, 10);
 	}

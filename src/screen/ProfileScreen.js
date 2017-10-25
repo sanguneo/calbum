@@ -24,7 +24,6 @@ const commonStyle = {
 	backgroundColor: '#f5f5f5'
 };
 export default class ProfileScreen extends Component {
-
 	constructor(props) {
 		super(props);
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -38,7 +37,7 @@ export default class ProfileScreen extends Component {
 			pass: '',
 			passchk: '',
 			signhash: props.user.signhash
-		}
+		};
 	}
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {
@@ -55,19 +54,29 @@ export default class ProfileScreen extends Component {
 		}
 	}
 
-
 	_changeImage() {
-		ImagePicker.openPicker(imgOpt).then(profile => {
-			this.setState({profile: {uri: profile.path}});
-		}).catch((e)=>{console.log(e)});
+		ImagePicker.openPicker(imgOpt)
+			.then(profile => {
+				this.setState({profile: {uri: profile.path}});
+			})
+			.catch(e => {
+				console.log(e);
+			});
 	}
 	_saveProfileImage() {
-		let key = Math.random()*10000;
-		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.signhash + '.scalb';
-		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath).then(() => {
-			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch((e) => {console.error('error_del', e)});
-		}).catch((e) => {console.error('error', e)});
-		this.global.getVar('side').setState({profile: {uri: 'file://'+pPath + '?key=' + key}});
+		let key = Math.random() * 10000;
+		let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + this.state.signhash +'.scalb';
+		RNFS.copyFile(this.state.profile.uri.replace('file://', ''), pPath
+		).then(() => {
+			RNFS.unlink(this.state.profile.uri.replace('file://', '')).catch(e => {
+				console.error('error_del', e);
+			});
+		}).catch(e => {
+			console.error('error', e);
+		});
+		this.global
+			.getVar('side')
+			.setState({profile: {uri: 'file://' + pPath + '?key=' + key}});
 	}
 	_formCheck() {
 		if (!this.state.profile.uri) {
@@ -81,7 +90,11 @@ export default class ProfileScreen extends Component {
 			Alert.alert('확인', '이메일을 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
-		} else if (!(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/.test(this.state.email))) {
+		} else if (
+			!/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/.test(
+				this.state.email
+			)
+		) {
 			Alert.alert('확인', '이메일을 형식에 맞게 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
@@ -99,86 +112,91 @@ export default class ProfileScreen extends Component {
 	_submit() {
 		if (!this._formCheck()) return;
 		Alert.alert(
-			'작성완료', '작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
+			'작성완료',
+			'작성한 내용을 확인하셨나요?\n확인을 누르시면 저장됩니다.',
 			[
-				{text: '확인', onPress: () => {
-					this._saveProfileImage();
-					this.global.getVar('side').setState({
-						name: this.state.name,
-						signhash: this.state.signhash,
-						email: this.state.email
-					});
-					this.props.navigator.pop();
-				}},
-				{text: '취소'},
+				{
+					text: '확인',
+					onPress: () => {
+						this._saveProfileImage();
+						this.global.getVar('side').setState({
+							name: this.state.name,
+							signhash: this.state.signhash,
+							email: this.state.email
+						});
+						this.props.navigator.pop();
+					}
+				},
+				{text: '취소'}
 			],
-			{ cancelable: true }
+			{cancelable: true}
 		);
 	}
-
 
 	render() {
 		return (
 			<ScrollView style={styles.container}>
 				<View style={styles.imgView}>
-					<TouchableOpacity onPress={() => {this._changeImage()}}>
+					<TouchableOpacity
+						onPress={() => {
+							this._changeImage();
+						}}>
 						<Image source={this.state.profile} style={styles.img} />
 					</TouchableOpacity>
 				</View>
 				<View style={styles.formWrapper}>
-
-					<LabeledInput label={"이름"} labelStyle={styles.labelStyle}>
+					<LabeledInput label={'이름'} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
 							ref={'r_name'}
-							onChangeText={(name) => this.setState({name})}
+							onChangeText={name => this.setState({name})}
 							value={this.state.name}
 							placeholder={'이름을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 						/>
 					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"이메일"} labelStyle={styles.labelStyle}>
+					<Hr lineColor={commonStyle.hrColor} />
+					<LabeledInput label={'이메일'} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
 							ref={'r_eml'}
-							onChangeText={(email) => this.setState({email})}
+							onChangeText={email => this.setState({email})}
 							value={this.state.email}
 							placeholder={'이메일을 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							keyboardType={'email-address'}
 						/>
 					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"비밀번호"} labelStyle={styles.labelStyle}>
+					<Hr lineColor={commonStyle.hrColor} />
+					<LabeledInput label={'비밀번호'} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
 							ref={'r_pass'}
-							onChangeText={(pass) => this.setState({pass})}
+							onChangeText={pass => this.setState({pass})}
 							value={this.state.pass}
 							placeholder={'비밀번호를 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
 							secureTextEntry={true}
 						/>
 					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor}/>
-					<LabeledInput label={"확인"} labelStyle={styles.labelStyle}>
+					<Hr lineColor={commonStyle.hrColor} />
+					<LabeledInput label={'확인'} labelStyle={styles.labelStyle}>
 						<TextInput
 							style={styles.labeledtextbox}
 							editable={true}
 							autoCorrect={false}
 							underlineColorAndroid={'transparent'}
 							ref={'r_chk'}
-							onChangeText={(passchk) => this.setState({passchk})}
+							onChangeText={passchk => this.setState({passchk})}
 							value={this.state.passchk}
 							placeholder={'비밀번호를 다시 입력해주세요'}
 							placeholderTextColor={commonStyle.placeholderTextColor}
@@ -187,7 +205,14 @@ export default class ProfileScreen extends Component {
 					</LabeledInput>
 				</View>
 				<View style={[styles.formWrapper]}>
-					<Button imgsource={require('../../img/save.png')} style={{backgroundColor: '#3692d9'}} onPress={()=>{this._submit();}} btnname={'저장'}/>
+					<Button
+						imgsource={require('../../img/save.png')}
+						style={{backgroundColor: '#3692d9'}}
+						onPress={() => {
+							this._submit();
+						}}
+						btnname={'저장'}
+					/>
 				</View>
 			</ScrollView>
 		);
@@ -196,9 +221,9 @@ export default class ProfileScreen extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		flex: 1
 	},
-	imgView : {
+	imgView: {
 		flex: 1,
 		flexDirection: 'row',
 		height: 202,
@@ -208,17 +233,17 @@ const styles = StyleSheet.create({
 		borderColor: '#eee',
 		borderWidth: 1
 	},
-	img :{
+	img: {
 		width: 200,
-		height: 200,
+		height: 200
 	},
 	formWrapper: {
 		flex: 1,
 		marginTop: 10,
 		marginHorizontal: 45,
 		marginBottom: 30,
-		borderRadius:5,
-		backgroundColor: '#f5f5f5',
+		borderRadius: 5,
+		backgroundColor: '#f5f5f5'
 	},
 	labeledtextbox: {
 		height: 42,
@@ -226,17 +251,16 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		color: '#000',
 		textAlign: 'left',
-		textAlignVertical: 'center',
+		textAlignVertical: 'center'
 	},
 	textbox: {
 		height: 58,
 		marginHorizontal: 10,
 		marginBottom: 10,
 		fontSize: 15,
-		color: '#000',
-
+		color: '#000'
 	},
 	labelStyle: {
-		fontSize:15,
+		fontSize: 15
 	}
 });
