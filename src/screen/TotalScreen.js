@@ -63,7 +63,6 @@ class TotalScreen extends Component {
 				photohash,
 				dbsvc: this.props.dbsvc,
 				crypt: this.props.crypt,
-				global: this.props.global,
 				updateList: () => this._getPhoto()
 			},
 			navigatorStyle: {},

@@ -12,7 +12,6 @@ import {AsyncStorage} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screen';
 
-import * as global from './service/global';
 import dbSVC from './service/calbumdb_svc';
 import cryptSVC from './service/crypt_svc';
 
@@ -45,28 +44,22 @@ export default class App {
 			});
 		store.subscribe(this.onStoreUpdate.bind(this));
 
-		AsyncStorage.getItem('token')
-			.then(token => {
-				if (typeof token === 'undefined' || token === null) {
-					store.dispatch(appActions.logout());
-				} else {
-					AsyncStorage.multiGet(
-						['token', '_id', 'name', 'email', 'signhash'],
-						(err, stores) => {
-							let obj = {};
-							stores.forEach(store => {
-								obj[store[0]] = store[1];
-							});
-							let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.scalb';
-							let key = Math.random() * 10000;
-							obj.profile = {uri: 'file://' + pPath + '?key=' + key};
-							store.dispatch(userActions.setUser(obj));
-							store.dispatch(appActions.login());
-						}
-					);
-				}
-			})
-			.done();
+		AsyncStorage.getItem('token').then(token => {
+			if (typeof token === 'undefined' || token === null) {
+				store.dispatch(appActions.logout());
+			} else {
+				AsyncStorage.multiGet(
+					['token', '_id', 'name', 'email', 'signhash'],
+					(err, stores) => {
+						let obj = {};
+						stores.forEach(store => { obj[store[0]] = store[1];});
+						obj.profile = {uri: 'file://' + RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.scalb' + '?key=' + Math.random() * 10000};
+						store.dispatch(userActions.setUser(obj));
+						store.dispatch(appActions.login());
+					}
+				);
+			}
+		}).done();
 	}
 	onStoreUpdate() {
 		const {root} = store.getState().app;
@@ -76,7 +69,7 @@ export default class App {
 		}
 	}
 	startApp(root) {
-		let passProps = {dbsvc, crypt, global};
+		let passProps = {dbsvc, crypt};
 		let appStyle = {
 			screenBackgroundColor: 'white',
 			navBarTransparent: false,

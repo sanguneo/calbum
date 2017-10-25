@@ -92,23 +92,22 @@ class LoginScreen extends Component {
 					profile: {uri: 'file://' + pPath + '?key=' + key}
 				};
 				AsyncStorage.multiSet(Object.entries(userinfo).filter((e) => e[0] !== 'profile'));
+				let loginOK = () => {
+					this.setState(userinfo);
+					this.props.dispatch(userActions.setUser(userinfo));
+					this.props.dispatch(appActions.loaded());
+					this.props.dispatch(appActions.login());
+					this.props.navigator.pop();
+				};
 				RNFS.exists(pPath).then((res) => {
 					if (res) {
-						this.setState(userinfo);
-						this.props.dispatch(userActions.setUser(userinfo));
-						this.props.dispatch(appActions.login());
-						this.props.dispatch(appActions.loaded());
-						this.props.navigator.pop();
+						loginOK();
 					} else {
 						RNFS.downloadFile({
 							fromUrl: 'http://calbum.sanguneo.com/upload/profiles/' + userinfo.signhash,
 							toFile: pPath
 						}).promise.then((res) => {
-							this.setState(userinfo);
-							this.props.dispatch(userActions.setUser(userinfo));
-							this.props.dispatch(appActions.loaded());
-							this.props.dispatch(appActions.login());
-							this.props.navigator.pop();
+							loginOK();
 						}).catch(e => {
 							console.error('error', e);
 						});
@@ -158,7 +157,6 @@ class LoginScreen extends Component {
 			passProps: {
 				dbsvc: this.props.dbsvc,
 				crypt: this.props.crypt,
-				global: this.props.global,
 				profileCreate: true,
 				user
 			},

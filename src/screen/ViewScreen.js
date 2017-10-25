@@ -64,7 +64,6 @@ class ViewScreen extends Component {
 				passProps: {
 					dbsvc: this.props.dbsvc,
 					crypt: this.props.crypt,
-					global: this.props.global,
 					parentUpdate: title => {
 						this._getPhotoInformation();
 						title ? this.props.navigator.setTitle({title}) : null;
@@ -103,8 +102,7 @@ class ViewScreen extends Component {
 			title: '#' + tagname,
 			passProps: {
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt,
-				global: this.props.global
+				crypt: this.props.crypt
 			},
 			navigatorStyle: {},
 			navigatorButtons: {

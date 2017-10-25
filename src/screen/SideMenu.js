@@ -29,7 +29,6 @@ class SideMenu extends Component {
 						passProps: {
 							dbsvc: this.props.dbsvc,
 							crypt: this.props.crypt,
-							global: this.props.global,
 							profileCreate: true,
 							user: {
 								signhash: '',
@@ -67,8 +66,7 @@ class SideMenu extends Component {
 				title: '디자인 작성하기',
 				passProps: {
 					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt,
-					global: this.props.global
+					crypt: this.props.crypt
 				},
 				navigatorStyle: {},
 				navigatorButtons: {},
@@ -83,7 +81,6 @@ class SideMenu extends Component {
 				passProps: {
 					dbsvc: this.props.dbsvc,
 					crypt: this.props.crypt,
-					global: this.props.global,
 					profileCreate: false
 				},
 				navigatorStyle: {},
@@ -96,7 +93,7 @@ class SideMenu extends Component {
 			/*this.props.navigator.push({
 				screen: "calbum.NoticeScreen",
 				title: "공지사항",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt, global: this.props.global},
+				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -109,8 +106,7 @@ class SideMenu extends Component {
 				title: '태그목록',
 				passProps: {
 					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt,
-					global: this.props.global
+					crypt: this.props.crypt
 				},
 				navigatorStyle: {},
 				navigatorButtons: {},
@@ -124,8 +120,7 @@ class SideMenu extends Component {
 				title: '전체보기',
 				passProps: {
 					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt,
-					global: this.props.global
+					crypt: this.props.crypt
 				},
 				navigatorStyle: {},
 				navigatorButtons: {

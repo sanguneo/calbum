@@ -22,7 +22,6 @@ class TagScreen extends Component {
 			passProps: {
 				dbsvc: this.props.dbsvc,
 				crypt: this.props.crypt,
-				global: this.props.global,
 				user: this.props.user
 			},
 			navigatorStyle: {},
