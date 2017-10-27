@@ -45,15 +45,16 @@ class InTagScreen extends Component {
 		this.state = {
 			rows: []
 		};
-		this.watch = setInterval(() => {
-			if (props.app.changing) {
-				props.dispatch(appActions.changed());
-				this._getPhoto();
-			}
-		}, 20);
 	}
 
-	onNavigatorEvent(event) {}
+	onNavigatorEvent(event) {
+		if(event.id === 'willAppear') {
+			if (this.props.app.changing) {
+				this.props.dispatch(appActions.changed());
+				this._getPhoto();
+			}
+		}
+	}
 
 	_goPhoto(title, photohash) {
 		this.props.navigator.push({
@@ -88,12 +89,6 @@ class InTagScreen extends Component {
 		);
 	}
 
-	componentWillMount() {
-		this._getPhoto();
-	}
-	componentWillUnmount() {
-		clearInterval(this.watch);
-	}
 	render() {
 		if (this.state.rows.length > 0) {
 			let key = Math.random() * 10000;

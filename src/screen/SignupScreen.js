@@ -108,33 +108,31 @@ class SignupScreen extends Component {
 		formdata.append('email', this.state.email);
 		formdata.append('password', this.state.pass);
 		this.props.dispatch(appActions.loading());
-		axios
-			.post('http://calbum.sanguneo.com/user/signup', formdata, {
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'multipart/form-data'
-				}
-			})
-			.then(response => {
-				if (response.data.message == 'success') {
-					RNFS.unlink(
-						this.state.profile.uri.replace('file://', '')
-					).catch(e => {
-						console.error(e);
-					});
-					this.props.dispatch(appActions.loaded());
-					this.props.navigator.pop();
-				} else if (response.data.message == 'emailexist') {
-					this.props.dispatch(appActions.loaded());
-					Alert.alert('사용중인 이메일 입니다.');
-				} else {
-					this.props.dispatch(appActions.loaded());
-					Alert.alert('회원가입에 오류가 발생했습니다.');
-				}
-			})
-			.catch(() => {
+		axios.post('http://calbum.sanguneo.com/user/signup', formdata, {
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'multipart/form-data'
+			}
+		}).then(response => {
+			if (response.data.message == 'success') {
+				RNFS.unlink(
+					this.state.profile.uri.replace('file://', '')
+				).catch(e => {
+					console.error(e);
+				});
+				this.props.dispatch(appActions.loaded());
+				this.props.navigator.pop();
+			} else if (response.data.message == 'emailexist') {
+				this.props.dispatch(appActions.loaded());
+				Alert.alert('사용중인 이메일 입니다.');
+			} else {
+				this.props.dispatch(appActions.loaded());
 				Alert.alert('회원가입에 오류가 발생했습니다.');
-			});
+			}
+		}).catch(e => {
+			Alert.alert('인터넷에 연결되어있지 않습니다.\n확인후 다시 시도해주세요.');
+			console.log('error', e);
+		});
 	}
 
 	render() {

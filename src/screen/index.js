@@ -2,6 +2,7 @@
 
 import {Navigation} from 'react-native-navigation';
 
+import NoticeScreen from './NoticeScreen';
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
 import SubscribeScreen from './SubscribeScreen';
@@ -13,6 +14,7 @@ import ViewScreen from './ViewScreen';
 import SideMenu from './SideMenu';
 
 export function registerScreens(store, provider) {
+	Navigation.registerComponent('calbum.NoticeScreen', () => NoticeScreen, store, provider);
 	Navigation.registerComponent('calbum.LoginScreen', () => LoginScreen, store, provider);
 	Navigation.registerComponent('calbum.SignupScreen', () => SignupScreen, store, provider);
 	Navigation.registerComponent('calbum.SubscribeScreen', () => SubscribeScreen, store, provider);

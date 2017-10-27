@@ -46,14 +46,16 @@ class TotalScreen extends Component {
 		this.state = {
 			rows: []
 		};
-		this.watch = setInterval(() => {
-			if (props.app.changing) {
-				props.dispatch(appActions.changed());
+	}
+
+	onNavigatorEvent(event) {
+		if(event.id === 'willAppear') {
+			if (this.props.app.changing) {
+				this.props.dispatch(appActions.changed());
 				this._getPhoto();
 			}
-		}, 20);
+		}
 	}
-	onNavigatorEvent(event) {}
 
 	_goPhoto(title, photohash) {
 		this.props.navigator.push({
@@ -81,13 +83,6 @@ class TotalScreen extends Component {
 				});
 			else this.props.dispatch(appActions.loaded());
 		}, this.props.user.signhash);
-	}
-
-	componentWillMount() {
-		this._getPhoto();
-	}
-	componentWillUnmount() {
-		clearInterval(this.watch);
 	}
 
 	render() {

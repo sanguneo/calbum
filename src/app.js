@@ -81,7 +81,7 @@ export default class App {
 			navBarBackgroundColor: '#36384C',
 			navBarTextColor: '#fff',
 			navBarButtonColor: '#fff',
-			navBarTitleTextCentered: true,
+			navBarTitleTextCentered: false,
 			topBarElevationShadowEnabled: false,
 			statusBarHidden: true,
 			statusBarTextColorScheme: 'light',
