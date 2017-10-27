@@ -11,11 +11,22 @@ import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
 import Loading from '../component/Loading';
+import AdBar from '../component/AdBar';
 import axios from 'axios';
 
 const RNFS = require('react-native-fs');
 
-const {width, height} = Dimensions.get('window');
+const {width, height, deviceWidth, deviceHeight, scale} = (function() {
+	let i = Dimensions.get('window'),
+		e = i.scale;
+	return {
+		width: i.width,
+		height: i.height,
+		deviceWidth: i.width * e,
+		deviceHeight: i.height * e,
+		scale: e
+	};
+})();
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
@@ -176,101 +187,112 @@ class LoginScreen extends Component {
 	render() {
 		let notloggedin = !this.state.signhash || this.state.signhash === '';
 		return (
-			<ScrollView style={styles.container}>
-				<View style={styles.imgView}>
-					<Image source={this.state.profile} style={styles.img} />
-				</View>
-				<View style={styles.formWrapper}>
-					{!notloggedin ? (
-						<LabeledInput label={'이름'} labelStyle={styles.labelStyle}>
+			<View style={styles.wrapper}>
+				<ScrollView style={styles.container}>
+					<View style={styles.imgView}>
+						<Image source={this.state.profile} style={styles.img} />
+					</View>
+					<View style={styles.formWrapper}>
+						{!notloggedin ? (
+							<LabeledInput label={'이름'} labelStyle={styles.labelStyle}>
+								<TextInput
+									style={styles.labeledtextbox}
+									editable={true}
+									autoCorrect={false}
+									underlineColorAndroid={'transparent'}
+									ref={'r_name'}
+									onChangeText={name => this.setState({name})}
+									value={this.state.name}
+									placeholder={'이름을 입력해주세요'}
+									placeholderTextColor={commonStyle.placeholderTextColor}
+								/>
+							</LabeledInput>
+						) : null}
+						{!notloggedin ? <Hr lineColor={commonStyle.hrColor} /> : null}
+						<LabeledInput label={'이메일'} labelStyle={styles.labelStyle}>
 							<TextInput
 								style={styles.labeledtextbox}
 								editable={true}
 								autoCorrect={false}
 								underlineColorAndroid={'transparent'}
-								ref={'r_name'}
-								onChangeText={name => this.setState({name})}
-								value={this.state.name}
-								placeholder={'이름을 입력해주세요'}
+								ref={'r_eml'}
+								onChangeText={email => this.setState({email})}
+								value={this.state.email}
+								placeholder={'이메일을 입력해주세요'}
 								placeholderTextColor={commonStyle.placeholderTextColor}
+								keyboardType={'email-address'}
 							/>
 						</LabeledInput>
-					) : null}
-					{!notloggedin ? <Hr lineColor={commonStyle.hrColor} /> : null}
-					<LabeledInput label={'이메일'} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_eml'}
-							onChangeText={email => this.setState({email})}
-							value={this.state.email}
-							placeholder={'이메일을 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-							keyboardType={'email-address'}
-						/>
-					</LabeledInput>
-					{notloggedin ? <Hr lineColor={commonStyle.hrColor} /> : null}
+						{notloggedin ? <Hr lineColor={commonStyle.hrColor} /> : null}
+						{notloggedin ? (
+							<LabeledInput label={'비밀번호'} labelStyle={styles.labelStyle}>
+								<TextInput
+									style={styles.labeledtextbox}
+									editable={true}
+									autoCorrect={false}
+									underlineColorAndroid={'transparent'}
+									ref={'r_pass'}
+									onChangeText={pass => this.setState({pass})}
+									value={this.state.pass}
+									placeholder={'비밀번호를 입력해주세요'}
+									placeholderTextColor={commonStyle.placeholderTextColor}
+									secureTextEntry={true}
+								/>
+							</LabeledInput>
+						) : null}
+					</View>
 					{notloggedin ? (
-						<LabeledInput label={'비밀번호'} labelStyle={styles.labelStyle}>
-							<TextInput
-								style={styles.labeledtextbox}
-								editable={true}
-								autoCorrect={false}
-								underlineColorAndroid={'transparent'}
-								ref={'r_pass'}
-								onChangeText={pass => this.setState({pass})}
-								value={this.state.pass}
-								placeholder={'비밀번호를 입력해주세요'}
-								placeholderTextColor={commonStyle.placeholderTextColor}
-								secureTextEntry={true}
+						<View style={[styles.formWrapper, {marginBottom: 0}]}>
+							<Button
+								imgsource={require('../../img/save.png')}
+								style={{backgroundColor: '#3692d9'}}
+								onPress={() => {
+									this._login();
+								}}
+								btnname={'로그인'}
 							/>
-						</LabeledInput>
+						</View>
+					) : (
+						<View style={[styles.formWrapper, {marginBottom: 0}]}>
+							<Button
+								imgsource={require('../../img/save.png')}
+								style={{backgroundColor: '#d9663c'}}
+								onPress={() => {
+									this._logout();
+								}}
+								btnname={'로그아웃'}
+							/>
+						</View>
+					)}
+					{notloggedin ? (
+						<View style={[styles.formWrapper, {marginBottom: 0}]}>
+							<Button
+								imgsource={require('../../img/save.png')}
+								style={{backgroundColor: '#bd6592'}}
+								onPress={() => {
+									this._signup();
+								}}
+								btnname={'회원가입'}
+							/>
+						</View>
 					) : null}
-				</View>
-				{notloggedin ? (
-					<View style={[styles.formWrapper, {marginBottom: 0}]}>
-						<Button
-							imgsource={require('../../img/save.png')}
-							style={{backgroundColor: '#3692d9'}}
-							onPress={() => {
-								this._login();
-							}}
-							btnname={'로그인'}
-						/>
-					</View>
-				) : (
-					<View style={[styles.formWrapper, {marginBottom: 0}]}>
-						<Button
-							imgsource={require('../../img/save.png')}
-							style={{backgroundColor: '#d9663c'}}
-							onPress={() => {
-								this._logout();
-							}}
-							btnname={'로그아웃'}
-						/>
-					</View>
-				)}
-				{notloggedin ? (
-					<View style={[styles.formWrapper, {marginBottom: 0}]}>
-						<Button
-							imgsource={require('../../img/save.png')}
-							style={{backgroundColor: '#bd6592'}}
-							onPress={() => {
-								this._signup();
-							}}
-							btnname={'회원가입'}
-						/>
-					</View>
-				) : null}
-				<Loading show={this.props.app.loading} style={{width, height}} />
-			</ScrollView>
+				</ScrollView>
+				<AdBar/>
+				<Loading show={this.props.app.loading} />
+			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: width,
+		height: height
+	},
+	container: {
+		width: width,
+		height: height - 260
+	},
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',

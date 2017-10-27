@@ -5,8 +5,20 @@ import {Dimensions, ScrollView, StyleSheet, Text} from 'react-native';
 import {connect} from 'react-redux';
 
 import Util from '../service/util_svc';
+import AdBar from '../component/AdBar';
+import Loading from '../component/Loading';
 
-const {width, height} = Dimensions.get('window');
+const {width, height, deviceWidth, deviceHeight, scale} = (function() {
+	let i = Dimensions.get('window'),
+		e = i.scale;
+	return {
+		width: i.width,
+		height: i.height,
+		deviceWidth: i.width * e,
+		deviceHeight: i.height * e,
+		scale: e
+	};
+})();
 
 class NoticeViewScreen extends Component {
 	constructor(props) {
@@ -22,18 +34,28 @@ class NoticeViewScreen extends Component {
 	render() {
 		let {subject} = this.props;
 		return (
-			<ScrollView style={styles.container}>
-				<Text style={styles.title}>{subject.title}</Text>
-				<Text style={styles.regdate}>{Util.isoFormatter(subject.regDate)}</Text>
-				<Text style={styles.content}>{subject.content.replace(/\\n/g, "\n")}</Text>
-			</ScrollView>
+			<View style={styles.wrapper}>
+				<ScrollView style={styles.container}>
+					<Text style={styles.title}>{subject.title}</Text>
+					<Text style={styles.regdate}>{Util.isoFormatter(subject.regDate)}</Text>
+					<Text style={styles.content}>{subject.content.replace(/\\n/g, "\n")}</Text>
+				</ScrollView>
+				<AdBar />
+				<Loading show={this.props.app.loading} />
+			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: width,
+		height: height
+	},
 	container: {
-		margin: 10
+		width: width,
+		height: height - 260,
+		padding: 10
 	},
 	title: {
 		paddingHorizontal: 20,

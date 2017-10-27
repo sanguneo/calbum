@@ -18,7 +18,17 @@ import Util from '../service/util_svc';
 
 const RNFS = require('react-native-fs');
 
-const {width, height} = Dimensions.get('window');
+const {width, height, deviceWidth, deviceHeight, scale} = (function() {
+	let i = Dimensions.get('window'),
+		e = i.scale;
+	return {
+		width: i.width,
+		height: i.height,
+		deviceWidth: i.width * e,
+		deviceHeight: i.height * e,
+		scale: e
+	};
+})();
 
 const commonStyle = {
 	placeholderTextColor: '#bbb',
@@ -207,7 +217,7 @@ class ViewScreen extends Component {
 			? {uri: this.state.merged.uri.replace('.scalb', '_cropright.scalb')}
 			: require('../../img/pickphoto.png');
 		return (
-			<View>
+			<View style={styles.wrapper}>
 				<ScrollView style={styles.container}>
 					{/*<View style={styles.imgView}>*/}
 					{/*<Image source={this.state.merged} style={styles.img}/>*/}
@@ -289,8 +299,9 @@ class ViewScreen extends Component {
 							/>
 						)}
 					</View>
-					<AdBar />
+
 				</ScrollView>
+				<AdBar />
 				<Loading show={this.props.app.loading} style={{bottom: 0}} />
 				<Lightbox
 					ref={'recipe'}
@@ -372,6 +383,14 @@ class ViewScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: width,
+		height: height
+	},
+	container: {
+		width: width,
+		height: height - 260
+	},
 	imgView: {
 		flex: 1,
 		flexDirection: 'row',

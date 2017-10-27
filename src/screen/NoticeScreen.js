@@ -10,9 +10,20 @@ import Util from '../service/util_svc';
 
 import axios from 'axios';
 
+import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
 
-const {width, height} = Dimensions.get('window');
+const {width, height, deviceWidth, deviceHeight, scale} = (function() {
+	let i = Dimensions.get('window'),
+		e = i.scale;
+	return {
+		width: i.width,
+		height: i.height,
+		deviceWidth: i.width * e,
+		deviceHeight: i.height * e,
+		scale: e
+	};
+})();
 
 class NoticeScreen extends Component {
 	static navigatorButtons = {
@@ -136,16 +147,43 @@ class NoticeScreen extends Component {
 					<Text style={styles.rowTitle}>{item.title}</Text>
 				</TouchableOpacity>
 			</View>));
-		return (
-			<ScrollView style={styles.container}>
-				{noticelist}
-				<Loading show={this.props.app.loading} style={{width, height}} />
-			</ScrollView>
-		);
+		if (this.state.rows.length > 0) {
+			return (
+				<View style={styles.wrapper}>
+					<ScrollView style={styles.container}>
+						{noticelist}
+					</ScrollView>
+					<AdBar/>
+					<Loading show={this.props.app.loading} style={{width, height}}/>
+				</View>
+			);
+		} else {
+			return (
+				<View style={[styles.container, styles.nodatastyle]}>
+					<Text style={{fontSize: 20}}>{'공지사항이 없습니다.'}</Text>
+					<AdBar style={{position: 'absolute', width, bottom: 0}} />
+					<Loading show={this.props.app.loading} />
+				</View>
+			);
+		}
 	}
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: width,
+		height: height
+	},
+	container: {
+		width: width,
+		height: height - 260
+	},
+	nodatastyle: {
+		flex: 1,
+		flexWrap: 'nowrap',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
 	row: {
 		flexDirection: 'row',
 		width: Dimensions.get('window').width,

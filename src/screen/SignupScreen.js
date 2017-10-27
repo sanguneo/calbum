@@ -10,12 +10,23 @@ import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
 import Loading from '../component/Loading';
+import AdBar from '../component/AdBar';
 import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 
 const RNFS = require('react-native-fs');
 
-const {width, height} = Dimensions.get('window');
+const {width, height, deviceWidth, deviceHeight, scale} = (function() {
+	let i = Dimensions.get('window'),
+		e = i.scale;
+	return {
+		width: i.width,
+		height: i.height,
+		deviceWidth: i.width * e,
+		deviceHeight: i.height * e,
+		scale: e
+	};
+})();
 
 const imgOpt = {
 	width: 400,
@@ -137,94 +148,102 @@ class SignupScreen extends Component {
 
 	render() {
 		return (
-			<ScrollView style={styles.container}>
-				<View style={styles.imgView}>
-					<TouchableOpacity
-						onPress={() => {
-							this._changeImage();
-						}}>
-						<Image source={this.state.profile} style={styles.img} />
-					</TouchableOpacity>
-				</View>
-				<View style={styles.formWrapper}>
-					<LabeledInput label={'이름'} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_name'}
-							onChangeText={name => this.setState({name})}
-							value={this.state.name}
-							placeholder={'이름을 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
+			<View style={styles.wrapper}>
+				<ScrollView style={styles.container}>
+					<View style={styles.imgView}>
+						<TouchableOpacity
+							onPress={() => {
+								this._changeImage();
+							}}>
+							<Image source={this.state.profile} style={styles.img} />
+						</TouchableOpacity>
+					</View>
+					<View style={styles.formWrapper}>
+						<LabeledInput label={'이름'} labelStyle={styles.labelStyle}>
+							<TextInput
+								style={styles.labeledtextbox}
+								editable={true}
+								autoCorrect={false}
+								underlineColorAndroid={'transparent'}
+								ref={'r_name'}
+								onChangeText={name => this.setState({name})}
+								value={this.state.name}
+								placeholder={'이름을 입력해주세요'}
+								placeholderTextColor={commonStyle.placeholderTextColor}
+							/>
+						</LabeledInput>
+						<Hr lineColor={commonStyle.hrColor} />
+						<LabeledInput label={'이메일'} labelStyle={styles.labelStyle}>
+							<TextInput
+								style={styles.labeledtextbox}
+								editable={true}
+								autoCorrect={false}
+								underlineColorAndroid={'transparent'}
+								ref={'r_eml'}
+								onChangeText={email => this.setState({email})}
+								value={this.state.email}
+								placeholder={'이메일을 입력해주세요'}
+								placeholderTextColor={commonStyle.placeholderTextColor}
+								keyboardType={'email-address'}
+							/>
+						</LabeledInput>
+						<Hr lineColor={commonStyle.hrColor} />
+						<LabeledInput label={'비밀번호'} labelStyle={styles.labelStyle}>
+							<TextInput
+								style={styles.labeledtextbox}
+								editable={true}
+								autoCorrect={false}
+								underlineColorAndroid={'transparent'}
+								ref={'r_pass'}
+								onChangeText={pass => this.setState({pass})}
+								value={this.state.pass}
+								placeholder={'비밀번호를 입력해주세요'}
+								placeholderTextColor={commonStyle.placeholderTextColor}
+								secureTextEntry={true}
+							/>
+						</LabeledInput>
+						<Hr lineColor={commonStyle.hrColor} />
+						<LabeledInput label={'확인'} labelStyle={styles.labelStyle}>
+							<TextInput
+								style={styles.labeledtextbox}
+								editable={true}
+								autoCorrect={false}
+								underlineColorAndroid={'transparent'}
+								ref={'r_chk'}
+								onChangeText={passchk => this.setState({passchk})}
+								value={this.state.passchk}
+								placeholder={'비밀번호를 다시 입력해주세요'}
+								placeholderTextColor={commonStyle.placeholderTextColor}
+								secureTextEntry={true}
+							/>
+						</LabeledInput>
+					</View>
+					<View style={[styles.formWrapper]}>
+						<Button
+							imgsource={require('../../img/save.png')}
+							style={{backgroundColor: '#3692d9'}}
+							onPress={() => {
+								this._submit();
+							}}
+							btnname={'저장'}
 						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor} />
-					<LabeledInput label={'이메일'} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_eml'}
-							onChangeText={email => this.setState({email})}
-							value={this.state.email}
-							placeholder={'이메일을 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-							keyboardType={'email-address'}
-						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor} />
-					<LabeledInput label={'비밀번호'} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_pass'}
-							onChangeText={pass => this.setState({pass})}
-							value={this.state.pass}
-							placeholder={'비밀번호를 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-							secureTextEntry={true}
-						/>
-					</LabeledInput>
-					<Hr lineColor={commonStyle.hrColor} />
-					<LabeledInput label={'확인'} labelStyle={styles.labelStyle}>
-						<TextInput
-							style={styles.labeledtextbox}
-							editable={true}
-							autoCorrect={false}
-							underlineColorAndroid={'transparent'}
-							ref={'r_chk'}
-							onChangeText={passchk => this.setState({passchk})}
-							value={this.state.passchk}
-							placeholder={'비밀번호를 다시 입력해주세요'}
-							placeholderTextColor={commonStyle.placeholderTextColor}
-							secureTextEntry={true}
-						/>
-					</LabeledInput>
-				</View>
-				<View style={[styles.formWrapper]}>
-					<Button
-						imgsource={require('../../img/save.png')}
-						style={{backgroundColor: '#3692d9'}}
-						onPress={() => {
-							this._submit();
-						}}
-						btnname={'저장'}
-					/>
-				</View>
-				<Loading show={this.props.app.loading} style={{width, height}} />
-			</ScrollView>
+					</View>
+				</ScrollView>
+				<AdBar/>
+				<Loading show={this.props.app.loading} />
+			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
+	wrapper: {
+		width: width,
+		height: height
+	},
 	container: {
-		flex: 1
+		width: width,
+		height: height - 260
 	},
 	imgView: {
 		flex: 1,

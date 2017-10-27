@@ -1,8 +1,25 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
+
+import * as appActions from '../reducer/app/actions';
+
+import AdBar from '../component/AdBar';
+import Loading from '../component/Loading';
+
+const {width, height, deviceWidth, deviceHeight, scale} = (function() {
+	let i = Dimensions.get('window'),
+		e = i.scale;
+	return {
+		width: i.width,
+		height: i.height,
+		deviceWidth: i.width * e,
+		deviceHeight: i.height * e,
+		scale: e
+	};
+})();
 
 class TagScreen extends Component {
 	constructor(props) {
@@ -38,11 +55,14 @@ class TagScreen extends Component {
 		this.props.navigator.push(aobj);
 	}
 	_getTags() {
+		this.props.dispatch(appActions.loading());
 		this.props.dbsvc.getTagGroups(this.props.user.signhash, ret => {
 			this.setState({
 				rows: ret.map(item => {
 					return item.name;
 				})
+			},()=> {
+				this.props.dispatch(appActions.loaded());
 			});
 		});
 	}
@@ -65,15 +85,35 @@ class TagScreen extends Component {
 				</TouchableOpacity>
 			</View>
 		));
-		return (
-			<ScrollView>
-				<View style={styles.container}>{taglist}</View>
-			</ScrollView>
-		);
+		if (this.state.rows.length > 0) {
+			return (
+				<View style={styles.wrapper}>
+					<ScrollView>
+						<View style={styles.container}>{taglist}</View>
+					</ScrollView>
+					<AdBar/>
+					<Loading show={this.props.app.loading} />
+				</View>
+			);
+		} else {
+			return (
+				<View style={[styles.container, styles.nodatastyle]}>
+					<Text style={{fontSize: 20}}>{'태그가 없습니다.'}</Text>
+					<AdBar style={{position: 'absolute', width, bottom: 0}} />
+					<Loading show={this.props.app.loading} />
+				</View>
+			);
+		}
 	}
 }
 const styles = StyleSheet.create({
+	wrapper: {
+		width: width,
+		height: height
+	},
 	container: {
+		width: width,
+		height: height - 260,
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',
