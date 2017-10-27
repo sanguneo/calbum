@@ -14,8 +14,6 @@ import Loading from '../component/Loading';
 import AdBar from '../component/AdBar';
 import axios from 'axios';
 
-import Permissions from 'react-native-permissions';
-
 const RNFS = require('react-native-fs');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
@@ -184,10 +182,6 @@ class LoginScreen extends Component {
 			animated: true,
 			animationType: 'fade'
 		});
-	}
-	componentDidMount() {
-		Permissions.request('storage', 'whenInUse').then((e) => {console.log('Storage Permission : ' + e)}).catch(e => console.warn(e));
-		Permissions.request('camera', 'whenInUse').then((e) => {console.log('Camera Permission : ' + e)}).catch(e => console.warn(e))
 	}
 
 	render() {

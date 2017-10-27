@@ -4,8 +4,6 @@ import React, {Component} from 'react';
 import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 
-import Permissions from 'react-native-permissions';
-
 class SideMenu extends Component {
 	constructor(props) {
 		super(props);
@@ -136,10 +134,6 @@ class SideMenu extends Component {
 
 	componentWillMount() {
 		this._validateUserData();
-	}
-	componentDidMount() {
-		Permissions.request('storage', 'always').then(() => {console.log('Storage Permission : ' + e)}).catch(e => console.warn(e));
-		Permissions.request('camera', 'always').then(() => {console.log('Camera Permission : ' + e)}).catch(e => console.warn(e))
 	}
 
 	render() {

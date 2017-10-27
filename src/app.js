@@ -14,7 +14,6 @@ import {registerScreens} from './screen';
 
 import dbSVC from './service/calbumdb_svc';
 import cryptSVC from './service/crypt_svc';
-import Permissions from 'react-native-permissions';
 
 const RNFS = require('react-native-fs');
 
@@ -62,7 +61,6 @@ export default class App {
 				);
 			}
 		}).done();
-		Permissions.request('camera', 'whenInUse').then((e) => {console.log('Camera Permission : ' + e)}).catch(e => console.warn(e))
 	}
 	onStoreUpdate() {
 		const {root} = store.getState().app;
