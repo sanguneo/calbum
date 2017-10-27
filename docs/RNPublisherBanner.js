@@ -79,7 +79,7 @@ PublisherBanner.propTypes = {
   adViewDidDismissScreen: React.PropTypes.func,
   adViewWillLeaveApplication: React.PropTypes.func,
   admobDispatchAppEvent: React.PropTypes.func,
-  ...PropTypes,
+  ...View.propTypes,
 };
 
 PublisherBanner.defaultProps = { bannerSize: 'smartBannerPortrait', didFailToReceiveAdWithError: () => {} ,

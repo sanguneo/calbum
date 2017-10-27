@@ -89,6 +89,10 @@ class InTagScreen extends Component {
 		);
 	}
 
+	componentWillMount() {
+		this._getPhoto();
+	}
+
 	render() {
 		if (this.state.rows.length > 0) {
 			let key = Math.random() * 10000;

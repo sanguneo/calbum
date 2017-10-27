@@ -118,7 +118,8 @@ class LoginScreen extends Component {
 			} else if (response.data.message === 'emailexist') {
 				Alert.alert('사용중인 이메일 입니다.');
 			} else {
-				Alert.alert('회원가입에 오류가 발생했습니다.');
+				Alert.alert('로그인중 오류가 발생했습니다.');
+				console.log(response.data);
 			}
 		}).catch(e => {
 			Alert.alert('인터넷에 연결되어있지 않습니다.\n확인후 다시 시도해주세요.');

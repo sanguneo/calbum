@@ -84,6 +84,9 @@ class TotalScreen extends Component {
 			else this.props.dispatch(appActions.loaded());
 		}, this.props.user.signhash);
 	}
+	componentWillMount() {
+		this._getPhoto();
+	}
 
 	render() {
 		if (this.state.rows.length > 0) {
