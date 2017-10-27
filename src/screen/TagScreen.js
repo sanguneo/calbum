@@ -97,7 +97,7 @@ class TagScreen extends Component {
 			);
 		} else {
 			return (
-				<View style={[styles.container, styles.nodatastyle]}>
+				<View style={[styles.container2, styles.nodatastyle]}>
 					<Text style={{fontSize: 20}}>{'태그가 없습니다.'}</Text>
 					<AdBar style={{position: 'absolute', width, bottom: 0}} />
 					<Loading show={this.props.app.loading} />
@@ -118,6 +118,17 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'flex-start',
 		padding: 10
+	},
+	container2: {
+		flexWrap: 'wrap',
+		flexDirection: 'row',
+		alignItems: 'flex-start'
+	},
+	nodatastyle: {
+		flex: 1,
+		flexWrap: 'nowrap',
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	row: {
 		flexDirection: 'row',
