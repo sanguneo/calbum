@@ -244,7 +244,7 @@ class LoginScreen extends Component {
 					{notloggedin ? (
 						<View style={[styles.formWrapper, {marginBottom: 0}]}>
 							<Button
-								imgsource={require('../../img/save.png')}
+								// imgsource={require('../../img/save.png')}
 								style={{backgroundColor: '#3692d9'}}
 								onPress={() => {
 									this._login();
@@ -255,7 +255,7 @@ class LoginScreen extends Component {
 					) : (
 						<View style={[styles.formWrapper, {marginBottom: 0}]}>
 							<Button
-								imgsource={require('../../img/save.png')}
+								// imgsource={require('../../img/save.png')}
 								style={{backgroundColor: '#d9663c'}}
 								onPress={() => {
 									this._logout();
@@ -267,7 +267,7 @@ class LoginScreen extends Component {
 					{notloggedin ? (
 						<View style={[styles.formWrapper, {marginBottom: 0}]}>
 							<Button
-								imgsource={require('../../img/save.png')}
+								// imgsource={require('../../img/save.png')}
 								style={{backgroundColor: '#bd6592'}}
 								onPress={() => {
 									this._signup();
