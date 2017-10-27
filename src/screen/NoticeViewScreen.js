@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Dimensions, ScrollView, StyleSheet, Text} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import Util from '../service/util_svc';
@@ -78,4 +78,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default connect()(NoticeViewScreen);
+function mapStateToProps(state) {
+	return {
+		app: state.app
+	};
+}
+
+export default connect(mapStateToProps)(NoticeViewScreen);

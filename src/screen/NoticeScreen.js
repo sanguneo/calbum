@@ -63,6 +63,7 @@ class NoticeScreen extends Component {
 			'http://calbum.sanguneo.com/notice/plain' + (after ? '?after=' + after : ''),
 			{},
 			{
+				timeout: 1000,
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json'
@@ -219,7 +220,6 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 	return {
-		user: state.user,
 		app: state.app
 	};
 }
