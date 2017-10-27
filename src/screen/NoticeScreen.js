@@ -1,10 +1,13 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import * as appActions from '../reducer/app/actions';
+
+import Util from '../service/util_svc';
+
 import axios from 'axios';
 
 import Loading from '../component/Loading';
@@ -27,11 +30,58 @@ class NoticeScreen extends Component {
 	}
 
 	_getNotice() {
-		let dateFormatter = (regdate) => {
-			let date = new Date(regdate);
-
-		};
 		this.props.dispatch(appActions.loading());
+		AsyncStorage.getItem('notice').then(notice => {
+			if (typeof notice === 'undefined' || notice === null) {
+				this._getNoticeSync()
+			} else {
+				AsyncStorage.getItem('noticeDate').then(noticeDate => {
+					if (typeof noticeDate === 'undefined' || noticeDate === null) {
+						this.setState({ rows : JSON.stringify(notice)}, ()=> {
+							this.props.dispatch(appActions.loaded());
+						});
+					} else {
+						this._getNoticeLatest(JSON.parse(notice), noticeDate)
+					}
+				}).done();
+			}
+		}).done();
+	}
+	_getNoticeLatest(parsedNotice, after) {
+		axios.get(
+			'http://calbum.sanguneo.com/notice/plain' + (after ? '?after=' + after : ''),
+			{},
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}
+		).then(response => {
+			if (response.data.code === 320){
+				let mergedNotice = [...response.data.notice, ...parsedNotice];
+				if(response.data.notice.length > 0) {
+					AsyncStorage.setItem('notice', JSON.stringify(mergedNotice)).done();
+					AsyncStorage.setItem('noticeDate', response.data.notice[0].regDate).done();
+				}
+				this.setState({
+					rows : mergedNotice
+				}, ()=> {
+					this.props.dispatch(appActions.loaded());
+				});
+			}else {
+				this.setState({rows : parsedNotice}, ()=> {
+					this.props.dispatch(appActions.loaded());
+				});
+			}
+		}).catch(e => {
+			console.log('error', e);
+			this.setState({ rows : parsedNotice}, ()=> {
+				this.props.dispatch(appActions.loaded());
+			});
+		});
+	}
+	_getNoticeSync() {
 		axios.get(
 			'http://calbum.sanguneo.com/notice/plain',
 			{},
@@ -42,10 +92,12 @@ class NoticeScreen extends Component {
 				}
 			}
 		).then(response => {
-			if (response.data.code === 331){
-				this.setState({
-					rows : response.data.notice.map((item, idx) => {return {regDate: new Date(item.regDate).toString()/*new Date(item.regDate).replace('T', ' ').split('.')[0]*/, idx, content: item.content}})
-				}, ()=> {
+			if (response.data.code === 320){
+				if(response.data.notice.length > 0) {
+					AsyncStorage.setItem('notice', JSON.stringify(response.data.notice)).done();
+					AsyncStorage.setItem('noticeDate', response.data.notice[0].regDate).done();
+				}
+				this.setState({ rows : response.data.notice}, ()=> {
 					this.props.dispatch(appActions.loaded());
 				});
 			}else {
@@ -57,17 +109,31 @@ class NoticeScreen extends Component {
 			this.props.dispatch(appActions.loaded());
 		});
 	}
+	_viewNotice(subjectIdx) {
+		let subject = this.state.rows[subjectIdx];
+		this.props.navigator.push({
+			screen: 'calbum.NoticeViewScreen',
+			title: '공지사항',
+			passProps: {
+				subject
+			},
+			navigatorStyle: {},
+			navigatorButtons: {},
+			animated: true,
+			animationType: 'slide-up'
+		});
+	}
 
 	componentWillMount() {
 		this._getNotice();
 	}
 
 	render() {
-		let noticelist = this.state.rows.map((item) =>
-			(<View style={styles.row} key={item.idx}>
-				<TouchableOpacity onPress={()=>{}}>
-					<Text style={styles.rowRegdate}>{item.regDate}</Text>
-					<Text style={styles.rowContent}>{item.content}</Text>
+		let noticelist = this.state.rows.map((item, idx) =>
+			(<View style={styles.row} key={idx}>
+				<TouchableOpacity onPress={()=>{this._viewNotice(idx)}}>
+					<Text style={styles.rowRegdate}>{Util.isoFormatter(item.regDate)}</Text>
+					<Text style={styles.rowTitle}>{item.title}</Text>
 				</TouchableOpacity>
 			</View>));
 		return (
@@ -100,7 +166,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		color: '#000',
 	},
-	rowContent: {
+	rowTitle: {
 		width: Dimensions.get('window').width - 60,
 		height: 40,
 

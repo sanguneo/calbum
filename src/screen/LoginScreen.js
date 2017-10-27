@@ -127,7 +127,9 @@ class LoginScreen extends Component {
 		});
 	}
 	_logout() {
-		AsyncStorage.clear();
+		AsyncStorage.multiRemove(['token', '_id', 'name', 'email', 'signhash'], (err) => {
+			console.log('logout error', err);
+		});
 		this.props.dispatch(
 			userActions.setUser({
 				signhash: '',
