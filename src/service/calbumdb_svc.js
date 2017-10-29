@@ -147,4 +147,8 @@ export default class dbSVC {
 			"  WHERE `photohash` = '"+photohash+"' AND `signhash` = '"+signhash+"'";
 		this.executeQuery(query);
 	}
+	deletePhoto(photohash, signhash) {
+		let query = "DELETE FROM `ca_photo` WHERE `photohash` = '"+photohash+"' AND `signhash` = '"+signhash+"'";
+		this.executeQuery(query);
+	}
 }

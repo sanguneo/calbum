@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
 import {connect} from 'react-redux';
 
 import * as appActions from '../reducer/app/actions';
@@ -38,7 +38,10 @@ const commonStyle = {
 
 class ViewScreen extends Component {
 	static navigatorButtons = {
-		rightButtons: [{icon: require('../../img/cut.png'), id: 'edit'}]
+		rightButtons: [
+			{icon: require('../../img/cut.png'), id: 'edit'},
+			{icon: require('../../img/remove.png'), id: 'delete'}
+			]
 	};
 
 	constructor(props) {
@@ -51,6 +54,10 @@ class ViewScreen extends Component {
 			success: 'no',
 			title: '',
 			merged: {uri: ''},
+			cropBefore: {uri: ''},
+			cropAfter: {uri: ''},
+			imgBefore: {uri: ''},
+			imgAfter: {uri: ''},
 			recipe: '',
 			email: props.user.email,
 			signhash: props.user.signhash,
@@ -96,6 +103,9 @@ class ViewScreen extends Component {
 				animationType: 'slide-up'
 			});
 		}
+		if (event.id === 'delete') {
+			this._deleteDesign();
+		}
 		if (event.id === 'backPress') {
 			if (!this.side) {
 				this.props.navigator.pop();
@@ -103,6 +113,30 @@ class ViewScreen extends Component {
 				this._lightboxClose();
 			}
 		}
+	}
+	
+	_deleteDesign() {
+		Alert.alert(
+			'디자인을 삭제하시겠습니까?',
+			'삭제된 디자인은 되돌릴 수 없습니다.\n확인을 누르시면 삭제됩니다.',
+			[
+				{
+					text: '확인',
+					onPress: () => {
+						RNFS.unlink(this.state.merged.uri.replace('file://', '')).catch(e => {console.log(e);});
+						RNFS.unlink(this.state.cropBefore.uri.replace('file://', '')).catch(e => {console.log(e);});
+						RNFS.unlink(this.state.cropAfter.uri.replace('file://', '')).catch(e => {console.log(e);});
+						RNFS.unlink(this.state.imgBefore.uri.replace('file://', '')).catch(e => {console.log(e);});
+						RNFS.unlink(this.state.imgAfter.uri.replace('file://', '')).catch(e => {console.log(e);});
+						this.props.dbsvc.deletePhoto();
+						this.props.dispatch(appActions.changing());
+						this.props.navigator.pop();
+					}
+				},
+				{text: '취소'}
+			],
+			{cancelable: true}
+		);
 	}
 
 	_goTag(tagname) {
@@ -115,7 +149,10 @@ class ViewScreen extends Component {
 			},
 			navigatorStyle: {},
 			navigatorButtons: {
-				rightButtons: [{icon: require('../../img/cut.png'), id: 'edit'}]
+				rightButtons: [
+					{icon: require('../../img/cut.png'), id: 'edit'},
+					{icon: require('../../img/remove.png'), id: 'delete'}
+				]
 			},
 			animated: false,
 			animationType: 'none'
@@ -136,6 +173,10 @@ class ViewScreen extends Component {
 				let pPath = 'file://' + RNFS.DocumentDirectoryPath + '/_original_/' + res.photohash + '_' + this.props.user.email + '.scalb?key=' + key;
 				let info = {
 					merged: {uri: pPath},
+					cropBefore: {uri: pPath.replace('.scalb', '_cropleft.scalb')},
+					cropAfter: {uri: pPath.replace('.scalb', '_cropright.scalb')},
+					imgBefore: {uri: pPath.replace('.scalb', '_left.scalb')},
+					imgAfter: {uri: pPath.replace('.scalb', '_right.scalb')},
 					title: res.title,
 					regdate: res.reg_date,
 					recipe: res.recipe.replace('\\n', '\n'),
@@ -196,26 +237,6 @@ class ViewScreen extends Component {
 		this._getPhotoInformation();
 	}
 	render() {
-		let imgBefore = this.state.merged.uri ? (
-			<ImageViewer
-				imageUrls={[
-					{url: this.state.merged.uri.replace('.scalb', '_left.scalb')}
-				]}
-			/>
-		) : null;
-		let imgAfter = this.state.merged.uri ? (
-			<ImageViewer
-				imageUrls={[
-					{url: this.state.merged.uri.replace('.scalb', '_right.scalb')}
-				]}
-			/>
-		) : null;
-		let cropBefore = this.state.merged.uri
-			? {uri: this.state.merged.uri.replace('.scalb', '_cropleft.scalb')}
-			: require('../../img/pickphoto.png');
-		let cropAfter = this.state.merged.uri
-			? {uri: this.state.merged.uri.replace('.scalb', '_cropright.scalb')}
-			: require('../../img/pickphoto.png');
 		return (
 			<View style={styles.wrapper}>
 				<ScrollView style={styles.container}>
@@ -229,7 +250,7 @@ class ViewScreen extends Component {
 					<View style={styles.imgView}>
 						<TouchableOpacity onPress={() => { this._getSideOriginal('left');}}>
 							<Image
-								source={cropBefore}
+								source={this.state.cropBefore}
 								style={[styles.img, {borderRightWidth: 0}]}
 							/>
 							<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
@@ -237,7 +258,7 @@ class ViewScreen extends Component {
 						<TouchableOpacity
 							onPress={() => { this._getSideOriginal('right');}}>
 							<Image
-								source={cropAfter}
+								source={this.state.cropAfter}
 								style={[styles.img, {borderLeftWidth: 0}]}
 							/>
 							<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
@@ -358,7 +379,13 @@ class ViewScreen extends Component {
 					close={() => {
 						this._lightboxClose();
 					}}>
-					<View style={{width: width, height: height}}>{imgBefore}</View>
+					<View style={{width, height}}>
+						<ImageViewer
+							imageUrls={[
+								this.state.imgBefore
+							]}
+						/>
+					</View>
 				</Lightbox>
 				<Lightbox
 					ref={'imagesafter'}
@@ -375,7 +402,13 @@ class ViewScreen extends Component {
 					close={() => {
 						this._lightboxClose();
 					}}>
-					<View style={{width: width, height: height}}>{imgAfter}</View>
+					<View style={{width, height}}>
+						<ImageViewer
+							imageUrls={[
+								this.state.imgAfter
+							]}
+						/>
+					</View>
 				</Lightbox>
 			</View>
 		);
