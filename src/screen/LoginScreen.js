@@ -2,19 +2,21 @@
 
 import React, {Component} from 'react';
 import {Alert, AsyncStorage, Dimensions, Image, ScrollView, StyleSheet, TextInput, View} from 'react-native';
-import {connect} from 'react-redux';
-
-import * as appActions from '../reducer/app/actions';
-import * as userActions from '../reducer/user/actions';
 
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
 import Loading from '../component/Loading';
 import AdBar from '../component/AdBar';
-import axios from 'axios';
 
+import axios from 'axios';
+import Util from '../service/util_svc';
 const RNFS = require('react-native-fs');
+
+import {connect} from 'react-redux';
+import * as appActions from '../reducer/app/actions';
+import * as userActions from '../reducer/user/actions';
+
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -67,8 +69,8 @@ class LoginScreen extends Component {
 	}
 
 	_formCheck() {
-		if (!this.state.email) {
-			Alert.alert('확인', '이메일을 입력해주세요.');
+		if (!this.state.email || Util.emailcheck(this.state.email)) {
+			Alert.alert('확인', '이메일을 확인해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
 		} else if (this.state.pass.length < 8) {
@@ -127,11 +129,26 @@ class LoginScreen extends Component {
 					console.error(err);
 				});
 			} else if (response.data.message === 'emailexist') {
+				this.props.dispatch(appActions.loaded());
 				Alert.alert('사용중인 이메일 입니다.');
-				this.props.dispatch(appActions.loaded());
+				
 			} else if (response.data.message === 'noaccount')  {
-				Alert.alert('아이디가 없습니다.');
 				this.props.dispatch(appActions.loaded());
+				Alert.alert(
+					'',
+					'로그인 되어있지 않습니다.\n가입하시겠습니까?',
+					[
+						{
+							text: '확인',
+							onPress: () => {
+								this.props.dispatch(appActions.logout());
+								this._signup()
+							}
+						},
+						{text: '취소'}
+					],
+					{cancelable: true}
+				);
 			} else {
 				this.props.dispatch(appActions.loaded());
 			}

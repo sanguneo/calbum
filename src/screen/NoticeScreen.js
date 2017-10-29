@@ -2,16 +2,17 @@
 
 import React, {Component} from 'react';
 import {Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+
+import AdBar from '../component/AdBar';
+import Loading from '../component/Loading';
+
+import Util from '../service/util_svc';
+import axios from 'axios';
+
 import {connect} from 'react-redux';
 
 import * as appActions from '../reducer/app/actions';
 
-import Util from '../service/util_svc';
-
-import axios from 'axios';
-
-import AdBar from '../component/AdBar';
-import Loading from '../component/Loading';
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),

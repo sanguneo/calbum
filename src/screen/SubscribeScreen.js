@@ -2,8 +2,6 @@
 
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {connect} from 'react-redux';
-import * as appActions from '../reducer/app/actions';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
@@ -14,6 +12,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge';
 
 const RNFS = require('react-native-fs');
+
+import {connect} from 'react-redux';
+import * as appActions from '../reducer/app/actions';
 
 const {width, height} = Dimensions.get('window');
 

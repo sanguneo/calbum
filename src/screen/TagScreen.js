@@ -2,12 +2,12 @@
 
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect} from 'react-redux';
-
-import * as appActions from '../reducer/app/actions';
 
 import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
+
+import {connect} from 'react-redux';
+import * as appActions from '../reducer/app/actions';
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),

@@ -30,10 +30,14 @@ export default {
 		let s = '0000' + num;
 		return s.substr(s.length - size);
 	},
-	uuid: function(arg) {
+	uuid: (arg) =>{
 		return uuidv5(
 			arg !== undefined && arg !== null ? arg : Date.now().toString(),
 			uuidv4()
 		);
+	},
+	emailcheck: (email) =>{
+		let regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+		return (email != '' && email != 'undefined' && regex.test(email));
 	}
 };

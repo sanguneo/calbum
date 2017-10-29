@@ -2,9 +2,6 @@
 
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
-import {connect} from 'react-redux';
-
-import * as appActions from '../reducer/app/actions';
 
 import LabeledInput from '../component/LabeledInput';
 import Hr from '../component/Hr';
@@ -12,9 +9,13 @@ import Button from '../component/Button';
 import Loading from '../component/Loading';
 import AdBar from '../component/AdBar';
 import ImagePicker from 'react-native-image-crop-picker';
-import axios from 'axios';
 
+import axios from 'axios';
+import Util from '../service/util_svc';
 const RNFS = require('react-native-fs');
+
+import {connect} from 'react-redux';
+import * as appActions from '../reducer/app/actions';
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -80,11 +81,11 @@ class SignupScreen extends Component {
 		if (!this.state.profile.uri) {
 			Alert.alert('확인', '이미지를 선택해주세요.');
 			return false;
-		} else if (!this.state.name && this.state.name.length >= 4) {
+		} else if (!this.state.name || this.state.name.length >= 4) {
 			Alert.alert('확인', '이름을 입력해주세요.');
 			this.refs['r_name'].focus();
 			return false;
-		} else if (!this.state.email) {
+		} else if (!this.state.email || !Util.emailcheck(this.state.email)) {
 			Alert.alert('확인', '이메일을 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;

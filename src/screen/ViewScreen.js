@@ -2,9 +2,6 @@
 
 import React, {Component} from 'react';
 import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
-import {connect} from 'react-redux';
-
-import * as appActions from '../reducer/app/actions';
 
 import Button from '../component/Button';
 import Lightbox from '../component/Lightbox';
@@ -14,9 +11,12 @@ import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
 import Tags from '../component/Tags';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import Util from '../service/util_svc';
 
+import Util from '../service/util_svc';
 const RNFS = require('react-native-fs');
+
+import {connect} from 'react-redux';
+import * as appActions from '../reducer/app/actions';
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
