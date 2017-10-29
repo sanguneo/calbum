@@ -69,7 +69,8 @@ class LoginScreen extends Component {
 	}
 
 	_formCheck() {
-		if (!this.state.email || Util.emailcheck(this.state.email)) {
+		if (!this.state.email && Util.emailcheck(this.state.email)) {
+			console.log(this.state.email);
 			Alert.alert('확인', '이메일을 확인해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
@@ -312,7 +313,7 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 210
 	},
 	imgView: {
 		flex: 1,

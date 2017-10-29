@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
 	},
 	scrollview: {
 		width: width,
-		height: height - 260
+		height: height - 210
 	},
 	container: {
 		flexWrap: 'wrap',

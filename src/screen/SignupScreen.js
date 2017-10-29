@@ -81,11 +81,11 @@ class SignupScreen extends Component {
 		if (!this.state.profile.uri) {
 			Alert.alert('확인', '이미지를 선택해주세요.');
 			return false;
-		} else if (!this.state.name || this.state.name.length >= 4) {
+		} else if (!this.state.name && this.state.name.length >= 1) {
 			Alert.alert('확인', '이름을 입력해주세요.');
 			this.refs['r_name'].focus();
 			return false;
-		} else if (!this.state.email || !Util.emailcheck(this.state.email)) {
+		} else if (!this.state.email && !Util.emailcheck(this.state.email)) {
 			Alert.alert('확인', '이메일을 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 210
 	},
 	imgView: {
 		flex: 1,

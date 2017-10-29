@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 210
 	},
 	imgView: {
 		flex: 1,

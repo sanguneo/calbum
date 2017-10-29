@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 210
 	},
 	nodatastyle: {
 		flex: 1,
