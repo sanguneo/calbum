@@ -54,10 +54,6 @@ class ViewScreen extends Component {
 			success: 'no',
 			title: '',
 			merged: {uri: ''},
-			cropBefore: {uri: ''},
-			cropAfter: {uri: ''},
-			imgBefore: {uri: ''},
-			imgAfter: {uri: ''},
 			recipe: '',
 			email: props.user.email,
 			signhash: props.user.signhash,
@@ -123,13 +119,15 @@ class ViewScreen extends Component {
 				{
 					text: '확인',
 					onPress: () => {
-						RNFS.unlink(this.state.merged.uri.replace('file://', '')).catch(e => {console.log(e);});
-						RNFS.unlink(this.state.cropBefore.uri.replace('file://', '')).catch(e => {console.log(e);});
-						RNFS.unlink(this.state.cropAfter.uri.replace('file://', '')).catch(e => {console.log(e);});
-						RNFS.unlink(this.state.imgBefore.uri.replace('file://', '')).catch(e => {console.log(e);});
-						RNFS.unlink(this.state.imgAfter.uri.replace('file://', '')).catch(e => {console.log(e);});
-						this.props.dbsvc.deletePhoto();
 						this.props.dispatch(appActions.changing());
+						let uriBase = this.state.merged.uri.replace('file://', '').split('?')[0];
+						RNFS.unlink(uriBase).catch(e => {console.log(e);});
+						RNFS.unlink(uriBase.replace('_original_', '_thumb_')).catch(e => {console.log(e);});
+						RNFS.unlink(uriBase.replace('.scalb', '_left.scalb')).catch(e => {console.log(e);});
+						RNFS.unlink(uriBase.replace('.scalb', '_right.scalb')).catch(e => {console.log(e);});
+						RNFS.unlink(uriBase.replace('.scalb', '_cropleft.scalb')).catch(e => {console.log(e);});
+						RNFS.unlink(uriBase.replace('.scalb', '_cropright.scalb')).catch(e => {console.log(e);});
+						this.props.dbsvc.deletePhoto(this.state.photohash, this.state.signhash);
 						this.props.navigator.pop();
 					}
 				},
@@ -173,10 +171,6 @@ class ViewScreen extends Component {
 				let pPath = 'file://' + RNFS.DocumentDirectoryPath + '/_original_/' + res.photohash + '_' + this.props.user.email + '.scalb?key=' + key;
 				let info = {
 					merged: {uri: pPath},
-					cropBefore: {uri: pPath.replace('.scalb', '_cropleft.scalb')},
-					cropAfter: {uri: pPath.replace('.scalb', '_cropright.scalb')},
-					imgBefore: {uri: pPath.replace('.scalb', '_left.scalb')},
-					imgAfter: {uri: pPath.replace('.scalb', '_right.scalb')},
 					title: res.title,
 					regdate: res.reg_date,
 					recipe: res.recipe.replace('\\n', '\n'),
@@ -237,6 +231,20 @@ class ViewScreen extends Component {
 		this._getPhotoInformation();
 	}
 	render() {
+		let imgBefore = this.state.merged.uri ? (
+			<ImageViewer
+				imageUrls={[
+					{url: this.state.merged.uri.replace('.scalb', '_left.scalb')}
+				]}
+			/>
+		) : null;
+		let imgAfter = this.state.merged.uri ? (
+			<ImageViewer
+				imageUrls={[
+					{url: this.state.merged.uri.replace('.scalb', '_right.scalb')}
+				]}
+			/>
+		) : null;
 		return (
 			<View style={styles.wrapper}>
 				<ScrollView style={styles.container}>
@@ -250,7 +258,7 @@ class ViewScreen extends Component {
 					<View style={styles.imgView}>
 						<TouchableOpacity onPress={() => { this._getSideOriginal('left');}}>
 							<Image
-								source={this.state.cropBefore}
+								source={this.state.merged.uri ? {uri: this.state.merged.uri.replace('.scalb', '_cropleft.scalb')} : null}
 								style={[styles.img, {borderRightWidth: 0}]}
 							/>
 							<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>
@@ -258,7 +266,7 @@ class ViewScreen extends Component {
 						<TouchableOpacity
 							onPress={() => { this._getSideOriginal('right');}}>
 							<Image
-								source={this.state.cropAfter}
+								source={this.state.merged.uri ? {uri: this.state.merged.uri.replace('.scalb', '_cropright.scalb')} : null}
 								style={[styles.img, {borderLeftWidth: 0}]}
 							/>
 							<Text style={[styles.imglabel, styles.lblRight]}>After</Text>
@@ -380,11 +388,7 @@ class ViewScreen extends Component {
 						this._lightboxClose();
 					}}>
 					<View style={{width, height}}>
-						<ImageViewer
-							imageUrls={[
-								this.state.imgBefore
-							]}
-						/>
+						{imgBefore}
 					</View>
 				</Lightbox>
 				<Lightbox
@@ -403,11 +407,7 @@ class ViewScreen extends Component {
 						this._lightboxClose();
 					}}>
 					<View style={{width, height}}>
-						<ImageViewer
-							imageUrls={[
-								this.state.imgAfter
-							]}
-						/>
+						{imgAfter}
 					</View>
 				</Lightbox>
 			</View>
