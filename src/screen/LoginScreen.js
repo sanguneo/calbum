@@ -128,8 +128,13 @@ class LoginScreen extends Component {
 				});
 			} else if (response.data.message === 'emailexist') {
 				Alert.alert('사용중인 이메일 입니다.');
+				this.props.dispatch(appActions.loaded());
+			} else if (response.data.message === 'noaccount')  {
+				Alert.alert('아이디가 없습니다.');
+				this.props.dispatch(appActions.loaded());
 			} else {
-				Alert.alert('로그인중 오류가 발생했습니다.');
+				Alert.alert('로그인중 알수없는 오류가 발생했습니다.\n' + response.data.message);
+				this.props.dispatch(appActions.loaded());
 				console.log(response.data);
 			}
 		}).catch(e => {

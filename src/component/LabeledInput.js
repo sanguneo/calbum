@@ -4,7 +4,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, KeyboardAvoidingView} from 'react-native';
 
 export default class LabeledInput extends Component {
 	constructor(props) {
@@ -13,7 +13,7 @@ export default class LabeledInput extends Component {
 	}
 	render() {
 		return (
-			<View
+			<KeyboardAvoidingView
 				style={[
 					styles.container,
 					this.stylesByDirection.container,
@@ -35,7 +35,7 @@ export default class LabeledInput extends Component {
 					]}>
 					{this.props.children}
 				</View>
-			</View>
+			</KeyboardAvoidingView>
 		);
 	}
 }
