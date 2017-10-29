@@ -4,15 +4,15 @@ import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
-import Hr from '../component/Hr';
 import Button from '../component/Button';
-import TagInput from '../component/TagInput';
+import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
+import TagInput from '../component/TagInput';
+
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge';
-
-import Util from '../service/util_svc';
 const RNFS = require('react-native-fs');
+import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';

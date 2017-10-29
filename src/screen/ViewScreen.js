@@ -3,17 +3,17 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
 
+import AdBar from '../component/AdBar';
 import Button from '../component/Button';
-import Lightbox from '../component/Lightbox';
 import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
-import AdBar from '../component/AdBar';
+import Lightbox from '../component/Lightbox';
 import Loading from '../component/Loading';
 import Tags from '../component/Tags';
-import ImageViewer from 'react-native-image-zoom-viewer';
 
-import Util from '../service/util_svc';
+import ImageViewer from 'react-native-image-zoom-viewer';
 const RNFS = require('react-native-fs');
+import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';

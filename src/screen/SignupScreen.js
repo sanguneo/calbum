@@ -3,16 +3,16 @@
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 
-import LabeledInput from '../component/LabeledInput';
-import Hr from '../component/Hr';
-import Button from '../component/Button';
-import Loading from '../component/Loading';
 import AdBar from '../component/AdBar';
-import ImagePicker from 'react-native-image-crop-picker';
+import Button from '../component/Button';
+import Hr from '../component/Hr';
+import LabeledInput from '../component/LabeledInput';
+import Loading from '../component/Loading';
 
 import axios from 'axios';
-import Util from '../service/util_svc';
+import ImagePicker from 'react-native-image-crop-picker';
 const RNFS = require('react-native-fs');
+import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';

@@ -6,11 +6,10 @@ import {Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, Touchable
 import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
 
-import Util from '../service/util_svc';
 import axios from 'axios';
+import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
-
 import * as appActions from '../reducer/app/actions';
 
 

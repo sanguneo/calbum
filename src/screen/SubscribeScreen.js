@@ -6,11 +6,11 @@ import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, Touch
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import Hr from '../component/Hr';
 import Button from '../component/Button';
-import TagInput from '../component/TagInput';
 import LabeledInput from '../component/LabeledInput';
+import TagInput from '../component/TagInput';
+
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge';
-
 const RNFS = require('react-native-fs');
 
 import {connect} from 'react-redux';

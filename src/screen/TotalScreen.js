@@ -3,12 +3,12 @@
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 
-import Thumbnail from '../component/Thumbnail';
 import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
+import Thumbnail from '../component/Thumbnail';
 
-import Util from '../service/util_svc';
 const RNFS = require('react-native-fs');
+import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
