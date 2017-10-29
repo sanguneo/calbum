@@ -133,10 +133,9 @@ class LoginScreen extends Component {
 				Alert.alert('아이디가 없습니다.');
 				this.props.dispatch(appActions.loaded());
 			} else {
-				Alert.alert('로그인중 알수없는 오류가 발생했습니다.\n' + response.data.message);
 				this.props.dispatch(appActions.loaded());
-				console.log(response.data);
 			}
+			
 		}).catch(e => {
 			Alert.alert('인터넷에 연결되어있지 않습니다.\n확인후 다시 시도해주세요.');
 			console.log('error', e);
