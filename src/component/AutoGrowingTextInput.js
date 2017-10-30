@@ -14,8 +14,10 @@ export default class AutoGrowingTextInput extends Component {
 				{...this.props}
 				multiline={true}
 				onContentSizeChange={(event) => {
+					let height = event.nativeEvent.contentSize.height;
+					this.props.contentLineFunc((Math.floor(event.nativeEvent.contentSize.height) - 42 + 19)/19);
 					this.setState({
-						height: event.nativeEvent.contentSize.height,
+						height
 					});
 				}}
 				style={[this.props.styleInput, {height: Math.max(36, this.state.height)}]}

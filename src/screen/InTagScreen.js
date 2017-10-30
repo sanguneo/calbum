@@ -6,12 +6,12 @@ import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
 import Thumbnail from '../component/Thumbnail';
-
-const RNFS = require('react-native-fs');
 import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
+
+const RNFS = require('react-native-fs');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
 	},
 	scrollview: {
 		width: width,
-		height: height - 210
+		height: height - 260
 	},
 	container: {
 		flexWrap: 'wrap',

@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: width,
-		height: height - 210,
+		height: height - 260,
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',

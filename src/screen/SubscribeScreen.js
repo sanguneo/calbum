@@ -187,6 +187,9 @@ class SubscribeScreen extends Component {
 			{cancelable: true}
 		);
 	}
+	_whereLine(e) {
+		console.log(e)
+	}
 
 	componentWillMount() {
 		this._getPhotohash();
@@ -265,6 +268,7 @@ class SubscribeScreen extends Component {
 						editable={true}
 						autoCorrect={false}
 						underlineColorAndroid={'transparent'}
+						contentLineFunc = {(e)=> {this._whereLine(e);}}
 						onChangeText={(recipe) => {this.setState({recipe})}}
 						value={this.state.recipe}
 						placeholder={'레시피'}
@@ -282,6 +286,7 @@ class SubscribeScreen extends Component {
 						editable={true}
 						autoCorrect={false}
 						underlineColorAndroid={'transparent'}
+						contentLineFunc = {(e)=> {this._whereLine(e);}}
 						onChangeText={comment => this.setState({comment})}
 						value={this.state.comment}
 						placeholder={'코멘트'}

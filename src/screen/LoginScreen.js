@@ -10,12 +10,13 @@ import LabeledInput from '../component/LabeledInput';
 import Loading from '../component/Loading';
 
 import axios from 'axios';
-const RNFS = require('react-native-fs');
 import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
 import * as userActions from '../reducer/user/actions';
+
+const RNFS = require('react-native-fs');
 
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
@@ -313,7 +314,7 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: width,
-		height: height - 210
+		height: height - 260
 	},
 	imgView: {
 		flex: 1,
