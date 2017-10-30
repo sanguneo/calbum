@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 
-import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
+import AutoGrowingTextInput from '../component/AutoGrowingTextInput';
 import Button from '../component/Button';
 import Hr from '../component/Hr';
 import LabeledInput from '../component/LabeledInput';
@@ -11,11 +11,12 @@ import TagInput from '../component/TagInput';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Image2merge from '../../native_modules/image2merge';
-const RNFS = require('react-native-fs');
 import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
+
+const RNFS = require('react-native-fs');
 
 const {width, height} = Dimensions.get('window');
 
@@ -252,12 +253,12 @@ class ModifyScreen extends Component {
 				</View>
 				<View style={styles.formWrapper}>
 					<AutoGrowingTextInput
-						style={styles.textboxag}
-						multiline={true}
+						styleInput={styles.textboxag}
+						initialHeight={36}
 						editable={true}
 						autoCorrect={false}
 						underlineColorAndroid={'transparent'}
-						onChangeText={recipe => this.setState({recipe})}
+						onChangeText={(recipe) => {this.setState({recipe})}}
 						value={this.state.recipe}
 						placeholder={'레시피'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
@@ -269,8 +270,8 @@ class ModifyScreen extends Component {
 				</View>
 				<View style={styles.formWrapper}>
 					<AutoGrowingTextInput
-						style={styles.textboxag}
-						multiline={true}
+						styleInput={styles.textboxag}
+						initialHeight={36}
 						editable={true}
 						autoCorrect={false}
 						underlineColorAndroid={'transparent'}

@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
+import {Alert, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import AdBar from '../component/AdBar';
 import Button from '../component/Button';
@@ -12,11 +12,12 @@ import Loading from '../component/Loading';
 import Tags from '../component/Tags';
 
 import ImageViewer from 'react-native-image-zoom-viewer';
-const RNFS = require('react-native-fs');
 import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
+
+const RNFS = require('react-native-fs');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -310,7 +311,7 @@ class ViewScreen extends Component {
 						{this.state.recipe === '' ? null : (
 							<Button
 								imgsource={require('../../img/recipe.png')}
-								style={{flex: 0.5, backgroundColor: '#ff412b'}}
+								style={{flex: (this.state.comment === '' ? 1 : 0.5), backgroundColor: '#ff412b'}}
 								onPress={() => {
 									this.refs.recipe._open();
 								}}
@@ -320,7 +321,7 @@ class ViewScreen extends Component {
 						{this.state.comment === '' ? null : (
 							<Button
 								imgsource={require('../../img/comment.png')}
-								style={{flex: 0.5, backgroundColor: '#3692d9'}}
+								style={{flex: (this.state.recipe === '' ? 1 : 0.5), backgroundColor: '#3692d9'}}
 								onPress={() => {
 									this.refs.comment._open();
 								}}
