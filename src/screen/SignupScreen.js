@@ -11,11 +11,13 @@ import Loading from '../component/Loading';
 
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
-const RNFS = require('react-native-fs');
 import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
+
+const base64Img = require('../service/base64-img');
+const RNFS = require('react-native-fs');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -40,6 +42,7 @@ const commonStyle = {
 	hrColor: '#878787',
 	backgroundColor: '#f5f5f5'
 };
+
 class SignupScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -47,11 +50,13 @@ class SignupScreen extends Component {
 		this.state = {
 			signhash: '',
 			profile: require('../../img/profile.png'),
+			base64: '',
 			email: '',
 			name: '',
 			pass: '',
 			passchk: ''
 		};
+		base64Img.setRNFSModule(RNFS);
 	}
 	onNavigatorEvent(event) {
 		if (event.id === 'menu') {
@@ -70,8 +75,13 @@ class SignupScreen extends Component {
 
 	_changeImage() {
 		ImagePicker.openPicker(imgOpt)
-			.then(profile => {
-				this.setState({profile: {uri: profile.path}});
+			.then((profile) => {
+				base64Img.base64(profile.path,(base64) => {
+					this.setState({
+						profile: {uri: profile.path},
+						base64
+					});
+				});
 			})
 			.catch(e => {
 				console.log(e);
@@ -110,7 +120,8 @@ class SignupScreen extends Component {
 	}
 	_submit() {
 		if (!this._formCheck()) return;
-		let formdata = new FormData();
+		this.props.dispatch(appActions.loading());
+		/*let formdata = new FormData();
 		formdata.append('profile', {
 			uri: this.state.profile.uri,
 			type: 'image/jpeg',
@@ -118,14 +129,23 @@ class SignupScreen extends Component {
 		});
 		formdata.append('nickname', this.state.name);
 		formdata.append('email', this.state.email);
-		formdata.append('password', this.state.pass);
-		this.props.dispatch(appActions.loading());
-		axios.post('http://calbum.sanguneo.com/user/signup', formdata, {
+		formdata.append('password', this.state.pass);*/
+		/*axios.post('http://calbum.sanguneo.com/user/signup', formdata, {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'multipart/form-data'
 			}
-		}).then(response => {
+		}).*/
+		axios.post(
+			'http://calbum.sanguneo.com/user/signup',
+			{base64: this.state.base64, nickname: this.state.name, email: this.state.email, password: this.state.pass},
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}
+		).then(response => {
 			if (response.data.message == 'success') {
 				RNFS.unlink(
 					this.state.profile.uri.replace('file://', '')
