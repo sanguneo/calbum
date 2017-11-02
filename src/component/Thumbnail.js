@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
 	thumbnailText: {
 		flex: 0.25,
 		textAlignVertical: 'center',
-		paddingHorizontal: 5
+		paddingHorizontal: 5,
+		fontSize: 13
 	}
 });
