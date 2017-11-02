@@ -130,10 +130,6 @@ class LoginScreen extends Component {
 				}).catch((err) => {
 					console.error(err);
 				});
-			} else if (response.data.message === 'emailexist') {
-				this.props.dispatch(appActions.loaded());
-				Alert.alert('사용중인 이메일 입니다.');
-				
 			} else if (response.data.message === 'noaccount')  {
 				this.props.dispatch(appActions.loaded());
 				Alert.alert(
@@ -151,12 +147,15 @@ class LoginScreen extends Component {
 					],
 					{cancelable: true}
 				);
+			} else if (response.data.message === 'invalidpw')  {
+				this.props.dispatch(appActions.loaded());
+				Alert.alert('패스워드를 다시 확인해주세요.');
 			} else {
 				this.props.dispatch(appActions.loaded());
 			}
 			
 		}).catch(e => {
-			Alert.alert('인터넷에 연결되어있지 않습니다.\n확인후 다시 시도해주세요.');
+			Alert.alert('인터넷에 연결되어있지 않습니다.\n확인 후 다시 시도해주세요.');
 			console.log('error', e);
 		});
 	}
@@ -309,12 +308,11 @@ class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		width: width,
-		height: height
+		flex:1,
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 180
 	},
 	imgView: {
 		flex: 1,

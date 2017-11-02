@@ -12,13 +12,15 @@ export default class Thumbnail extends Component {
 	render() {
 		let title = this.props.title
 			? this.props.title
-			: this.props.regdate ? Util.dateFormatter(this.props.regdate) : 'noname';
+			: this.props.regdate
+				? Util.dateFormatter(this.props.regdate)
+				: 'noname';
 		return (
 			<TouchableOpacity
 				style={[styles.thumbnail, this.props.style]}
 				onPress={this.props.onPress}>
 				<Image source={{uri: this.props.uri}} style={styles.thumbImage} />
-				<Text style={styles.thumbnailText}>{title}</Text>
+				<Text style={styles.thumbnailText} numberOfLines={1} ellipsizeMode='tail' >{title}</Text>
 			</TouchableOpacity>
 		);
 	}

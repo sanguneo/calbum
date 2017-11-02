@@ -1,7 +1,6 @@
 import React from 'react';
 import {requireNativeComponent, View,} from 'react-native';
 import PropTypes from 'prop-types';
-React.PropTypes = PropTypes;
 
 const RNBanner = requireNativeComponent('RNAdMobDFP', PublisherBanner);
 

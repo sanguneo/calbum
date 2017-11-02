@@ -61,6 +61,7 @@ class ModifyScreen extends Component {
 			photohash: props.targetProps.photohash,
 			comment: props.targetProps.comment
 		};
+		this.scrollYPos = 0;
 	}
 	onNavigatorEvent(event) {
 		if (event.id === 'save') {
@@ -176,6 +177,11 @@ class ModifyScreen extends Component {
 		);
 	}
 
+
+	_whereLine(event) {
+		this.scrollYPos = event.nativeEvent.contentOffset.y;
+	}
+
 	componentWillMount() {
 		this.props.navigator.setTitle({
 			title: this.props.targetProps.title
@@ -186,7 +192,7 @@ class ModifyScreen extends Component {
 
 	render() {
 		return (
-			<ScrollView style={styles.container}>
+			<ScrollView style={styles.container} ref={'ScrollView'} onScroll={event => this._whereLine(event)}>
 				<View style={styles.imgView}>
 					<TouchableOpacity
 						onPress={() => {
@@ -254,11 +260,11 @@ class ModifyScreen extends Component {
 				<View style={styles.formWrapper}>
 					<AutoGrowingTextInput
 						styleInput={styles.textboxag}
-						initialHeight={36}
-						editable={true}
-						autoCorrect={false}
 						underlineColorAndroid={'transparent'}
 						onChangeText={(recipe) => {this.setState({recipe})}}
+						measureBottom={(e)=>{
+							this.refs.ScrollView.scrollTo({y: this.scrollYPos + e});
+						}}
 						value={this.state.recipe}
 						placeholder={'레시피'}
 						placeholderTextColor={commonStyle.placeholderTextColor}
@@ -271,11 +277,11 @@ class ModifyScreen extends Component {
 				<View style={styles.formWrapper}>
 					<AutoGrowingTextInput
 						styleInput={styles.textboxag}
-						initialHeight={36}
-						editable={true}
-						autoCorrect={false}
 						underlineColorAndroid={'transparent'}
 						onChangeText={comment => this.setState({comment})}
+						measureBottom={(e)=>{
+							this.refs.ScrollView.scrollTo({y: this.scrollYPos + e});
+						}}
 						value={this.state.comment}
 						placeholder={'코멘트'}
 						placeholderTextColor={commonStyle.placeholderTextColor}

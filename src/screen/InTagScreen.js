@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
 
 import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
@@ -29,11 +29,11 @@ const owidth = (function() {
 	let devW = 1440 > deviceWidth > 1080 ? 1440 : deviceWidth;
 	let scaledThumbSize = 150 * scale;
 	let quantityInline = Math.ceil(devW / scaledThumbSize);
-	return (
+	return [
 		Math.round(devW / quantityInline / scale) -
 		8 -
-		(quantityInline - Math.round(devW / scaledThumbSize))
-	);
+		(quantityInline - Math.round(devW / scaledThumbSize)),
+		quantityInline]
 })();
 
 class InTagScreen extends Component {
@@ -97,31 +97,35 @@ class InTagScreen extends Component {
 
 	render() {
 		if (this.state.rows.length > 0) {
-			let key = Math.random() * 10000;
-			let thumbs = this.state.rows.map((i, idx) => (
-				<Thumbnail
-					key={idx}
-					style={styles.thumbnail}
-					title={i.title}
-					regdate={i.reg_date}
-					uri={ 'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + i.photohash + '_' + this.props.user.email + '.scalb?key=' + key }
-					onPress={() => {
-						this._goPhoto(i.title ? i.title : Util.dateFormatter(i.reg_date), i.photohash + '');
-					}}
-				/>
-			));
+			let randomkey = Math.random() * 10000;
 			return (
 				<View style={styles.wrapper}>
-					<ScrollView style={styles.scrollview}>
-						<View style={styles.container}>{thumbs}</View>
-					</ScrollView>
+					<View style={styles.scrollview} >
+						<FlatList initialNumToRender={20}  numColumns={owidth[1]} data={this.state.rows}
+								  keyExtractor={item => item.photohash}
+								  renderItem={({item}) => {
+									  return <Thumbnail
+										  key={item.idx}
+										  style={styles.thumbnail}
+										  title={item.title}
+										  regdate={item.reg_date}
+										  uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + item.photohash + '_' + this.props.user.email + '.scalb?key=' + randomkey}
+										  onPress={() => {
+											  this._goPhoto(item.title ? item.title : Util.dateFormatter(item.reg_date), item.photohash + '');
+										  }
+										  }
+									  />
+								  }
+								  }
+						/>
+					</View>
 					<AdBar />
 					<Loading show={this.props.app.loading} />
 				</View>
 			);
 		} else {
 			return (
-				<View style={[styles.container, styles.nodatastyle]}>
+				<View style={[styles.nodatastyle]}>
 					<Text style={{fontSize: 20}}>{'사진을 등록해주세요!'}</Text>
 					<AdBar style={{position: 'absolute', width: width, bottom: 0}} />
 					<Loading show={this.props.app.loading} />
@@ -133,21 +137,18 @@ class InTagScreen extends Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		width: width,
-		height: height
+		flex:1,
 	},
 	scrollview: {
 		width: width,
-		height: height - 260
-	},
-	container: {
+		height: height - 130,
 		flexWrap: 'wrap',
 		flexDirection: 'row',
-		alignItems: 'flex-start'
 	},
 	nodatastyle: {
 		flex: 1,
 		flexWrap: 'nowrap',
+		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
@@ -158,8 +159,8 @@ const styles = StyleSheet.create({
 		textAlignVertical: 'center'
 	},
 	thumbnail: {
-		width: owidth,
-		height: owidth,
+		width: owidth[0],
+		height: owidth[0],
 		marginVertical: 5,
 		marginHorizontal: 4,
 		borderColor: 'rgba(0,0,0,0.2)',

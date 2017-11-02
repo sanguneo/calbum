@@ -90,11 +90,7 @@ class SignupScreen extends Component {
 			Alert.alert('확인', '이메일을 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
-		} else if (
-			!/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/.test(
-				this.state.email
-			)
-		) {
+		} else if (!/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/.test(this.state.email)) {
 			Alert.alert('확인', '이메일을 형식에 맞게 입력해주세요.');
 			this.refs['r_eml'].focus();
 			return false;
@@ -231,7 +227,7 @@ class SignupScreen extends Component {
 						/>
 					</View>
 				</ScrollView>
-				<AdBar/>
+				<AdBar style={{bottom:0}}/>
 				<Loading show={this.props.app.loading} />
 			</View>
 		);
@@ -240,12 +236,11 @@ class SignupScreen extends Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		width: width,
-		height: height
+		flex:1,
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 180
 	},
 	imgView: {
 		flex: 1,

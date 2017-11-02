@@ -108,12 +108,11 @@ class TagScreen extends Component {
 }
 const styles = StyleSheet.create({
 	wrapper: {
-		width: width,
-		height: height
+		flex:1,
 	},
 	container: {
 		width: width,
-		height: height - 260,
+		height: height - 180,
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 		alignItems: 'flex-start',

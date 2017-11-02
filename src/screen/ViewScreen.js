@@ -249,13 +249,6 @@ class ViewScreen extends Component {
 		return (
 			<View style={styles.wrapper}>
 				<ScrollView style={styles.container}>
-					{/*<View style={styles.imgView}>*/}
-					{/*<Image source={this.state.merged} style={styles.img}/>*/}
-					{/*<Text style={[styles.imglabel, styles.lblLeft]}>Before</Text>*/}
-					{/*<Text style={[styles.imglabel, styles.lblRight]}>After</Text>*/}
-					{/*<TouchableOpacity style={[styles.oimg, styles.leftImg]} onPress={()=> {this._getSideOriginal('left')}}></TouchableOpacity>*/}
-					{/*<TouchableOpacity style={[styles.oimg, styles.rightImg]} onPress={()=> {this._getSideOriginal('right')}}></TouchableOpacity>*/}
-					{/*</View>*/}
 					<View style={styles.imgView}>
 						<TouchableOpacity onPress={() => { this._getSideOriginal('left');}}>
 							<Image
@@ -418,12 +411,11 @@ class ViewScreen extends Component {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		width: width,
-		height: height
+		flex:1,
 	},
 	container: {
 		width: width,
-		height: height - 260
+		height: height - 180
 	},
 	imgView: {
 		flex: 1,
@@ -436,14 +428,6 @@ const styles = StyleSheet.create({
 	img: {
 		width: width < 800 ? width / 2 : 400,
 		height: width < 800 ? width : 800
-	},
-	oimg: {
-		width: width < 800 ? width / 2 : 400,
-		height: width < 800 ? width : 800
-	},
-	oimg2: {
-		position: 'absolute',
-		backgroundColor: 'rgba(255,255,255,0.05)'
 	},
 	leftImg: {
 		left: 0
