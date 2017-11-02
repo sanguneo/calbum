@@ -222,7 +222,8 @@ class ViewScreen extends Component {
 		});
 		this.props.navigator.setButtons({
 			leftButtons: [{id: 'back'}],
-			rightButtons: [{icon: require('../../img/cut.png'), id: 'edit'}],
+			rightButtons: [{icon: require('../../img/cut.png'), id: 'edit'},
+				{icon: require('../../img/remove.png'), id: 'delete'}],
 			animated: true
 		});
 		this.side = null;
