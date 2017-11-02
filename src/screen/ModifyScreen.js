@@ -192,7 +192,7 @@ class ModifyScreen extends Component {
 
 	render() {
 		return (
-			<ScrollView style={styles.container} ref={'ScrollView'} onScroll={event => this._whereLine(event)}>
+			<ScrollView style={styles.container} ref={'ScrollView'} onScroll={event => this._whereLine(event)} keyboardShouldPersistTaps='handled'>
 				<View style={styles.imgView}>
 					<TouchableOpacity
 						onPress={() => {

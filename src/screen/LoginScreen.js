@@ -210,7 +210,7 @@ class LoginScreen extends Component {
 		let notloggedin = !this.state.signhash || this.state.signhash === '';
 		return (
 			<View style={styles.wrapper}>
-				<ScrollView style={styles.container}>
+				<ScrollView style={styles.container} keyboardShouldPersistTaps='handled'>
 					<View style={styles.imgView}>
 						<Image source={this.state.profile} style={styles.img} />
 					</View>

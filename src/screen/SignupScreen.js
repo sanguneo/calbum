@@ -147,7 +147,7 @@ class SignupScreen extends Component {
 	render() {
 		return (
 			<View style={styles.wrapper}>
-				<ScrollView style={styles.container}>
+				<ScrollView style={styles.container} keyboardShouldPersistTaps='handled'>
 					<View style={styles.imgView}>
 						<TouchableOpacity
 							onPress={() => {
