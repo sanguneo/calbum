@@ -16,7 +16,7 @@ import Util from '../service/util_svc';
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
 
-const RNFS = require('react-native-fs');
+const RNFS = require('../service/rnfs_wrapper');
 
 const {width, height} = Dimensions.get('window');
 
@@ -81,14 +81,14 @@ class ModifyScreen extends Component {
 					this.setState({uriLeft: {uri: result.path}, srcLeft: result.sourceURL});
 					RNFS.copyFile(
 						result.path.replace('file://', ''),
-						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email +'_cropleft.scalb'
+						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email +'_cropleft.scalb'
 					).then(() => {}
 					).catch(e => {
 						console.error('error left', e);
 					});
 					RNFS.copyFile(
 						result.sourceURL.replace('file://', ''),
-						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_left.scalb'
+						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_left.scalb'
 					).then(() => {}
 					).catch(e => {
 						console.error('error left', e);
@@ -102,14 +102,14 @@ class ModifyScreen extends Component {
 					this.setState({uriRight: {uri: result.path}, srcRight: result.sourceURL});
 					RNFS.copyFile(
 						result.path.replace('file://', ''),
-						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropright.scalb'
+						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropright.scalb'
 					).then(() => {}
 					).catch(e => {
 						console.error('error left', e);
 					});
 					RNFS.copyFile(
 						result.sourceURL.replace('file://', ''),
-						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_right.scalb'
+						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_right.scalb'
 					).then(() => {}
 					).catch(e => {
 						console.error('error right', e);

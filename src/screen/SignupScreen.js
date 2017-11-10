@@ -17,7 +17,7 @@ import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
 import * as userActions from '../reducer/user/actions';
 
-const RNFS = require('react-native-fs');
+const RNFS = require('../service/rnfs_wrapper');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -133,7 +133,7 @@ class SignupScreen extends Component {
 			if (response.data.message == 'success') {
 				RNFS.copyFile(
 					this.state.profile.uri.replace('file://', ''),
-					RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.scalb'
+					RNFS.PlatformDependPath + '/_profiles_/' + response.data.signhash + '.scalb'
 				).then(() => {
 					RNFS.unlink(
 						this.state.profile.uri.replace('file://', '')
@@ -145,7 +145,7 @@ class SignupScreen extends Component {
 				});
 				let key = Math.random() * 10000;
 				let user = {
-					profile: {uri: 'file://' + RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.scalb?key=' + key},
+					profile: {uri: 'file://' + RNFS.PlatformDependPath + '/_profiles_/' + response.data.signhash + '.scalb?key=' + key},
 					name: response.data.nickname
 				};
 				this.props.setLoginState(user);

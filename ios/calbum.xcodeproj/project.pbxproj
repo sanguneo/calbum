@@ -41,6 +41,7 @@
 		1A658B763F444E6FA1877149 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA76495FCE40198D646C62 /* libSQLite.a */; };
 		BD863730FA3444C9A3F7BF99 /* libRNAdMobManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A3F53DF0FC46A7A76C663A /* libRNAdMobManager.a */; };
 		9077CF8998574DA180D88D51 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C9729681E84576A14B4881 /* libAutoGrowTextInput.a */; };
+		83BA587D4ECA479FACD01C43 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D51AE13BD9CE46D7AF0D82BF /* libRCTImageResizer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -272,6 +273,8 @@
 		83A3F53DF0FC46A7A76C663A /* libRNAdMobManager.a */ = {isa = PBXFileReference; name = "libRNAdMobManager.a"; path = "libRNAdMobManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		A57187AC72374801AFE42AB7 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; name = "AutoGrowTextInput.xcodeproj"; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		21C9729681E84576A14B4881 /* libAutoGrowTextInput.a */ = {isa = PBXFileReference; name = "libAutoGrowTextInput.a"; path = "libAutoGrowTextInput.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1634EA1FA2684070B5CF8EC7 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; name = "RCTImageResizer.xcodeproj"; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D51AE13BD9CE46D7AF0D82BF /* libRCTImageResizer.a */ = {isa = PBXFileReference; name = "libRCTImageResizer.a"; path = "libRCTImageResizer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -304,6 +307,7 @@
 				1A658B763F444E6FA1877149 /* libSQLite.a in Frameworks */,
 				BD863730FA3444C9A3F7BF99 /* libRNAdMobManager.a in Frameworks */,
 				9077CF8998574DA180D88D51 /* libAutoGrowTextInput.a in Frameworks */,
+				83BA587D4ECA479FACD01C43 /* libRCTImageResizer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,6 +480,7 @@
 				EEAA270B9E93420F8D64BDD2 /* SQLite.xcodeproj */,
 				25FDE8CD13C54B25BF8CC1C2 /* RNAdMobManager.xcodeproj */,
 				A57187AC72374801AFE42AB7 /* AutoGrowTextInput.xcodeproj */,
+				1634EA1FA2684070B5CF8EC7 /* RCTImageResizer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1003,6 +1008,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/calbum.app/calbum";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1012,6 +1018,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1032,6 +1039,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/calbum.app/calbum";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1041,6 +1049,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1068,6 +1077,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1094,6 +1104,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1123,6 +1134,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1132,6 +1144,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1161,6 +1174,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1170,6 +1184,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-autogrow-textinput\ios",
+					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1194,6 +1209,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1218,6 +1234,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Release;

@@ -13,7 +13,6 @@ import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screen';
 
 import dbSVC from './service/calbumdb_svc';
-import cryptSVC from './service/crypt_svc';
 
 const RNFS = require('react-native-fs');
 

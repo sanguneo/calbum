@@ -17,7 +17,7 @@ import Util from '../service/util_svc';
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
 
-const RNFS = require('react-native-fs');
+const RNFS = require('../service/rnfs_wrapper');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -169,7 +169,7 @@ class ViewScreen extends Component {
 		let key = Math.random() * 10000;
 		this.props.dbsvc.getPhotoSpecific(
 			res => {
-				let pPath = 'file://' + RNFS.DocumentDirectoryPath + '/_original_/' + res.photohash + '_' + this.props.user.email + '.scalb?key=' + key;
+				let pPath = 'file://' + RNFS.PlatformDependPath + '/_original_/' + res.photohash + '_' + this.props.user.email + '.scalb?key=' + key;
 				let info = {
 					merged: {uri: pPath},
 					title: res.title,

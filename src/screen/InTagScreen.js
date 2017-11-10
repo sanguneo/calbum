@@ -11,7 +11,7 @@ import Util from '../service/util_svc';
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
 
-const RNFS = require('react-native-fs');
+const RNFS = require('../service/rnfs_wrapper');
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
 	let i = Dimensions.get('window'),
@@ -109,7 +109,7 @@ class InTagScreen extends Component {
 										  style={styles.thumbnail}
 										  title={item.title}
 										  regdate={item.reg_date}
-										  uri={'file://' + RNFS.DocumentDirectoryPath + '/_thumb_/' + item.photohash + '_' + this.props.user.email + '.scalb?key=' + randomkey}
+										  uri={'file://' + RNFS.PlatformDependPath + '/_thumb_/' + item.photohash + '_' + this.props.user.email + '.scalb?key=' + randomkey}
 										  onPress={() => {
 											  this._goPhoto(item.title ? item.title : Util.dateFormatter(item.reg_date), item.photohash + '');
 										  }

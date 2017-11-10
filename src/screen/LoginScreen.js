@@ -16,7 +16,7 @@ import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
 import * as userActions from '../reducer/user/actions';
 
-const RNFS = require('react-native-fs');
+const RNFS = require('../service/rnfs_wrapper');
 
 
 const {width, height, deviceWidth, deviceHeight, scale} = (function() {
@@ -97,7 +97,7 @@ class LoginScreen extends Component {
 		).then(response => {
 			if (response.data.message === 'success') {
 				let key = Math.random() * 10000;
-				let pPath = RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.scalb';
+				let pPath = RNFS.PlatformDependPath + '/_profiles_/' + response.data.signhash + '.scalb';
 				let userinfo = {
 					token: response.data.token,
 					_id: response.data._id,
