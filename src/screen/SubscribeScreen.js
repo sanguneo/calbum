@@ -82,7 +82,7 @@ class SubscribeScreen extends Component {
 		if (direct === 'left') {
 			ImagePicker.openPicker(imgOpt)
 				.then(result => {
-					this.setState({uriLeft: {uri: result.path}, srcLeft: result.src});
+					this.setState({uriLeft: {uri: result.path}, srcLeft: result.sourceURL});
 					RNFS.copyFile(
 						result.path.replace('file://', ''),
 						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropleft.scalb'
@@ -91,7 +91,7 @@ class SubscribeScreen extends Component {
 						console.error('error left', e);
 					});
 					RNFS.copyFile(
-						result.src.replace('file://', ''),
+						result.sourceURL.replace('file://', ''),
 						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_left.scalb'
 					).then(() => {}
 					).catch(e => {
@@ -103,7 +103,7 @@ class SubscribeScreen extends Component {
 		} else {
 			ImagePicker.openPicker(imgOpt)
 				.then(result => {
-					this.setState({uriRight: {uri: result.path}, srcRight: result.src});
+					this.setState({uriRight: {uri: result.path}, srcRight: result.sourceURL});
 					RNFS.copyFile(
 						result.path.replace('file://', ''),
 						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropright.scalb'
@@ -112,7 +112,7 @@ class SubscribeScreen extends Component {
 						console.error('error left', e);
 					});
 					RNFS.copyFile(
-						result.src.replace('file://', ''),
+						result.sourceURL.replace('file://', ''),
 						RNFS.DocumentDirectoryPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_right.scalb'
 					).then(() => {}
 					).catch(e => {

@@ -15,6 +15,7 @@ import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
+import * as userActions from '../reducer/user/actions';
 
 const RNFS = require('react-native-fs');
 
@@ -107,7 +108,9 @@ class SignupScreen extends Component {
 	}
 	_submit() {
 		if (!this._formCheck()) return;
+
 		let formdata = new FormData();
+
 		formdata.append('profile', {
 			uri: this.state.profile.uri,
 			type: 'image/jpeg',
@@ -117,31 +120,66 @@ class SignupScreen extends Component {
 		formdata.append('email', this.state.email);
 		formdata.append('password', this.state.pass);
 
-		axios.post('http://calbum.sanguneo.com/user/signup', formdata, {
+		let urlpostfix = 'signup';
+		if(!this.props.profileCreate) {
+			urlpostfix = 'modify';
+		}
+		axios.post('http://calbum.sanguneo.com/user/' + urlpostfix, formdata, {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'multipart/form-data'
 			}
 		}).then(response => {
 			if (response.data.message == 'success') {
-				RNFS.unlink(
-					this.state.profile.uri.replace('file://', '')
-				).catch(e => {
-					console.error(e);
+				RNFS.copyFile(
+					this.state.profile.uri.replace('file://', ''),
+					RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.scalb'
+				).then(() => {
+					RNFS.unlink(
+						this.state.profile.uri.replace('file://', '')
+					).catch(e => {
+						console.error(e);
+					});
+				}).catch(e => {
+					console.error('error', e);
 				});
+				let key = Math.random() * 10000;
+				let user = {
+					profile: {uri: 'file://' + RNFS.DocumentDirectoryPath + '/_profiles_/' + response.data.signhash + '.scalb?key=' + key},
+					name: response.data.nickname
+				};
+				this.props.setLoginState(user);
+				this.props.dispatch(userActions.setUser(user));
 				this.props.dispatch(appActions.loaded());
 				this.props.navigator.pop();
+			} else if (response.data.message == 'noaccount') {
+				this.props.dispatch(appActions.loaded());
+				Alert.alert('가입되어있지 않습니다.');
+			} else if (response.data.message == 'invalidpw') {
+				this.props.dispatch(appActions.loaded());
+				Alert.alert('잘못된 비밀번호 입니다.');
 			} else if (response.data.message == 'emailexist') {
 				this.props.dispatch(appActions.loaded());
 				Alert.alert('사용중인 이메일 입니다.');
 			} else {
 				this.props.dispatch(appActions.loaded());
-				Alert.alert('회원가입에 오류가 발생했습니다.');
+				Alert.alert('입력값을 확인해주세요!');
 			}
 		}).catch(e => {
 			Alert.alert('인터넷에 연결되어있지 않습니다.\n확인후 다시 시도해주세요.');
 			console.log('error', e);
 		});
+	}
+
+	componentWillMount() {
+		this.setState({
+			signhash: this.props.user.signhash,
+			profile: this.props.user.profile,
+			email: this.props.user.email,
+			name: this.props.user.name,
+			pass: '',
+			passchk: ''
+		})
 	}
 
 	render() {

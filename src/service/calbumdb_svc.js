@@ -74,7 +74,7 @@ export default class dbSVC {
 	}
 	getPhoto(callback, signhash, limit) {
 		let userFind = signhash ? " WHERE signhash='"+signhash +"'" : "";
-		userFind += ' ORDER BY `idx`';
+		userFind += ' ORDER BY `idx` DESC';
 		userFind += limit ? ' LIMIT ' + limit : '';
 		userFind += ';';
 		this.db.transaction((tx) => {
@@ -94,7 +94,7 @@ export default class dbSVC {
 		query += signhash ? " t.signhash='"+signhash+"'" : "";
 		query += signhash && tagname ? " AND" : "";
 		query += tagname ? " t.name='"+tagname+"'" : "";
-		query += ' ORDER BY p.idx;';
+		query += ' ORDER BY p.idx DESC;';
 		this.db.transaction((tx) => {
 			tx.executeSql(query, [], (tx, results) => {
 				var len = results.rows.length;
@@ -112,7 +112,7 @@ export default class dbSVC {
 		postfix += signhash ? " signhash='"+signhash +"'" : "";
 		postfix += signhash&&photohash ? " AND" : "";
 		postfix += photohash ? " `photohash`='" + photohash+"'" : "";
-		postfix += ' ORDER BY `idx`;';
+		postfix += ' ORDER BY `idx` DESC;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_photo" + postfix, [], (tx, results) => {
 				var len = results.rows.length;
@@ -129,7 +129,7 @@ export default class dbSVC {
 		let postfix = signhash||photohash ? ' WHERE' : '';
 		postfix += signhash ? " signhash='"+signhash +"'" : "";
 		postfix += photohash ? "AND `photohash`='" + photohash+"'" : "";
-		postfix += ' ORDER BY `idx`;';
+		postfix += ' ORDER BY `idx` DESC;';
 		this.db.transaction((tx) => {
 			tx.executeSql("SELECT * FROM ca_tag" + postfix, [], (tx, results) => {
 				var len = results.rows.length;

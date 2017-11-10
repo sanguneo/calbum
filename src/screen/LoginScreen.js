@@ -205,6 +205,28 @@ class LoginScreen extends Component {
 			animationType: 'fade'
 		});
 	}
+	_modify() {
+		let user = {signhash: this.props.user.signhash, profile: this.props.user.profile, email: this.props.user.email, name: this.props.user.name};
+		this.props.navigator.push({
+			screen: 'calbum.SignupScreen',
+			title: '정보수정',
+			passProps: {
+				dbsvc: this.props.dbsvc,
+				crypt: this.props.crypt,
+				profileCreate: false,
+				user,
+				setLoginState: (arg) => {
+					this.setState(arg);
+				}
+			},
+			navigatorStyle: {navBarHidden: false},
+			navigatorButtons: {},
+			backButtonHidden: true,
+			overrideBackPress: true,
+			animated: true,
+			animationType: 'fade'
+		});
+	}
 
 	render() {
 		let notloggedin = !this.state.signhash || this.state.signhash === '';
@@ -297,7 +319,15 @@ class LoginScreen extends Component {
 								btnname={'회원가입'}
 							/>
 						</View>
-					) : null}
+					) : <View style={[styles.formWrapper, {marginBottom: 0}]}>
+						<Button
+							style={{backgroundColor: '#bd6592'}}
+							onPress={() => {
+								this._modify();
+							}}
+							btnname={'정보수정'}
+						/>
+					</View>}
 				</ScrollView>
 				<AdBar/>
 				<Loading show={this.props.app.loading} />
