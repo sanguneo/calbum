@@ -80,8 +80,8 @@ class ViewScreen extends Component {
 					parentUpdate: title => {
 						this._getPhotoInformation();
 						title ? this.props.navigator.setTitle({title}) : null;
-						this.refs['imgBefore'].forceUpdate();
-						this.refs['imgAfter'].forceUpdate();
+						this.refs['imagesbefore'].forceUpdate();
+						this.refs['imagesafter'].forceUpdate();
 						this.props.updateList();
 					},
 					targetProps: {
@@ -372,7 +372,6 @@ class ViewScreen extends Component {
 				<Lightbox
 					ref={'imagesbefore'}
 					title={'Before'}
-					height={height}
 					duration={500}
 					fromValue={0}
 					toValue={1}
@@ -392,7 +391,6 @@ class ViewScreen extends Component {
 				<Lightbox
 					ref={'imagesafter'}
 					title={'After'}
-					height={height}
 					duration={500}
 					fromValue={0}
 					toValue={1}
