@@ -10,6 +10,7 @@ import LabeledInput from '../component/LabeledInput';
 import TagInput from '../component/TagInput';
 
 import ImagePicker from 'react-native-image-crop-picker';
+import ImageResizer from 'react-native-image-resizer';
 import Image2merge from '../../native_modules/image2merge';
 import Util from '../service/util_svc';
 
@@ -75,48 +76,79 @@ class ModifyScreen extends Component {
 		});
 	};
 	_changeImage(direct) {
+		let randomkey = Math.random() * 10000;
 		if (direct === 'left') {
 			ImagePicker.openPicker(imgOpt)
 				.then(result => {
-					this.setState({uriLeft: {uri: result.path}, srcLeft: result.sourceURL});
-					RNFS.copyFile(
-						result.path.replace('file://', ''),
-						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email +'_cropleft.scalb'
-					).then(() => {}
-					).catch(e => {
-						console.error('error left', e);
+					ImageResizer.createResizedImage(result.path.replace('file://', ''), 400, 800, 'JPEG', 100, 0,
+						RNFS.PlatformDependPath + '/_original_/'
+					).then(({name}) => {
+							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropleft.scalb';
+							RNFS.moveFile(
+								RNFS.PlatformDependPath + '/_original_/' + name,
+								renamed
+							).then(() => {
+								this.setState({uriLeft: {uri: 'file://' + renamed + '?key=' + randomkey}});
+								RNFS.unlink(result.path.replace('file://', '')).catch(()=>{});
+							});
+
+						}
+					).catch((err) => {
+						console.log(err);
 					});
-					RNFS.copyFile(
-						result.sourceURL.replace('file://', ''),
-						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_left.scalb'
-					).then(() => {}
-					).catch(e => {
-						console.error('error left', e);
+					ImageResizer.createResizedImage(result.sourceURL.replace('file://', ''), 800, 800, 'JPEG', 100, 0,
+						RNFS.PlatformDependPath + '/_original_/'
+					).then(({name}) => {
+							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_left.scalb';
+							RNFS.moveFile(
+								RNFS.PlatformDependPath + '/_original_/' + name,
+								renamed
+							).then(() => {
+								this.setState({srcLeft: 'file://' + renamed + '?key=' + randomkey});
+							});
+						}
+					).catch((err) => {
+						console.log(err);
 					});
 				}).catch(e => {
-					console.log(e);
-				});
+				console.log(e);
+			});
 		} else {
 			ImagePicker.openPicker(imgOpt)
 				.then(result => {
-					this.setState({uriRight: {uri: result.path}, srcRight: result.sourceURL});
-					RNFS.copyFile(
-						result.path.replace('file://', ''),
-						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropright.scalb'
-					).then(() => {}
-					).catch(e => {
-						console.error('error left', e);
+					ImageResizer.createResizedImage(result.path.replace('file://', ''), 400, 800, 'JPEG', 100, 0,
+						RNFS.PlatformDependPath + '/_original_/'
+					).then(({name}) => {
+							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropright.scalb';
+							RNFS.moveFile(
+								RNFS.PlatformDependPath + '/_original_/' + name,
+								renamed
+							).then(() => {
+								this.setState({uriRight: {uri: 'file://' + renamed + '?key=' + randomkey}});
+								RNFS.unlink(result.path.replace('file://', '')).catch(()=>{});
+							});
+
+						}
+					).catch((err) => {
+						console.log(err);
 					});
-					RNFS.copyFile(
-						result.sourceURL.replace('file://', ''),
-						RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_right.scalb'
-					).then(() => {}
-					).catch(e => {
-						console.error('error right', e);
+					ImageResizer.createResizedImage(result.sourceURL.replace('file://', ''), 800, 800, 'JPEG', 100, 0,
+						RNFS.PlatformDependPath + '/_original_/'
+					).then(({name}) => {
+							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_right.scalb';
+							RNFS.moveFile(
+								RNFS.PlatformDependPath + '/_original_/' + name,
+								renamed
+							).then(() => {
+								this.setState({srcRight: 'file://' + renamed + '?key=' + randomkey});
+							});
+						}
+					).catch((err) => {
+						console.log(err);
 					});
 				}).catch(e => {
-					console.log(e);
-				});
+				console.log(e);
+			});
 		}
 	}
 	_mergeImage() {

@@ -109,7 +109,6 @@ class SubscribeScreen extends Component {
 								renamed
 							).then(() => {
 								this.setState({srcLeft: 'file://' + renamed});
-								RNFS.unlink(result.sourceURL.replace('file://', '')).catch(()=>{});
 							});
 						}
 					).catch((err) => {
@@ -146,7 +145,6 @@ class SubscribeScreen extends Component {
 								renamed
 							).then(() => {
 								this.setState({srcRight: 'file://' + renamed});
-								RNFS.unlink(result.sourceURL.replace('file://', '')).catch(()=>{});
 							});
 						}
 					).catch((err) => {

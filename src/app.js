@@ -13,8 +13,9 @@ import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screen';
 
 import dbSVC from './service/calbumdb_svc';
+import cryptSVC from './service/crypt_svc';
 
-const RNFS = require('react-native-fs');
+const RNFS = require('./service/rnfs_wrapper');
 
 const dbsvc = new dbSVC(false);
 const crypt = new cryptSVC();
@@ -27,15 +28,15 @@ registerScreens(store, Provider);
 
 export default class App {
 	constructor() {
-		RNFS.readDir(RNFS.DocumentDirectoryPath)
+		RNFS.readDir(RNFS.PlatformDependPath)
 		.then(result => {
 			let resarr = [];
 			result.forEach(e => resarr.push(e.path));
-			if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_original_') < 0) {
-				RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_original_');
+			if (resarr.indexOf(RNFS.PlatformDependPath + '/_original_') < 0) {
+				RNFS.mkdir(RNFS.PlatformDependPath + '/_original_');
 			}
-			if (resarr.indexOf(RNFS.DocumentDirectoryPath + '/_profiles_') < 0) {
-				RNFS.mkdir(RNFS.DocumentDirectoryPath + '/_profiles_');
+			if (resarr.indexOf(RNFS.PlatformDependPath + '/_profiles_') < 0) {
+				RNFS.mkdir(RNFS.PlatformDependPath + '/_profiles_');
 			}
 		})
 		.catch(err => {
@@ -53,7 +54,7 @@ export default class App {
 					(err, stores) => {
 						let obj = {};
 						stores.forEach(store => { obj[store[0]] = store[1];});
-						obj.profile = {uri: 'file://' + RNFS.DocumentDirectoryPath + '/_profiles_/' + obj.signhash + '.scalb' + '?key=' + Math.random() * 10000};
+						obj.profile = {uri: 'file://' + RNFS.PlatformDependPath + '/_profiles_/' + obj.signhash + '.scalb' + '?key=' + Math.random() * 10000};
 						store.dispatch(userActions.setUser(obj));
 						store.dispatch(appActions.login());
 					}
