@@ -11,7 +11,6 @@ import Lightbox from '../component/Lightbox';
 import Loading from '../component/Loading';
 import Tags from '../component/Tags';
 
-import ImageViewer from 'react-native-image-zoom-viewer';
 import Util from '../service/util_svc';
 
 import {connect} from 'react-redux';
@@ -80,8 +79,6 @@ class ViewScreen extends Component {
 					parentUpdate: title => {
 						this._getPhotoInformation();
 						title ? this.props.navigator.setTitle({title}) : null;
-						this.refs['imagesbefore'].forceUpdate();
-						this.refs['imagesafter'].forceUpdate();
 						this.props.updateList();
 					},
 					targetProps: {
@@ -201,54 +198,23 @@ class ViewScreen extends Component {
 
 	_getSideOriginal(side) {
 		this.side = null;
-		this.props.navigator.setButtons({
-			leftButtons: [],
-			rightButtons: [{id: 'close', icon: require('../../img/close.png')}],
-			animated: true
+		this.props.navigator.push({
+			screen: 'calbum.ImgSourceViewScreen',
+			title: (side === 'left') ? 'Before' : 'After',
+			passProps: {
+				uri: this.state.merged.uri.replace('.scalb', '_' + side + '.scalb')
+			},
+			navigatorStyle: {},
+			navigatorButtons: {},
+			animated: true,
+			animationType: 'fade'
 		});
-		if (side === 'left') {
-			this.side = 'imagesbefore';
-			this.props.navigator.setTitle({title: 'Before'});
-		} else {
-			this.side = 'imagesafter';
-			this.props.navigator.setTitle({title: 'After'});
-		}
-		this.refs[this.side]._open();
-	}
-	_lightboxClose() {
-		this.refs[this.side]._close();
-		this.props.navigator.setTitle({
-			title: this.props.title
-				? this.props.title
-				: Util.dateFormatter(this.props.regdate)
-		});
-		this.props.navigator.setButtons({
-			leftButtons: [{id: 'back'}],
-			rightButtons: [{icon: require('../../img/cut.png'), id: 'edit'},
-				{icon: require('../../img/remove.png'), id: 'delete'}],
-			animated: true
-		});
-		this.side = null;
 	}
 
 	componentWillMount() {
 		this._getPhotoInformation();
 	}
 	render() {
-		let imgBefore = this.state.merged.uri ? (
-			<ImageViewer
-				imageUrls={[
-					{url: this.state.merged.uri.replace('.scalb', '_left.scalb')}
-				]}
-			/>
-		) : null;
-		let imgAfter = this.state.merged.uri ? (
-			<ImageViewer
-				imageUrls={[
-					{url: this.state.merged.uri.replace('.scalb', '_right.scalb')}
-				]}
-			/>
-		) : null;
 		return (
 			<View style={styles.wrapper}>
 				<ScrollView style={styles.container}>
@@ -367,44 +333,6 @@ class ViewScreen extends Component {
 						<Text style={{lineHeight: 20, fontSize: 16}}>
 							{this.state.comment === '' ? '코멘트없음' : this.state.comment}
 						</Text>
-					</View>
-				</Lightbox>
-				<Lightbox
-					ref={'imagesbefore'}
-					title={'Before'}
-					duration={500}
-					fromValue={0}
-					toValue={1}
-					stylekey={'opacity'}
-					bgColor={'#000'}
-					color={'#fff'}
-					collapsedStyle={{paddingTop: 0}}
-					collapsed={true}
-					hideTop={true}
-					close={() => {
-						this._lightboxClose();
-					}}>
-					<View style={{width, height}}>
-						{imgBefore}
-					</View>
-				</Lightbox>
-				<Lightbox
-					ref={'imagesafter'}
-					title={'After'}
-					duration={500}
-					fromValue={0}
-					toValue={1}
-					stylekey={'opacity'}
-					bgColor={'#000'}
-					color={'#fff'}
-					collapsedStyle={{paddingTop: 0}}
-					collapsed={true}
-					hideTop={true}
-					close={() => {
-						this._lightboxClose();
-					}}>
-					<View style={{width, height}}>
-						{imgAfter}
 					</View>
 				</Lightbox>
 			</View>

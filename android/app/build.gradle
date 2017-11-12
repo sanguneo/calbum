@@ -80,7 +80,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 25
@@ -90,8 +90,8 @@ android {
         applicationId "com.calbum"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 9 // 171110
-        versionName "1.2.6"  // 171110
+        versionCode 11 // 171112 v2
+        versionName "1.2.8"  // 171112 v2
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

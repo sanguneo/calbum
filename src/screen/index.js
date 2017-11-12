@@ -13,8 +13,10 @@ import InTagScreen from './InTagScreen';
 import TagScreen from './TagScreen';
 import ViewScreen from './ViewScreen';
 import SideMenu from './SideMenu';
+import ImgSourceViewScreen from './ImgSourceViewScreen'
 
 export function registerScreens(store, provider) {
+	Navigation.registerComponent('calbum.ImgSourceViewScreen', () => ImgSourceViewScreen, store, provider);
 	Navigation.registerComponent('calbum.NoticeScreen', () => NoticeScreen, store, provider);
 	Navigation.registerComponent('calbum.NoticeViewScreen', () => NoticeViewScreen, store, provider);
 	Navigation.registerComponent('calbum.LoginScreen', () => LoginScreen, store, provider);
