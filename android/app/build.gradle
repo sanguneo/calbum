@@ -90,8 +90,8 @@ android {
         applicationId "com.calbum"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 11 // 171112 v2
-        versionName "1.2.8"  // 171112 v2
+        versionCode 12 // 171113
+        versionName "1.2.9"  // 171113
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

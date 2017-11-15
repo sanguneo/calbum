@@ -124,7 +124,7 @@ class SignupScreen extends Component {
 		if(!this.props.profileCreate) {
 			urlpostfix = 'modify';
 		}
-		axios.post('http://calbum.sanguneo.com/user/' + urlpostfix, formdata, {
+		axios.post('http://hpserver.sanguneo.com/user/' + urlpostfix, formdata, {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'multipart/form-data'
@@ -146,9 +146,11 @@ class SignupScreen extends Component {
 				let key = Math.random() * 10000;
 				let user = {
 					profile: {uri: 'file://' + RNFS.PlatformDependPath + '/_profiles_/' + response.data.signhash + '.scalb?key=' + key},
-					name: response.data.nickname
+					name: this.state.name
 				};
-				this.props.setLoginState(user);
+				if(!this.props.profileCreate) {
+					this.props.setLoginState(user);
+				}
 				this.props.dispatch(userActions.setUser(user));
 				this.props.dispatch(appActions.loaded());
 				this.props.navigator.pop();

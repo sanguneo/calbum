@@ -60,7 +60,7 @@ class NoticeScreen extends Component {
 	}
 	_getNoticeLatest(parsedNotice, after) {
 		axios.get(
-			'http://calbum.sanguneo.com/notice/plain' + (after ? '?after=' + after : ''),
+			'http://hpserver.sanguneo.com/notice/plain' + (after ? '?after=' + after : ''),
 			{},
 			{
 				timeout: 1000,
@@ -95,7 +95,7 @@ class NoticeScreen extends Component {
 	}
 	_getNoticeSync() {
 		axios.get(
-			'http://calbum.sanguneo.com/notice/plain',
+			'http://hpserver.sanguneo.com/notice/plain',
 			{},
 			{
 				headers: {
