@@ -8,7 +8,7 @@ import * as reducers from './reducer';
 import * as appActions from './reducer/app/actions';
 import * as userActions from './reducer/user/actions';
 
-import {AsyncStorage, processColor} from 'react-native';
+import {AsyncStorage, processColor as pc, Platform} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screen';
 
@@ -22,10 +22,13 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const reducer = combineReducers(reducers);
 const store = createStoreWithMiddleware(reducer);
 
+let processColor = null;
+
 registerScreens(store, Provider);
 
 export default class App {
 	constructor() {
+		processColor = (Platform.OS === 'ios') ? pc: (color) => color;
 		RNFS.readDir(RNFS.PlatformDependPath)
 			.then(result => {
 				let resarr = [];

@@ -1,16 +1,18 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
 
-import {rootProps} from '../service/rootProps';
+import {rootProps as omg} from '../service/rootProps';
 const RNFS = require('../service/rnfs_wrapper');
+let rootProps = null;
 
 import {connect} from 'react-redux';
 
 class SideMenu extends Component {
 	constructor(props) {
 		super(props);
+		rootProps = (Platform.OS === 'ios') ? omg : props;
 		rootProps.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 	}
 	onNavigatorEvent(event) {}
