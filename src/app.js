@@ -8,17 +8,15 @@ import * as reducers from './reducer';
 import * as appActions from './reducer/app/actions';
 import * as userActions from './reducer/user/actions';
 
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, processColor} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {registerScreens} from './screen';
 
 import dbSVC from './service/calbumdb_svc';
-import cryptSVC from './service/crypt_svc';
+const dbsvc = new dbSVC();
+//import cryptSVC from './service/crypt_svc';
 
 const RNFS = require('./service/rnfs_wrapper');
-
-const dbsvc = new dbSVC(false);
-const crypt = new cryptSVC();
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const reducer = combineReducers(reducers);
@@ -29,19 +27,28 @@ registerScreens(store, Provider);
 export default class App {
 	constructor() {
 		RNFS.readDir(RNFS.PlatformDependPath)
-		.then(result => {
-			let resarr = [];
-			result.forEach(e => resarr.push(e.path));
-			if (resarr.indexOf(RNFS.PlatformDependPath + '/_original_') < 0) {
-				RNFS.mkdir(RNFS.PlatformDependPath + '/_original_');
-			}
-			if (resarr.indexOf(RNFS.PlatformDependPath + '/_profiles_') < 0) {
-				RNFS.mkdir(RNFS.PlatformDependPath + '/_profiles_');
-			}
-		})
-		.catch(err => {
-			console.error(err.message, err.code);
-		});
+			.then(result => {
+				let resarr = [];
+				result.forEach(e => resarr.push(e.path));
+				if (resarr.indexOf(RNFS.PlatformDependPath + '/_original_') < 0) {
+					RNFS.mkdir(RNFS.PlatformDependPath + '/_original_');
+				}
+				if (resarr.indexOf(RNFS.PlatformDependPath + '/_profiles_') < 0) {
+					RNFS.mkdir(RNFS.PlatformDependPath + '/_profiles_');
+				}
+			})
+			.catch(err => {
+				console.error(err.message, err.code);
+			});
+		RNFS.readDir(RNFS.PlatformDependPath + '/_original_')
+			.then(result => {
+				let resarr = [];
+				result.forEach(e => resarr.push(e.path));
+				console.log(resarr);
+			})
+			.catch(err => {
+				console.error(err.message, err.code);
+			});
 
 		store.subscribe(this.onStoreUpdate.bind(this));
 
@@ -70,17 +77,17 @@ export default class App {
 		}
 	}
 	startApp(root) {
-		let passProps = {dbsvc, crypt};
+		let navigator = {nav: null};
 		let appStyle = {
-			screenBackgroundColor: 'white',
+			screenBackgroundColor: processColor('white'),
 			navBarTransparent: false,
 			navBarTranslucent: false,
 			drawUnderNavBar: false,
 			navBarHideOnScroll: false,
-			statusBarColor: '#36384C',
-			navBarBackgroundColor: '#36384C',
-			navBarTextColor: '#fff',
-			navBarButtonColor: '#fff',
+			statusBarColor: processColor('#36384C'),
+			navBarBackgroundColor: processColor('#36384C'),
+			navBarTextColor: processColor('#ffffff'),
+			navBarButtonColor: processColor('#ffffff'),
 			navBarTitleTextCentered: false,
 			topBarElevationShadowEnabled: false,
 			statusBarHidden: false,
@@ -98,7 +105,7 @@ export default class App {
 					},
 					appStyle,
 					drawer: {},
-					passProps: {...passProps, profileInitial: true, profileCreate: true},
+					passProps: {dbsvc, profileInitial: true, profileCreate: true},
 					animationType: 'fade'
 				});
 				return;
@@ -112,11 +119,15 @@ export default class App {
 					drawer: {
 						left: {
 							screen: 'calbum.SideMenu',
-							passProps
+							passProps: {dbsvc}
+						},
+						style: {
+							drawerShadow: false,
+							leftDrawerWidth: 53.5,
 						},
 						disableOpenGesture: false
 					},
-					passProps,
+					passProps: {dbsvc},
 					animationType: 'fade'
 				});
 				return;

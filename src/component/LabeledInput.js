@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
 		margin: 0
 	},
 	label: {
-		flexDirection: 'row',
 		flex: 30,
 		fontSize: 16,
 		textAlignVertical: 'center',
-		textAlign: 'center'
+		textAlign: 'center',
+		alignSelf: 'center',
 	},
 	Input: {
 		flex: 70,

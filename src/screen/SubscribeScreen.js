@@ -17,6 +17,8 @@ import * as appActions from '../reducer/app/actions';
 
 // const RNFS = require('../service/rnfs_wrapper');
 const RNFS = require('../service/rnfs_wrapper');
+import cryptsvc from'../service/crypt_svc';
+const crypt = new cryptsvc();
 
 const {width, height} = Dimensions.get('window');
 
@@ -76,7 +78,7 @@ class SubscribeScreen extends Component {
 	};
 	_getPhotohash() {
 		let regdate = Date.now();
-		let photohash = this.props.crypt.getAntCode(regdate);
+		let photohash = crypt.getAntCode(regdate);
 		this.setState({regdate, photohash});
 		return photohash;
 	}
@@ -86,14 +88,15 @@ class SubscribeScreen extends Component {
 				.then(result => {
 					ImageResizer.createResizedImage(result.path.replace('file://', ''), 400, 800, 'JPEG', 100, 0,
 						RNFS.PlatformDependPath + '/_original_/'
-					).then(({name}) => {
+					).then(({uri}) => {
+						console.log(uri);
 							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropleft.scalb';
 							RNFS.moveFile(
-								RNFS.PlatformDependPath + '/_original_/' + name,
+								uri.replace('file://', ''),
 								renamed
 							).then(() => {
 								this.setState({uriLeft: {uri: 'file://' + renamed}});
-								RNFS.unlink(result.path.replace('file://', '')).catch(()=>{});
+								//RNFS.unlink(result.path.replace('file://', '')).catch(()=>{});
 							});
 
 						}
@@ -102,10 +105,10 @@ class SubscribeScreen extends Component {
 					});
 					ImageResizer.createResizedImage(result.sourceURL.replace('file://', ''), 800, 800, 'JPEG', 100, 0,
 						RNFS.PlatformDependPath + '/_original_/'
-					).then(({name}) => {
+					).then(({uri}) => {
 							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_left.scalb';
 							RNFS.moveFile(
-								RNFS.PlatformDependPath + '/_original_/' + name,
+								uri.replace('file://', ''),
 								renamed
 							).then(() => {
 								this.setState({srcLeft: 'file://' + renamed});
@@ -122,14 +125,14 @@ class SubscribeScreen extends Component {
 				.then(result => {
 					ImageResizer.createResizedImage(result.path.replace('file://', ''), 400, 800, 'JPEG', 100, 0,
 						RNFS.PlatformDependPath + '/_original_/'
-					).then(({name}) => {
+					).then(({uri}) => {
 							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_cropright.scalb';
 							RNFS.moveFile(
-								RNFS.PlatformDependPath + '/_original_/' + name,
+								uri.replace('file://', ''),
 								renamed
 							).then(() => {
 								this.setState({uriRight: {uri: 'file://' + renamed}});
-								RNFS.unlink(result.path.replace('file://', '')).catch(()=>{});
+								//RNFS.unlink(result.path.replace('file://', '')).catch(()=>{});
 							});
 
 						}
@@ -138,10 +141,10 @@ class SubscribeScreen extends Component {
 					});
 					ImageResizer.createResizedImage(result.sourceURL.replace('file://', ''), 800, 800, 'JPEG', 100, 0,
 						RNFS.PlatformDependPath + '/_original_/'
-					).then(({name}) => {
+					).then(({uri}) => {
 							let renamed = RNFS.PlatformDependPath + '/_original_/' + this.state.photohash + '_' + this.props.user.email + '_right.scalb';
 							RNFS.moveFile(
-								RNFS.PlatformDependPath + '/_original_/' + name,
+								uri.replace('file://', ''),
 								renamed
 							).then(() => {
 								this.setState({srcRight: 'file://' + renamed});
@@ -378,7 +381,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		margin: 10,
 		borderRadius: 5,
-		backgroundColor: commonStyle.backgroundColor
+		backgroundColor: commonStyle.backgroundColor,
+		overflow: 'hidden'
 	},
 	bgView: {
 		backgroundColor: 'white',

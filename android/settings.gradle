@@ -21,14 +21,14 @@ project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../no
 include ':react-native-sqlite-storage'
 project(':react-native-sqlite-storage').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sqlite-storage/src/android')
 
-include ':Image2merge'
-project(':Image2merge').projectDir = new File(rootProject.projectDir, '../native_modules/image2merge/android')
-
 include ':react-native-image-crop-picker'
 project(':react-native-image-crop-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-crop-picker/android')
 
 include ':react-native-navigation'
 project(':react-native-navigation').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-navigation/android/app/')
+
+include ':Image2merge'
+project(':Image2merge').projectDir = new File(rootProject.projectDir, '../native_modules/image2merge/android')
 
 include ':app'
 

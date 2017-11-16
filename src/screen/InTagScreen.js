@@ -66,7 +66,6 @@ class InTagScreen extends Component {
 				title,
 				photohash,
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt,
 				user: this.props.user
 			},
 			navigatorStyle: {},

@@ -1,6 +1,3 @@
-/**
- * Created by 나상권 on 2017-05-19.
- */
 'use strict';
 
 const SQLite = require('react-native-sqlite-storage');

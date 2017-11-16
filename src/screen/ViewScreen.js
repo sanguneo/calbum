@@ -75,7 +75,6 @@ class ViewScreen extends Component {
 				title: "'" + this.state.title + "' 수정하기",
 				passProps: {
 					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt,
 					parentUpdate: title => {
 						this._getPhotoInformation();
 						title ? this.props.navigator.setTitle({title}) : null;
@@ -143,7 +142,6 @@ class ViewScreen extends Component {
 			title: '#' + tagname,
 			passProps: {
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt
 			},
 			navigatorStyle: {},
 			navigatorButtons: {
@@ -302,7 +300,7 @@ class ViewScreen extends Component {
 					fromValue={0}
 					toValue={1}
 					stylekey={'opacity'}
-					bgColor={'#fff'}
+					bgColor={'#ffffff'}
 					color={'#000'}>
 					<View
 						style={{
@@ -322,7 +320,7 @@ class ViewScreen extends Component {
 					fromValue={0}
 					toValue={1}
 					stylekey={'opacity'}
-					bgColor={'#fff'}
+					bgColor={'#ffffff'}
 					color={'#000'}>
 					<View
 						style={{

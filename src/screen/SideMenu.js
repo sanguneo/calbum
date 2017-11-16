@@ -3,17 +3,20 @@
 import React, {Component} from 'react';
 import {AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
+import {rootProps} from '../service/rootProps';
+const RNFS = require('../service/rnfs_wrapper');
+
 import {connect} from 'react-redux';
 
 class SideMenu extends Component {
 	constructor(props) {
 		super(props);
-		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		rootProps.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 	}
 	onNavigatorEvent(event) {}
 
 	_toggleDrawer() {
-		this.props.navigator.toggleDrawer({
+		rootProps.navigator.toggleDrawer({
 			to: 'closed',
 			side: 'left',
 			animated: true
@@ -24,12 +27,11 @@ class SideMenu extends Component {
 			.then(token => {
 				if (typeof token === 'undefined' || token === null) {
 					this._toggleDrawer();
-					this.props.navigator.push({
+					rootProps.navigator.push({
 						screen: 'calbum.LoginScreen',
 						title: '로그인',
 						passProps: {
-							dbsvc: this.props.dbsvc,
-							crypt: this.props.crypt,
+							dbsvc: rootProps.dbsvc,
 							profileCreate: true,
 							user: {
 								signhash: '',
@@ -62,12 +64,11 @@ class SideMenu extends Component {
 		};
 		if (screen === 'subscribe') {
 			this._toggleDrawer();
-			this.props.navigator.push({
+			rootProps.navigator.push({
 				screen: 'calbum.SubscribeScreen',
 				title: '디자인 작성하기',
 				passProps: {
-					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt
+					dbsvc: rootProps.dbsvc,
 				},
 				navigatorStyle: {},
 				navigatorButtons: {},
@@ -76,12 +77,11 @@ class SideMenu extends Component {
 			});
 		} else if (screen === 'profile') {
 			this._toggleDrawer();
-			this.props.navigator.push({
+			rootProps.navigator.push({
 				screen: 'calbum.LoginScreen',
 				title: '로그인',
 				passProps: {
-					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt,
+					dbsvc: rootProps.dbsvc,
 					profileCreate: false
 				},
 				navigatorStyle: {},
@@ -91,10 +91,10 @@ class SideMenu extends Component {
 			});
 		} else if (screen === 'notice') {
 			this._toggleDrawer();
-			this.props.navigator.push({
+			rootProps.navigator.push({
 				screen: "calbum.NoticeScreen",
 				title: "공지사항",
-				passProps: {dbsvc:this.props.dbsvc, crypt:this.props.crypt},
+				passProps: {dbsvc:rootProps.dbsvc},
 				navigatorStyle: {},
 				navigatorButtons: {},
 				animated: true,
@@ -102,12 +102,11 @@ class SideMenu extends Component {
 			});
 		} else if (screen === 'tag') {
 			this._toggleDrawer();
-			this.props.navigator.push({
+			rootProps.navigator.push({
 				screen: 'calbum.TagScreen',
 				title: '태그목록',
 				passProps: {
-					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt
+					dbsvc: rootProps.dbsvc,
 				},
 				navigatorStyle: {},
 				navigatorButtons: {},
@@ -116,12 +115,11 @@ class SideMenu extends Component {
 			});
 		} else {
 			this._toggleDrawer();
-			this.props.navigator.resetTo({
+			rootProps.navigator.resetTo({
 				screen: 'calbum.TotalScreen',
 				title: '전체보기',
 				passProps: {
-					dbsvc: this.props.dbsvc,
-					crypt: this.props.crypt
+					dbsvc: rootProps.dbsvc,
 				},
 				navigatorStyle: {},
 				navigatorButtons: {
@@ -138,11 +136,16 @@ class SideMenu extends Component {
 	}
 
 	render() {
-		let profile = this.props.user.profile;
-		if (profile.uri) {
-			var key = 1e5 * Math.random();
-			profile.uri = profile.uri.split('?key=')[0] + '?key=' + key;
-		}
+		let key = Math.random() * 10000;
+		let pPath = RNFS.PlatformDependPath + '/_profiles_/' + this.props.user.signhash + '.scalb';
+		let profile = this.props.user.signhash ? {uri: 'file://' + pPath + '?key=' + key} : require('../../img/profile.png');
+		//let profile = this.props.user.profile;
+		//if (profile.uri !== '') {
+		//	var key = 1e5 * Math.random();
+		//	profile.uri = profile.uri.split('?key=')[0] + '?key=' + key;
+		//} else {
+		//	profile = require('../../img/profile.png');
+		//}
 		return (
 			<View style={styles.container}>
 				<TouchableOpacity
@@ -218,19 +221,21 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'flex-start',
 		justifyContent: 'flex-start',
-		backgroundColor: '#fff',
+		backgroundColor: '#ffffff',
+		borderRightWidth: 1,
+		borderRightColor: 'lightgray',
 		width: 200
 	},
 	name: {
 		textAlign: 'right',
-		fontSize: 15,
-		marginTop: -30,
+		fontSize: 15,		marginTop: -30,
 		marginLeft: 10,
 		marginRight: 10,
 		fontWeight: '500',
 		height: 30,
 		width: 170,
 		color: 'white',
+		backgroundColor: 'transparent',
 		textShadowColor: 'black',
 		textShadowOffset: {width: 1, height: 1},
 		textShadowRadius: 2

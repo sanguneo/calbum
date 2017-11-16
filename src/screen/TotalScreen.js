@@ -7,6 +7,7 @@ import AdBar from '../component/AdBar';
 import Loading from '../component/Loading';
 import Thumbnail from '../component/Thumbnail';
 import Util from '../service/util_svc';
+import {rNsetter, rDsetter} from '../service/rootProps';
 
 import {connect} from 'react-redux';
 import * as appActions from '../reducer/app/actions';
@@ -43,11 +44,12 @@ class TotalScreen extends Component {
 
 	constructor(props) {
 		super(props);
+		rNsetter(props.navigator);
+		rDsetter(props.dbsvc);
 		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 		this.state = {
 			rows: []
 		};
-		this.rendomkey = Math.random() * 10000;
 	}
 
 	onNavigatorEvent(event) {
@@ -66,7 +68,6 @@ class TotalScreen extends Component {
 				title,
 				photohash,
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt,
 				updateList: () => this._getPhoto()
 			},
 			navigatorStyle: {},

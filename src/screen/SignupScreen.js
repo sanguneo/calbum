@@ -300,7 +300,8 @@ const styles = StyleSheet.create({
 		marginHorizontal: 45,
 		marginBottom: 30,
 		borderRadius: 5,
-		backgroundColor: '#f5f5f5'
+		backgroundColor: '#f5f5f5',
+		overflow: 'hidden'
 	},
 	labeledtextbox: {
 		height: 42,
@@ -318,7 +319,9 @@ const styles = StyleSheet.create({
 		color: '#000'
 	},
 	labelStyle: {
-		fontSize: 15
+		fontSize: 15,
+		height: 42,
+		lineHeight: 42
 	}
 });
 

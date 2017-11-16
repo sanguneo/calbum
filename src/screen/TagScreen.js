@@ -38,7 +38,6 @@ class TagScreen extends Component {
 			title: '#' + tagname,
 			passProps: {
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt,
 				user: this.props.user
 			},
 			navigatorStyle: {},
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 0,
 		textAlignVertical: 'center',
 		fontSize: 16,
-		color: '#fff'
+		color: '#ffffff'
 	}
 });
 

@@ -325,9 +325,12 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		marginTop: 2,
 		marginBottom: 4,
-		marginLeft: 14,
+		marginLeft: 10,
 		marginRight: 14,
 		alignItems: 'flex-start'
+	},
+	tagInputContainer: {
+		paddingLeft: 0
 	},
 	tagInputContainerScroll: {
 		flex: 1

@@ -40,9 +40,12 @@ class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
 		props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+		let key = Math.random() * 10000;
+		let pPath = RNFS.PlatformDependPath + '/_profiles_/' + this.props.user.signhash + '.scalb';
+		let profile = this.props.user.signhash ? {uri: 'file://' + pPath + '?key=' + key} : require('../../img/profile.png');
 		this.state = !props.profileCreate ?
 			{
-					profile: props.user.profile,
+					profile: profile,
 					name: props.user.name,
 					email: props.user.email,
 					pass: '',
@@ -104,7 +107,7 @@ class LoginScreen extends Component {
 					email: response.data.email,
 					signhash: response.data.signhash,
 					name: response.data.nickname,
-					profile: {uri: 'file://' + pPath + '?key=' + key}
+					//profile: 'file://' + pPath + '?key=' + key
 				};
 				AsyncStorage.multiSet(Object.entries(userinfo).filter((e) => e[0] !== 'profile'));
 				let loginOK = () => {
@@ -193,7 +196,6 @@ class LoginScreen extends Component {
 			title: '회원가입',
 			passProps: {
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt,
 				profileCreate: true,
 				user
 			},
@@ -212,7 +214,6 @@ class LoginScreen extends Component {
 			title: '정보수정',
 			passProps: {
 				dbsvc: this.props.dbsvc,
-				crypt: this.props.crypt,
 				profileCreate: false,
 				user,
 				setLoginState: (arg) => {
@@ -365,11 +366,11 @@ const styles = StyleSheet.create({
 		marginHorizontal: 45,
 		marginBottom: 30,
 		borderRadius: 5,
-		backgroundColor: '#f5f5f5'
+		backgroundColor: '#f5f5f5',
+		overflow: 'hidden'
 	},
 	labeledtextbox: {
 		height: 42,
-		marginHorizontal: 10,
 		fontSize: 15,
 		color: '#000',
 		textAlign: 'left',
@@ -383,7 +384,9 @@ const styles = StyleSheet.create({
 		color: '#000'
 	},
 	labelStyle: {
-		fontSize: 15
+		fontSize: 15,
+		height: 40,
+		lineHeight: 40
 	}
 });
 
