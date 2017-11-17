@@ -89,7 +89,7 @@ class LoginScreen extends Component {
 		if (!this._formCheck()) return;
 		this.props.dispatch(appActions.loading());
 		axios.post(
-			'http://calbum.sanguneo.com/user/login',
+			'https://hpserver.sanguneo.com/user/login',
 			{email: this.state.email, password: this.state.pass},
 			{
 				headers: {
@@ -122,7 +122,7 @@ class LoginScreen extends Component {
 						loginOK();
 					} else {
 						RNFS.downloadFile({
-							fromUrl: 'http://calbum.sanguneo.com/upload/profiles/' + userinfo.signhash,
+							fromUrl: 'http://hpserver.sanguneo.com/upload/profiles/' + userinfo.signhash,
 							toFile: pPath
 						}).promise.then((res) => {
 							loginOK();
@@ -137,7 +137,7 @@ class LoginScreen extends Component {
 				this.props.dispatch(appActions.loaded());
 				Alert.alert(
 					'',
-					'로그인 되어있지 않습니다.\n가입하시겠습니까?',
+					'사용자 정보가 존재하지 않습니다.\n가입하시겠습니까?',
 					[
 						{
 							text: '확인',

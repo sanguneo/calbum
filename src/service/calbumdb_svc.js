@@ -22,7 +22,6 @@ export default class dbSVC {
 			});
 		});
 	}
-
 	insertPhoto(photohash, regdate, title, recipe, comment, signhash) {
 		let query = "INSERT INTO `ca_photo`(`photohash`,`reg_date`,`title`,`recipe`,`comment`,`signhash`) " +
 			"VALUES ('" + photohash + "','" + regdate + "','" + title + "','" + recipe.replace('\n', '\\n') + "','" + comment.replace('\n', '\\n') + "','" + signhash + "');";

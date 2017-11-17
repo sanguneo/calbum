@@ -124,7 +124,7 @@ class SignupScreen extends Component {
 		if(!this.props.profileCreate) {
 			urlpostfix = 'modify';
 		}
-		axios.post('http://calbum.sanguneo.com/user/' + urlpostfix, formdata, {
+		axios.post('https://hpserver.sanguneo.com/user/' + urlpostfix, formdata, {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'multipart/form-data'
