@@ -107,7 +107,6 @@ class LoginScreen extends Component {
 					email: response.data.email,
 					signhash: response.data.signhash,
 					name: response.data.nickname,
-					//profile: 'file://' + pPath + '?key=' + key
 				};
 				AsyncStorage.multiSet(Object.entries(userinfo).filter((e) => e[0] !== 'profile'));
 				let loginOK = () => {
